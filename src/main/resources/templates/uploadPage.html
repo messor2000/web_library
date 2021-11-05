@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Pbf Library</title>
+    <link rel="shortcut icon" href="/static/img/logo.png"/>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
+
+</head>
+
+<body>
+<div id="main-container" class="main-container nav-effect-1">
+
+    <nav class="nav-menu nav-effect-1" id="menu-1">
+        <h2 class="">The Library</h2>
+        <ul>
+            <li><a href="/">Library</a></li>
+            <li><a href="/file/info">Upload file</a></li>
+        </ul>
+    </nav>
+    <div class="main clearfix">
+
+        <!-- Header Content -->
+        <header id="header" class="page-header">
+            <div class="page-header-container row">
+
+                <!-- Logo -->
+                <div class="main-logo">
+                    <a href="#" class="logo">The PSON Library</a>
+                </div>
+
+                <div class="menu-search">
+                    <!-- Main Navigation -->
+                    <div class="main-navigation">
+                        <a href="#">Menu</a>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="catalog-search">
+                        <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
+                               maxlength="128" id="input-search"/>
+                        <label class="input_label" for="input-search">
+                            <span class="input_label-content">Search Library</span>
+                            <span class="input_label-search"></span>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <div class="page-container">
+            <div class="page-title category-title">
+                <h1>File Upload & Data Save Page</h1>
+            </div>
+
+            <form action="/file/upload" method="POST" enctype="multipart/form-data">
+                <br/><br/>
+                Please select a file to upload :
+                <input type="file" name="file" value="Browse File" th:name="file" th:placeholder="File"/> <br/> <br/>
+
+                Press here to save the file :
+                <input type="submit" value="save"/> <br/> <br/>
+
+                <h2 th:text="${message}"></h2>
+
+            </form>
+
+<!--            <form id="add" th:action="@{/addSummary}" method="post" th:object="${user}">-->
+
+
+
+
+<!--                <input id="userId" th:field="*{userId}" type="hidden"/>-->
+<!--                <button type="submit" value="save">Add Summary</button>-->
+<!--            </form>-->
+        </div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/4.0.0/shuffle.min.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>
