@@ -57,26 +57,34 @@
                 <h1>File Upload & Data Save Page</h1>
             </div>
 
-            <form action="/file/upload" method="POST" enctype="multipart/form-data">
-                <br/><br/>
-                Please select a file to upload :
-                <input type="file" name="file" value="Browse File" th:name="file" th:placeholder="File"/> <br/> <br/>
+<!--            <form action="/file/upload" method="POST" enctype="multipart/form-data">-->
+<!--                <br/><br/>-->
+<!--                Please select a file to upload :-->
+<!--                <input type="file" name="file" value="Browse File" th:name="file" th:placeholder="File"/> <br/> <br/>-->
 
-                Press here to save the file :
-                <input type="submit" value="save"/> <br/> <br/>
+<!--                Press here to save the file :-->
+<!--                <input type="submit" value="save"/> <br/> <br/>-->
 
-                <h2 th:text="${message}"></h2>
+<!--                <h2 th:text="${message}"></h2>-->
 
+<!--            </form>-->
+
+            <form method="POST" enctype="multipart/form-data" action="/files/upload">
+                <table>
+                    <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+                    <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+                    <div th:if="${message}">
+                        <h2 th:text="${message}"/>
+                    </div>
+                </table>
+
+                <ul>
+                    <li th:each="file : ${files}">
+                        <a th:href="${file}" th:text="${file}" />
+                    </li>
+                </ul>
             </form>
 
-<!--            <form id="add" th:action="@{/addSummary}" method="post" th:object="${user}">-->
-
-
-
-
-<!--                <input id="userId" th:field="*{userId}" type="hidden"/>-->
-<!--                <button type="submit" value="save">Add Summary</button>-->
-<!--            </form>-->
         </div>
     </div>
 </div>

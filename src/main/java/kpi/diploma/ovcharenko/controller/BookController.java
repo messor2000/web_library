@@ -4,6 +4,7 @@ import kpi.diploma.ovcharenko.entity.Book;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.service.data.IExcelDataService;
 import kpi.diploma.ovcharenko.service.updloader.IFileUploaderService;
+import kpi.diploma.ovcharenko.service.updloader.IStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,8 @@ public class BookController {
     @Autowired
     IExcelDataService excelService;
 
+    private IStorageService storageService;
+
     @Autowired
     BookRepository bookRepository;
 
@@ -42,30 +45,40 @@ public class BookController {
         return "uploadPage";
     }
 
-    @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+//    @PostMapping("/upload")
+//    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+//
+//        fileService.uploadFile(file);
+//
+//        List<Book> excelDataAsList = excelService.getExcelDataAsList();
+//        try {
+//            excelService.saveExcelData(excelDataAsList);
+//        } catch (NumberFormatException e) {
+//            log.error(String.valueOf(e));
+//        }
+//
+//        redirectAttributes.addFlashAttribute("message",
+//                "You have successfully uploaded '" + file.getOriginalFilename() + "' !");
+//
+//
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        return "redirect:/";
+//    }
 
-        fileService.uploadFile(file);
+//    @PostMapping("/")
+//    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+//        storageService.store(file);
+//        redirectAttributes.addFlashAttribute("message",
+//                "You successfully uploaded " + file.getOriginalFilename() + "!");
+//
+//        return "redirect:/";
+//    }
 
-        List<Book> excelDataAsList = excelService.getExcelDataAsList();
-        try {
-            excelService.saveExcelData(excelDataAsList);
-        } catch (NumberFormatException e) {
-            log.error(String.valueOf(e));
-        }
-
-        redirectAttributes.addFlashAttribute("message",
-                "You have successfully uploaded '" + file.getOriginalFilename() + "' !");
-
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return "redirect:/";
-    }
 
 //    @PostMapping("/save")
 //    public String saveExcelData(Model model, @RequestParam(value = "file") MultipartFile file) {

@@ -1,14 +1,15 @@
 package kpi.diploma.ovcharenko;
 
+import kpi.diploma.ovcharenko.service.updloader.IStorageService;
+import kpi.diploma.ovcharenko.service.updloader.StorageProperties;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.util.unit.DataSize;
-
-import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
+@EnableConfigurationProperties(StorageProperties.class)
 public class OvcharenkoDiplomaProjectApplication {
 
     public static void main(String[] args) {
@@ -16,11 +17,11 @@ public class OvcharenkoDiplomaProjectApplication {
     }
 
     @Bean
-    MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize(DataSize.parse("512KB"));
-        factory.setMaxRequestSize(DataSize.parse("512KB"));
-        return factory.createMultipartConfig();
+    CommandLineRunner init(IStorageService storageService) {
+        return args -> {
+            storageService.deleteAll();
+            storageService.init();
+        };
     }
 
 }
