@@ -6,8 +6,10 @@ import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.service.updloader.IStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -26,10 +28,6 @@ import java.util.Objects;
 @Slf4j
 @Service
 public class ExcelDataServiceImpl implements IExcelDataService {
-
-//    @Value("${app.upload.file:${user.home}}")
-//    public String excelFilePath;
-
     @Autowired
     BookRepository bookRepository;
 
@@ -49,34 +47,35 @@ public class ExcelDataServiceImpl implements IExcelDataService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Read student data form excel file sheet1.
+
         XSSFSheet worksheet = null;
         if (workbook != null) {
             worksheet = workbook.getSheetAt(0);
         }
-        for (int index = 0; index < Objects.requireNonNull(worksheet).getPhysicalNumberOfRows(); index++) {
+
+        int numberOfRows = getNumberOfNonEmptyCells(Objects.requireNonNull(worksheet), 2);
+
+        for (int index = 0; index < numberOfRows; index++) {
             if (index > 0) {
                 XSSFRow row = worksheet.getRow(index);
 
                 BookModel book = new BookModel();
                 book.setAuthor(getCellValue(row, 1));
-
-                if (getCellValue(row, 2) == null) {
-                    break;
-                }
                 book.setBookName(getCellValue(row, 2));
-
-//                if (getCellValue(row, 3).equals("0")) {
-//                    book.setYear("-");
-//                }
-
-                book.setYear(convertStringToInt(getCellValue(row, 4)));
+                book.setYear(convertStringToInt(getCellValue(row, 3)));
                 book.setSubject("Автоматика и телемеханика");
+
+                book.setAmount(1);
+
                 allBooks.add(book);
             }
         }
 
-        List<Book> bookList = new ArrayList<>();
+//        System.out.println(allBooks.size());
+//        allBooks = checkDuplicatesInArray(allBooks);
+//        System.out.println(allBooks.size());
+
+        List<Book> books = new ArrayList<>();
 
         if (!allBooks.isEmpty()) {
             allBooks.forEach(x -> {
@@ -85,13 +84,18 @@ public class ExcelDataServiceImpl implements IExcelDataService {
                 book.setBookName(x.getBookName());
                 book.setYear(x.getYear());
                 book.setSubject(x.getSubject());
-                bookList.add(book);
+                book.setAmount(x.getAmount());
+                books.add(book);
             });
 
-//            bookRepository.saveAll(bookList);
         }
 
-        return bookList;
+        return books;
+    }
+
+    @Override
+    public void saveExcelData(List<Book> books) {
+        bookRepository.saveAll(books);
     }
 
     private int convertStringToInt(String str) {
@@ -109,10 +113,63 @@ public class ExcelDataServiceImpl implements IExcelDataService {
         return formatter.formatCellValue(cell);
     }
 
-    @Override
-    public void saveExcelData(List<Book> books) {
-        bookRepository.saveAll(books);
+    private static int getNumberOfNonEmptyCells(XSSFSheet sheet, int columnIndex) {
+        int numberOfNonEmptyCells = 0;
+        for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+            XSSFRow row = sheet.getRow(i);
+            if (row != null) {
+                XSSFCell cell = row.getCell(columnIndex);
+                if (cell != null && cell.getCellType() != CellType.BLANK && !cell.getRawValue().trim().isEmpty()) {
+                    numberOfNonEmptyCells++;
+                }
+            }
+        }
+        return numberOfNonEmptyCells;
     }
+
+//    private static List<BookModel> checkDuplicatesInArray(List<BookModel> bookModels) {
+//        ArrayList<BookModel> newBookList = new ArrayList<>();
+//
+//        for (BookModel book : bookModels) {
+//            if (newBookList.contains(book)) {
+//
+////                BookModel newBook = new BookModel();
+////                newBook.setBookName(book.getBookName());
+////                newBook.setAuthor(book.getAuthor());
+////                newBook.setYear(book.getYear());
+////                newBook.setSubject(book.getSubject());
+////                newBook.setAmount(book.getAmount() + 1);
+////
+////                newBookList.add(newBook);
+////                newBookList.remove(book);
+////                int currentAmount = book.getAmount();
+//                book.setAmount(book.getAmount() + 1);
+//            }
+//            newBookList.add(book);
+//        }
+//
+//        return newBookList;
+//    }
+
+//    private static List<BookModel> checkDuplicatesInArray(List<BookModel> bookModels) {
+//
+//        ArrayList<BookModel> newBookList = new ArrayList<>();
+//
+//        for (int i = 0; i < bookModels.size(); i++) {
+//            BookModel firstBookModel = bookModels.get(i);
+//            for (int j = i + 1; j < bookModels.size(); j++) {
+//                BookModel secondBookModel = bookModels.get(j);
+//                if (firstBookModel.getBookName().equals(secondBookModel.getBookName())) {
+//                    secondBookModel.setAmount(firstBookModel.getAmount() + 1);
+//                    newBookList.add(secondBookModel);
+//                    newBookList.remove(firstBookModel);
+//                }
+//                newBookList.add(secondBookModel);
+//            }
+//        }
+//
+//        return newBookList;
+//    }
 
     private String getPathToFile(MultipartFile fillName) {
 

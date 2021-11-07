@@ -57,18 +57,6 @@
                 <h1>File Upload & Data Save Page</h1>
             </div>
 
-<!--            <form action="/file/upload" method="POST" enctype="multipart/form-data">-->
-<!--                <br/><br/>-->
-<!--                Please select a file to upload :-->
-<!--                <input type="file" name="file" value="Browse File" th:name="file" th:placeholder="File"/> <br/> <br/>-->
-
-<!--                Press here to save the file :-->
-<!--                <input type="submit" value="save"/> <br/> <br/>-->
-
-<!--                <h2 th:text="${message}"></h2>-->
-
-<!--            </form>-->
-
             <form method="POST" enctype="multipart/form-data" action="/files/upload">
                 <table>
                     <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
