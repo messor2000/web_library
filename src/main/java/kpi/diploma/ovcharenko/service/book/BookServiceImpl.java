@@ -10,6 +10,7 @@ import kpi.diploma.ovcharenko.repo.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -20,11 +21,6 @@ public class BookServiceImpl implements IBookService, IPagingService {
 
     @Autowired
     BookRepository bookRepository;
-
-    @Override
-    public List<Book> getAllBook() {
-        return bookRepository.findAll();
-    }
 
     @Override
     public List<Book> getAllBooksByNameAsc() {
@@ -41,6 +37,12 @@ public class BookServiceImpl implements IBookService, IPagingService {
     @Override
     public Book getByName(String name) {
         return bookRepository.getByBookName(name);
+    }
+
+    @Override
+    @Transactional
+    public void deleteBookByName(String name) {
+        bookRepository.deleteByBookName(name);
     }
 
     @Override

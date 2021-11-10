@@ -97,8 +97,7 @@
                                     <div class="bk-wrapper">
                                         <div class="bk-book bk-bookdefault">
                                             <div class="bk-front">
-                                                <div class="bk-cover"
-                                                     style="background-image: url('http://interactivejoe.com/book-viewer/assets/images/bk_1-small.jpg')"></div>
+                                                <div class="bk-cover"></div>
                                             </div>
                                             <div class="bk-back"></div>
                                             <div class="bk-left"></div>
@@ -109,6 +108,25 @@
                                     <h3 class="book-item_title" th:text="${book.bookName}"></h3>
                                     <p class="author" th:text="${book.author}"></p>
                                     <p th:text="${book.year}"></p>
+                                    <a href="#" class="button ">Details</a>
+                                </div>
+
+                                <div class="overlay-details">
+                                    <a href="#" class="close-overlay-btn">Close</a>
+                                    <div class="overlay-image">
+                                        <img src="/img/demoBookCover.jpeg"
+                                             alt="Book Cover">
+                                        <div class="back-color"></div>
+                                    </div>
+                                    <div class="overlay-desc activated">
+                                        <h2 class="overlay_title" th:text="${book.bookName}"></h2>
+                                        <p class="author" th:text="${book.author}"></p>
+                                        <p class="published" th:text="${book.year}"></p>
+                                        <p>
+                                            <a class="btn btn-primary">Update</a>
+                                            <a th:href="@{/delete/{bookName}(bookName=${book.bookName})}" class="btn btn-danger">Delete</a>
+                                        </p>
+                                    </div>
                                 </div>
                             </li>
                         </tr>
@@ -121,7 +139,8 @@
                                    tabindex="-1">Previous</a>
                             </li>
                             <th:block th:each="item : ${books.paging.getItems()}">
-                                <li class="page-item" th:classappend="${item.index == books.paging.pageNumber? 'active' : ''}"
+                                <li class="page-item"
+                                    th:classappend="${item.index == books.paging.pageNumber? 'active' : ''}"
                                     th:if="${item.pageItemType.name() == 'PAGE'}">
                                     <a class="page-link" th:href="@{'/?pageNumber=' + ${item.index}}"
                                        th:text="${item.index}"></a>
@@ -131,7 +150,8 @@
                                 </li>
                             </th:block>
                             <li class="page-item" th:classappend="${!books.paging.isNextEnabled()? 'disabled' : ''}">
-                                <a class="page-link" th:href="@{'/?pageNumber=' + ${books.paging.pageNumber + 1}}">Next</a>
+                                <a class="page-link"
+                                   th:href="@{'/?pageNumber=' + ${books.paging.pageNumber + 1}}">Next</a>
                             </li>
                         </ul>
                     </nav>
