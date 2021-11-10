@@ -89,20 +89,28 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-10 mt-5 mb-5">
-                        <table id="posts" class="table table-bordered table-responsive-sm">
+                        <table id="books" class="table table-bordered table-responsive-sm">
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Title</th>
-                                <th>Body</th>
+                                <th>Book Name</th>
+                                <th>Author</th>
+                                <th>Year</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="post : ${books.page}">
-                                <td th:text="${post.id}">id</td>
-                                <td th:text="${post.bookName}">title</td>
-                                <td th:text="${post.author}">body</td>
-                                <td th:text="${post.year}">body</td>
+                            <tr th:each="book : ${books.page}">
+                                <td th:text="${book.id}">id</td>
+                                <td th:text="${book.bookName}">title</td>
+                                <td th:text="${book.author}">body</td>
+                                <td th:text="${book.year}">body</td>
+<!--                                <td> <a th:href="@{/showFormForUpdate/{id}(id=${employee.id})}" class="btn btn-primary">Update</a>-->
+<!--                                    <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-danger">Delete</a>-->
+<!--                                </td>-->
+                                <td> <a class="btn btn-primary">Update</a>
+                                    <a class="btn btn-danger">Delete</a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
