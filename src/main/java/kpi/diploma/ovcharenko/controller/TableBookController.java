@@ -1,7 +1,6 @@
 package kpi.diploma.ovcharenko.controller;
 
-import kpi.diploma.ovcharenko.service.book.IBookService;
-import kpi.diploma.ovcharenko.service.book.IPagingService;
+import kpi.diploma.ovcharenko.service.book.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/table")
 public class TableBookController {
     @Autowired
-    IBookService bookService;
-    @Autowired
-    IPagingService pagingService;
+    BookService bookService;
 
     @GetMapping(value = "/books/all")
     public String posts(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
                         @RequestParam(value = "size", required = false, defaultValue = "20") int size, Model model) {
-        model.addAttribute("books", pagingService.getPage(pageNumber, size));
+        model.addAttribute("books", bookService.getPage(pageNumber, size));
         return "tableLibrary";
     }
 }

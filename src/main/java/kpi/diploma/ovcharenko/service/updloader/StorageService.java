@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * @author Aleksandr Ovcharenko
  */
-public interface IStorageService {
+public interface StorageService {
 
     void init();
 

@@ -1,7 +1,7 @@
 package kpi.diploma.ovcharenko.upload;
 
 import kpi.diploma.ovcharenko.exception.StorageFileNotFoundException;
-import kpi.diploma.ovcharenko.service.updloader.IStorageService;
+import kpi.diploma.ovcharenko.service.updloader.StorageService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class FileUploadTests {
     private MockMvc mvc;
 
     @MockBean
-    private IStorageService storageService;
+    private StorageService storageService;
 
     @Test
     void shouldListAllFiles() throws Exception {

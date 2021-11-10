@@ -1,6 +1,6 @@
 package kpi.diploma.ovcharenko;
 
-import kpi.diploma.ovcharenko.service.updloader.IStorageService;
+import kpi.diploma.ovcharenko.service.updloader.StorageService;
 import kpi.diploma.ovcharenko.service.updloader.StorageProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +17,7 @@ public class OvcharenkoDiplomaProjectApplication {
     }
 
     @Bean
-    CommandLineRunner init(IStorageService storageService) {
+    CommandLineRunner init(StorageService storageService) {
         return args -> {
             storageService.deleteAll();
             storageService.init();

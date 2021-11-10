@@ -17,7 +17,7 @@ import java.util.List;
  * @author Aleksandr Ovcharenko
  */
 @Service
-public class BookServiceImpl implements IBookService, IPagingService {
+public class LibraryBookService implements BookService {
 
     @Autowired
     BookRepository bookRepository;
@@ -51,6 +51,9 @@ public class BookServiceImpl implements IBookService, IPagingService {
 
         PageRequest request = PageRequest.of(pageNumber - 1, size);
         Page<Book> postPage = bookRepository.findAll(request);
+
+        System.out.println(postPage.stream().toArray().length);
         return new Paged<>(postPage, Paging.of(postPage.getTotalPages(), pageNumber, size));
     }
+
 }

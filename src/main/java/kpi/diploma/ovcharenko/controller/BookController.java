@@ -1,15 +1,12 @@
 package kpi.diploma.ovcharenko.controller;
 
-import kpi.diploma.ovcharenko.service.book.IBookService;
-import kpi.diploma.ovcharenko.service.book.IPagingService;
+import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -19,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class BookController {
     @Autowired
-    IBookService bookService;
-    @Autowired
-    IPagingService pagingService;
+    private BookService bookService;
 
     @GetMapping(value = "/")
     public String getAllBook(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
                              @RequestParam(value = "size", required = false, defaultValue = "20") int size, Model model) {
-        model.addAttribute("books", pagingService.getPage(pageNumber, size));
+
+        model.addAttribute("books", bookService.getPage(pageNumber, size));
         return "library";
     }
 

@@ -2,8 +2,8 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.Book;
 import kpi.diploma.ovcharenko.exception.StorageFileNotFoundException;
-import kpi.diploma.ovcharenko.service.data.IExcelDataService;
-import kpi.diploma.ovcharenko.service.updloader.IStorageService;
+import kpi.diploma.ovcharenko.service.data.ExcelDataService;
+import kpi.diploma.ovcharenko.service.updloader.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
 public class FileUploadController {
 
     @Autowired
-    IStorageService storageService;
+    StorageService storageService;
 
     @Autowired
-    IExcelDataService excelService;
+    ExcelDataService excelService;
 
     @Autowired
-    public FileUploadController(IStorageService storageService) {
+    public FileUploadController(StorageService storageService) {
         this.storageService = storageService;
     }
 

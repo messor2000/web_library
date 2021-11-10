@@ -3,7 +3,7 @@ package kpi.diploma.ovcharenko.service.data;
 import kpi.diploma.ovcharenko.entity.Book;
 import kpi.diploma.ovcharenko.entity.BookModel;
 import kpi.diploma.ovcharenko.repo.BookRepository;
-import kpi.diploma.ovcharenko.service.updloader.IStorageService;
+import kpi.diploma.ovcharenko.service.updloader.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -27,19 +27,19 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
-public class ExcelDataServiceImpl implements IExcelDataService {
+public class LibraryExcelDataService implements ExcelDataService {
     @Autowired
     BookRepository bookRepository;
 
     @Autowired
-    IExcelDataService excelService;
+    ExcelDataService excelService;
 
     @Autowired
-    IStorageService storageService;
+    StorageService storageService;
 
     @Override
     public List<Book> getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String subject) {
-        List<BookModel> allBooks = new ArrayList<>();
+        List<BookModel> bookModels = new ArrayList<>();
 
         XSSFWorkbook workbook = null;
         try {
@@ -62,12 +62,14 @@ public class ExcelDataServiceImpl implements IExcelDataService {
                 BookModel book = new BookModel();
                 book.setAuthor(getCellValue(row, 1));
                 book.setBookName(getCellValue(row, 2));
+
                 book.setYear(convertStringToInt(getCellValue(row, 3)));
+
                 book.setSubject(subject);
 
                 book.setAmount(1);
 
-                allBooks.add(book);
+                bookModels.add(book);
             }
         }
 
@@ -77,8 +79,8 @@ public class ExcelDataServiceImpl implements IExcelDataService {
 
         List<Book> books = new ArrayList<>();
 
-        if (!allBooks.isEmpty()) {
-            allBooks.forEach(x -> {
+        if (!bookModels.isEmpty()) {
+            bookModels.forEach(x -> {
                 Book book = new Book();
                 book.setAuthor(x.getAuthor());
                 book.setBookName(x.getBookName());

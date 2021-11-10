@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Aleksandr Ovcharenko
  */
-public interface IExcelDataService {
+public interface ExcelDataService {
         List<Book> getExcelDataAsList(MultipartFile excelFilePath, int pageNum, String subject);
 
         void saveExcelData(List<Book> books);

@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  */
 
 @Service
-public class StorageServiceImpl implements IStorageService {
+public class ExcelStorageService implements StorageService {
 
     private Path rootLocation;
 
