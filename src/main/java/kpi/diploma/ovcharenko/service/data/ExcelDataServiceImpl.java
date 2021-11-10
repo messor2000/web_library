@@ -38,7 +38,7 @@ public class ExcelDataServiceImpl implements IExcelDataService {
     IStorageService storageService;
 
     @Override
-    public List<Book> getExcelDataAsList(MultipartFile excelFilePath) {
+    public List<Book> getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String subject) {
         List<BookModel> allBooks = new ArrayList<>();
 
         XSSFWorkbook workbook = null;
@@ -50,7 +50,7 @@ public class ExcelDataServiceImpl implements IExcelDataService {
 
         XSSFSheet worksheet = null;
         if (workbook != null) {
-            worksheet = workbook.getSheetAt(0);
+            worksheet = workbook.getSheetAt(pageIndex - 1);
         }
 
         int numberOfRows = getNumberOfNonEmptyCells(Objects.requireNonNull(worksheet), 2);
@@ -63,7 +63,7 @@ public class ExcelDataServiceImpl implements IExcelDataService {
                 book.setAuthor(getCellValue(row, 1));
                 book.setBookName(getCellValue(row, 2));
                 book.setYear(convertStringToInt(getCellValue(row, 3)));
-                book.setSubject("Автоматика и телемеханика");
+                book.setSubject(subject);
 
                 book.setAmount(1);
 

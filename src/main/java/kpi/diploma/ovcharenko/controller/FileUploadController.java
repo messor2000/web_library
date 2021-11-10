@@ -22,8 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,10 +64,12 @@ public class FileUploadController {
     }
 
     @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("pageNum") String pageNum,
+                                   @RequestParam("subject") String subject ,RedirectAttributes redirectAttributes) {
+
         storageService.store(file);
 
-        List<Book> excelDataAsList = excelService.getExcelDataAsList(file);
+        List<Book> excelDataAsList = excelService.getExcelDataAsList(file, Integer.parseInt(pageNum), subject);
 
         excelService.saveExcelData(excelDataAsList);
 

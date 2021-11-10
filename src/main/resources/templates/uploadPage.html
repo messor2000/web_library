@@ -59,16 +59,43 @@
 
             <form method="POST" enctype="multipart/form-data" action="/files/upload">
                 <table>
-                    <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-                    <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+                    <tr>
+                        <td>File to upload:</td>
+                        <td><input type="file" name="file"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>Page for saved:</td>
+                        <td><input type="text" name="pageNum"></td>
+                    </tr>
+
+                    <tr>
+                        <td>Select subject for book:</td>
+                        <td>
+                            <label>
+                                <select class="sort-options"  name="subject">
+                                    <option value="-">-</option>
+                                    <option value="Теория колебания и динамика">Теория колебания и динамика</option>
+                                    <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
+                                    <option value="САУ">САУ</option>
+                                    <option value="Методички">Методички</option>
+                                </select>
+                            </label>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Upload"/></td>
+                    </tr>
                     <div th:if="${message}">
-                        <h2 th:text="${message}"/>
+                        <h2 th:text="${message}"></h2>
                     </div>
                 </table>
 
                 <ul>
                     <li th:each="file : ${files}">
-                        <a th:href="${file}" th:text="${file}" />
+                        <a th:href="${file}" th:text="${file}"></a>
                     </li>
                 </ul>
             </form>

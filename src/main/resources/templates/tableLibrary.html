@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Pbf Library</title>
+    <link rel="shortcut icon" href="/static/img/logo.png"/>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
+
+</head>
+
+<body>
+<div id="main-container" class="main-container nav-effect-1">
+
+    <nav class="nav-menu nav-effect-1" id="menu-1">
+        <h2 class="">The Library</h2>
+        <ul>
+            <li><a href="/">Library</a></li>
+            <li><a href="/table/books/all">Table library</a></li>
+            <li><a href="/files/upload">Upload file</a></li>
+        </ul>
+    </nav>
+
+    <div class="main clearfix">
+
+        <!-- Header Content -->
+        <header id="header" class="page-header">
+            <div class="page-header-container row">
+
+                <!-- Logo -->
+                <div class="main-logo">
+                    <a href="#" class="logo">The PSON Library</a>
+                </div>
+
+                <div class="menu-search">
+                    <!-- Main Navigation -->
+                    <div class="main-navigation">
+                        <a href="#">Menu</a>
+                    </div>
+
+                    <!-- Search -->
+
+                    <div class="catalog-search">
+                        <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
+                               maxlength="128" id="input-search" name="bookName"/>
+                        <label class="input_label" for="input-search">
+                            <span class="input_label-content">Search Library</span>
+                            <span class="input_label-search"></span>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+
+        <!-- Main Section -->
+        <div class="page-container">
+
+            <div class="page-title category-title">
+                <h1>Books table</h1>
+            </div>
+
+            <div class="toolbar row">
+                <div class="filter-options small-12 medium-9 columns">
+                    <a th:href="@{/}" class="filter-item">All Categories</a>
+                    <a th:href="@{/book/{category}(category = ${'Теория колебания и динамика'})}"
+                       class="filter-item">Теория колебания и динамика</a>
+                    <a th:href="@{/book/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
+                        и телемеханика</a>
+                    <a th:href="@{/book/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
+                    <a th:href="@{/book/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
+                </div>
+
+                <div class="small-12 medium-3 columns">
+                    <label>
+                        <select class="sort-options">
+                            <option value="" disabled selected>Sort by</option>
+                            <option value="">Featured</option>
+                            <option value="title">Alphabetical</option>
+                            <option value="date-created">Published</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 mt-5 mb-5">
+                        <table id="posts" class="table table-bordered table-responsive-sm">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Body</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="post : ${books.page}">
+                                <td th:text="${post.id}">id</td>
+                                <td th:text="${post.bookName}">title</td>
+                                <td th:text="${post.author}">body</td>
+                                <td th:text="${post.year}">body</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <nav aria-label="Page navigation" class="paging">
+                            <ul class="pagination" th:if="${books.page.totalPages > 1}">
+                                <li class="page-item" th:classappend="${!books.paging.isPrevEnabled()? 'disabled' : ''}">
+                                    <a class="page-link" th:href="@{'/table/books/all?pageNumber=' + ${books.paging.pageNumber - 1}}"
+                                       tabindex="-1">Previous</a>
+                                </li>
+                                <th:block th:each="item : ${books.paging.getItems()}">
+                                    <li class="page-item" th:classappend="${item.index == books.paging.pageNumber? 'active' : ''}"
+                                        th:if="${item.pageItemType.name() == 'PAGE'}">
+                                        <a class="page-link" th:href="@{'/table/books/all?pageNumber=' + ${item.index}}"
+                                           th:text="${item.index}"></a>
+                                    </li>
+                                    <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                                        <a class="page-link" href="#">...</a>
+                                    </li>
+                                </th:block>
+                                <li class="page-item" th:classappend="${!books.paging.isNextEnabled()? 'disabled' : ''}">
+                                    <a class="page-link" th:href="@{'/table/books/all?pageNumber=' + ${books.paging.pageNumber + 1}}">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Content -->
+        <footer id="footer" class="page-footer">
+            <div class="row footer-wrapper">
+                <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /main -->
+
+    <div class="main-overlay">
+        <div class="overlay-full"></div>
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/4.0.0/shuffle.min.js"></script>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+<script src="/js/main.js"></script>
+</body>
+</html>
