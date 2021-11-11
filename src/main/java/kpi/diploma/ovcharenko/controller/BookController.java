@@ -1,7 +1,6 @@
 package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.Book;
-import kpi.diploma.ovcharenko.entity.BookModel;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -32,13 +32,6 @@ public class BookController {
     @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
-    }
-
-    @GetMapping(value = "/delete/{bookName}")
-    public String deleteBookByName(@PathVariable("bookName") String bookName) {
-        bookService.deleteBookByName(bookName);
-
-        return "redirect:/";
     }
 
     @GetMapping(value = "/")
@@ -121,6 +114,22 @@ public class BookController {
         return "library";
     }
 
+    @GetMapping(value = "/find")
+    public String findBookByName(@RequestParam(value = "bookName", required = false) String name, Model model) {
+        Page<Book> book = bookService.findBookByName(name);
+
+        model.addAttribute("books", book);
+
+        return "library";
+    }
+
+    @GetMapping(value = "/delete/{id}")
+    public String deleteBookByName(@PathVariable("id") Long id) {
+        bookService.deleteBookById(id);
+
+        return "redirect:/";
+    }
+
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Book book = bookService.findBookById(id);
@@ -130,7 +139,10 @@ public class BookController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") long id, @Valid Book book, BindingResult result) {
+    public String updateUser(@PathVariable("id") long id, @Valid Book book, BindingResult result, HttpServletRequest request) {
+
+        String query = request.getRequestURI();
+        System.out.println(query);
 
         if (result.hasErrors()) {
             book.setId(id);
@@ -141,12 +153,4 @@ public class BookController {
 
         return "redirect:/";
     }
-
-//    @PostMapping(value = "/updateBook")
-//    public String updateBook(@ModelAttribute BookModel book) {
-//        bookService.updateBook(book);
-//
-//        return "redirect:/";
-//    }
-
 }

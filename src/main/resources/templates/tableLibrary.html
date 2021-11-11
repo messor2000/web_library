@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Pbf Library</title>
+    <title>Pson Library</title>
     <link rel="shortcut icon" href="/static/img/logo.png"/>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
@@ -31,7 +31,7 @@
 
                 <!-- Logo -->
                 <div class="main-logo">
-                    <a href="#" class="logo">The PSON Library</a>
+                    <a href="#" class="logo">The Pson Library</a>
                 </div>
 
                 <div class="menu-search">
@@ -41,16 +41,16 @@
                     </div>
 
                     <!-- Search -->
-
-                    <div class="catalog-search">
-                        <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
-                               maxlength="128" id="input-search" name="bookName"/>
-                        <label class="input_label" for="input-search">
-                            <span class="input_label-content">Search Library</span>
-                            <span class="input_label-search"></span>
-                        </label>
-                    </div>
-
+                    <form action="#" th:action="@{/table/find}" th:object="${books}">
+                        <div class="catalog-search">
+                            <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
+                                   maxlength="128" id="input-search" name="bookName"/>
+                            <label class="input_label" for="books">
+                                <span class="input_label-content">Search Library</span>
+                                <span class="input_label-search"></span>
+                            </label>
+                        </div>
+                    </form>
                 </div>
             </div>
         </header>
@@ -66,14 +66,13 @@
             <div class="toolbar row">
                 <div class="filter-options small-12 medium-9 columns">
                     <a th:href="@{/}" class="filter-item">All Categories</a>
-                    <a th:href="@{/book/{category}(category = ${'Теория колебания и динамика'})}"
+                    <a th:href="@{/{category}(category = ${'Теория колебания и динамика'})}"
                        class="filter-item">Теория колебания и динамика</a>
-                    <a th:href="@{/book/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
+                    <a th:href="@{/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
                         и телемеханика</a>
-                    <a th:href="@{/book/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
-                    <a th:href="@{/book/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
+                    <a th:href="@{/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
+                    <a th:href="@{/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
                 </div>
-
                 <div class="small-12 medium-3 columns">
                     <label>
                         <select class="sort-options">
@@ -105,9 +104,11 @@
                                 <td th:text="${book.bookName}">title</td>
                                 <td th:text="${book.author}">body</td>
                                 <td th:text="${book.year}">body</td>
-                                <td><a class="btn btn-primary">Update</a>
-                                    <a th:action="@{/delete/{bookName}(bookName=${book.bookName})}"
-                                       class="btn btn-danger">Delete</a>
+                                <td>
+                                    <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
+                                       data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
+                                    <a th:href="@{/delete/{id}(id=${book.id})}"
+                                       class="btn btn-danger button btn btn-primary">Delete</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -117,23 +118,22 @@
                             <ul th:if="${books.totalPages > 0}" class="pagination">
                                 <li class="page-item">
                                     <a class="page-link" href="#" aria-label="First"
-                                       th:href="@{/table/books/all(size=${books.size}, page=${1})}">
+                                       th:href="@{/(size=${books.size}, page=${1})}">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
                                 <th:block th:each="pageNumber : ${pageNumbers}">
-                                    <li class="page-item"><a th:href="@{/table/books/all(size=${books.size}, page=${pageNumber})}"
+                                    <li class="page-item"><a th:href="@{/(size=${books.size}, page=${pageNumber})}"
                                                              th:text="${pageNumber}" class="page-link" href="#"></a></li>
                                 </th:block>
                                 <li class="page-item">
                                     <a class="page-link" href="#" aria-label="Last"
-                                       th:href="@{/table/books/all(size=${books.size}, page=${books.totalPages})}">
+                                       th:href="@{/(size=${books.size}, page=${books.totalPages})}">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>
                             </ul>
                         </nav>
-
                     </div>
                 </div>
             </div>

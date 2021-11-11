@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Pbf Library</title>
+    <title>Pson Library</title>
     <link rel="shortcut icon" href="/static/img/logo.png"/>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
@@ -31,7 +31,7 @@
 
                 <!-- Logo -->
                 <div class="main-logo">
-                    <a href="#" class="logo">The PSON Library</a>
+                    <a href="#" class="logo">The Pson Library</a>
                 </div>
 
                 <div class="menu-search">
@@ -42,15 +42,26 @@
 
                     <!-- Search -->
 
-                    <div class="catalog-search">
-                        <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
-                               maxlength="128" id="input-search" name="bookName"/>
-                        <label class="input_label" for="input-search">
-                            <span class="input_label-content">Search Library</span>
-                            <span class="input_label-search"></span>
-                        </label>
-                    </div>
-
+<!--                    <div class="catalog-search">-->
+<!--                        <form th:action="@{/find}" method="get">-->
+<!--                            <input class="shuffle-search input_field " type="search" autocomplete="off" value=""-->
+<!--                                   maxlength="128" id="input-search" name="bookName"/>-->
+<!--                            <label class="input_label" for="input-search">-->
+<!--                                <span class="input_label-content">Search Library</span>-->
+<!--                                <span class="input_label-search"></span>-->
+<!--                            </label>-->
+<!--                        </form>-->
+<!--                    </div>-->
+                    <form action="#" th:action="@{/find}" th:object="${books}">
+                        <div class="catalog-search">
+                            <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
+                                   maxlength="128" id="input-search" name="bookName"/>
+                            <label class="input_label" for="book_list">
+                                <span class="input_label-content">Search Library</span>
+                                <span class="input_label-search"></span>
+                            </label>
+                        </div>
+                    </form>
                 </div>
             </div>
         </header>
@@ -126,7 +137,7 @@
                                         <p>
                                             <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
-                                            <a th:href="@{/delete/{bookName}(bookName=${book.bookName})}"
+                                            <a th:href="@{/delete/{id}(id=${book.id})}"
                                                class="btn btn-danger button btn btn-primary">Delete</a>
                                         </p>
                                     </div>

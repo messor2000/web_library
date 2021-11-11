@@ -24,11 +24,15 @@ public class LibraryBookService implements BookService {
 
     @Override
     @Transactional
-    public void deleteBookByName(String name) {
-        bookRepository.deleteByBookName(name);
+    public void deleteBookById(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+
+        bookRepository.delete(book);
     }
 
     @Override
+    @Transactional
     public void updateBook(Book book) {
         bookRepository.save(book);
     }
@@ -37,6 +41,13 @@ public class LibraryBookService implements BookService {
     public Book findBookById(Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+    }
+
+    @Override
+    public Page<Book> findBookByName(String name) {
+        Pageable findOneByName = PageRequest.of(0, 1);
+
+        return bookRepository.findByBookName(name, findOneByName);
     }
 
     @Override

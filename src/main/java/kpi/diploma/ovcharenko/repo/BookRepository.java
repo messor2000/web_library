@@ -12,7 +12,5 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
 
     Page<Book> findBySubjectContains(Pageable pageable, String subject);
 
-    void deleteByBookName(String bookName);
-
-    Book findByBookName(String bookName);
+    Page<Book> findByBookName(String bookName, Pageable pageable);
 }
