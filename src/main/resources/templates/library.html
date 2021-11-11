@@ -68,12 +68,12 @@
                 <div class="toolbar row">
                     <div class="filter-options small-12 medium-9 columns">
                         <a th:href="@{/}" class="filter-item">All Categories</a>
-                        <a th:href="@{/book/{category}(category = ${'Теория колебания и динамика'})}"
+                        <a th:href="@{/{category}(category = ${'Теория колебания и динамика'})}"
                            class="filter-item">Теория колебания и динамика</a>
-                        <a th:href="@{/book/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
+                        <a th:href="@{/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
                             и телемеханика</a>
-                        <a th:href="@{/book/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
-                        <a th:href="@{/book/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
+                        <a th:href="@{/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
+                        <a th:href="@{/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
                     </div>
 
                     <div class="small-12 medium-3 columns">
@@ -81,8 +81,8 @@
                             <select class="sort-options">
                                 <option value="" disabled selected>Sort by</option>
                                 <option value="">Featured</option>
-                                <option value="title">Alphabetical</option>
-                                <option value="date-created">Published</option>
+                                <option th:href="@{/alphabetical}" value="title">Alphabetical</option>
+                                <option th:href="@{/published}" value="date-created">Published</option>
                             </select>
                         </label>
                     </div>
@@ -91,13 +91,14 @@
                 <div class="grid-shuffle table table-bordered table-responsive-sm">
                     <ul id="grid" class="row">
 
-                        <tr th:each="book : ${books.page}">
+                        <tr th:each="book : ${books.content}">
                             <li class="book-item small-12 medium-6 columns">
                                 <div class="bk-img">
                                     <div class="bk-wrapper">
                                         <div class="bk-book bk-bookdefault">
                                             <div class="bk-front">
-                                                <div class="bk-cover"></div>
+                                                <div class="bk-cover"
+                                                     style="background-image: url('/img/bookCover.gif')"></div>
                                             </div>
                                             <div class="bk-back"></div>
                                             <div class="bk-left"></div>
@@ -108,13 +109,13 @@
                                     <h3 class="book-item_title" th:text="${book.bookName}"></h3>
                                     <p class="author" th:text="${book.author}"></p>
                                     <p th:text="${book.year}"></p>
-                                    <a href="#" class="button ">Details</a>
+                                    <a href="#" class="button">Details</a>
                                 </div>
 
                                 <div class="overlay-details">
                                     <a href="#" class="close-overlay-btn">Close</a>
                                     <div class="overlay-image">
-                                        <img src="/img/demoBookCover.jpeg"
+                                        <img src="/img/detailsBookCover.jpeg"
                                              alt="Book Cover">
                                         <div class="back-color"></div>
                                     </div>
@@ -123,42 +124,69 @@
                                         <p class="author" th:text="${book.author}"></p>
                                         <p class="published" th:text="${book.year}"></p>
                                         <p>
-                                            <a class="btn btn-primary">Update</a>
-                                            <a th:href="@{/delete/{bookName}(bookName=${book.bookName})}" class="btn btn-danger">Delete</a>
+                                            <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
+                                               data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
+                                            <a th:href="@{/delete/{bookName}(bookName=${book.bookName})}"
+                                               class="btn btn-danger button btn btn-primary">Delete</a>
                                         </p>
                                     </div>
                                 </div>
+                                <div class="modal fade" id="exampleModal" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+<!--                                            <form action="#" th:action="@{/update/{id}(id=${book.id})}"-->
+<!--                                                  th:object="${book}" method="post">-->
+<!--                                                <label for="bookName">bookName</label>-->
+<!--                                                <input type="text" th:field="${book.bookName}" id="bookName" placeholder="bookName">-->
+<!--                                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{bookName}"></span>-->
+
+<!--                                                <label for="author">author</label>-->
+<!--                                                <input type="text" th:field="${book.author}" id="author" placeholder="author">-->
+<!--                                                <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>-->
+
+<!--                                                <label for="year">year</label>-->
+<!--                                                <input type="text" th:field="${book.year}" id="year" placeholder="year">-->
+<!--                                                <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>-->
+
+<!--&lt;!&ndash;                                                <input type="submit" value="Update Book">&ndash;&gt;-->
+<!--                                                <div class="modal-footer">-->
+<!--                                                    <button type="button" class="btn btn-primary">Save changes</button>-->
+<!--                                                </div>-->
+<!--                                            </form>-->
+                                        </div>
+                                    </div>
+                                </div>
+
                             </li>
                         </tr>
                     </ul>
 
-                    <nav aria-label="Page navigation" class="paging">
-                        <ul class="pagination" th:if="${books.page.totalPages > 1}">
-                            <li class="page-item" th:classappend="${!books.paging.isPrevEnabled()? 'disabled' : ''}">
-                                <a class="page-link" th:href="@{'/?pageNumber=' + ${books.paging.pageNumber - 1}}"
-                                   tabindex="-1">Previous</a>
+                    <nav aria-label="Page navigation example">
+                        <ul th:if="${books.totalPages > 0}" class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="First"
+                                   th:href="@{/(size=${books.size}, page=${1})}">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
                             </li>
-                            <th:block th:each="item : ${books.paging.getItems()}">
-                                <li class="page-item"
-                                    th:classappend="${item.index == books.paging.pageNumber? 'active' : ''}"
-                                    th:if="${item.pageItemType.name() == 'PAGE'}">
-                                    <a class="page-link" th:href="@{'/?pageNumber=' + ${item.index}}"
-                                       th:text="${item.index}"></a>
-                                </li>
-                                <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
-                                    <a class="page-link" href="#">...</a>
-                                </li>
+                            <th:block th:each="pageNumber : ${pageNumbers}">
+                                <li class="page-item"><a th:href="@{/(size=${books.size}, page=${pageNumber})}"
+                                                         th:text="${pageNumber}" class="page-link" href="#"></a></li>
                             </th:block>
-                            <li class="page-item" th:classappend="${!books.paging.isNextEnabled()? 'disabled' : ''}">
-                                <a class="page-link"
-                                   th:href="@{'/?pageNumber=' + ${books.paging.pageNumber + 1}}">Next</a>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Last"
+                                   th:href="@{/(size=${books.size}, page=${books.totalPages})}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
                             </li>
                         </ul>
                     </nav>
+
                 </div>
 
             </section>
-
         </div>
 
         <!-- Footer Content -->

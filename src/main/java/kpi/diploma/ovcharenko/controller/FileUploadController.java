@@ -2,6 +2,7 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.Book;
 import kpi.diploma.ovcharenko.exception.StorageFileNotFoundException;
+import kpi.diploma.ovcharenko.service.book.BookService;
 import kpi.diploma.ovcharenko.service.data.ExcelDataService;
 import kpi.diploma.ovcharenko.service.updloader.StorageService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,23 +26,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author Aleksandr Ovcharenko
- */
 @Slf4j
 @Controller
 @RequestMapping(value = "/files")
 public class FileUploadController {
 
-    @Autowired
-    StorageService storageService;
+    private final StorageService storageService;
+    private final ExcelDataService excelDataService;
 
     @Autowired
-    ExcelDataService excelService;
-
-    @Autowired
-    public FileUploadController(StorageService storageService) {
+    public FileUploadController(StorageService storageService, ExcelDataService excelDataService) {
         this.storageService = storageService;
+        this.excelDataService = excelDataService;
     }
 
     @GetMapping("/upload")
@@ -69,9 +65,9 @@ public class FileUploadController {
 
         storageService.store(file);
 
-        List<Book> excelDataAsList = excelService.getExcelDataAsList(file, Integer.parseInt(pageNum), subject);
+        List<Book> excelDataAsList = excelDataService.getExcelDataAsList(file, Integer.parseInt(pageNum), subject);
 
-        excelService.saveExcelData(excelDataAsList);
+        excelDataService.saveExcelData(excelDataAsList);
 
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");

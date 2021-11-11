@@ -14,9 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-/**
- * @author Aleksandr Ovcharenko
- */
 @Data
 @Entity
 @NoArgsConstructor

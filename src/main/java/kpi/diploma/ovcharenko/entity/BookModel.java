@@ -2,16 +2,11 @@ package kpi.diploma.ovcharenko.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * @author Aleksandr Ovcharenko
- */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -28,7 +23,6 @@ public class BookModel implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         BookModel bookModel = (BookModel) o;
         return year == bookModel.year &&
-//                amount == bookModel.amount &&
                 Objects.equals(bookName, bookModel.bookName) &&
                 Objects.equals(author, bookModel.author) &&
                 Objects.equals(subject, bookModel.subject);

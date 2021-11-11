@@ -1,42 +1,25 @@
 package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.Book;
-import kpi.diploma.ovcharenko.util.Paged;
-import kpi.diploma.ovcharenko.util.Paging;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import kpi.diploma.ovcharenko.entity.BookModel;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
-/**
- * @author Aleksandr Ovcharenko
- */
 @Service
 public class LibraryBookService implements BookService {
 
+    private final BookRepository bookRepository;
+
     @Autowired
-    BookRepository bookRepository;
-
-    @Override
-    public List<Book> getAllBooksByNameAsc() {
-        Sort.Order order = new Sort.Order(Sort.Direction.ASC, "bookName");
-
-        return bookRepository.findAll(Sort.by(order));
-    }
-
-    @Override
-    public List<Book> getAllBookByCategory(String subject) {
-        return bookRepository.findAllBySubject(subject);
-    }
-
-    @Override
-    public Book getByName(String name) {
-        return bookRepository.getByBookName(name);
+    public LibraryBookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     @Override
@@ -46,14 +29,39 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public Paged<Book> getPage(int pageNumber, int size) {
-//        PageRequest request = PageRequest.of(pageNumber - 1, size, new Sort(Sort.Direction.ASC, "id"));
-
-        PageRequest request = PageRequest.of(pageNumber - 1, size);
-        Page<Book> postPage = bookRepository.findAll(request);
-
-        System.out.println(postPage.stream().toArray().length);
-        return new Paged<>(postPage, Paging.of(postPage.getTotalPages(), pageNumber, size));
+    public void updateBook(Book book) {
+        bookRepository.save(book);
     }
 
+    @Override
+    public Book findBookById(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+    }
+
+    @Override
+    public Page<Book> getAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Book> getSortingBooksByYear(Pageable pageable) {
+        Pageable sortedByPriceDesc = PageRequest.of(1, 20, Sort.by("year").descending());
+
+        return bookRepository.findAll(sortedByPriceDesc);
+    }
+
+    @Override
+    public Page<Book> getSortingBooksAlphabetical(Pageable pageable) {
+        Pageable sortedByPriceDesc = PageRequest.of(1, 20, Sort.by("bookName").ascending());
+
+        return bookRepository.findAll(sortedByPriceDesc);
+    }
+
+    @Override
+    public Page<Book> getBookByCategory(Pageable pageable, String subject) {
+        return bookRepository.findBySubjectContains(pageable, subject);
+    }
 }
+
+

@@ -22,20 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * @author Aleksandr Ovcharenko
- */
 @Slf4j
 @Service
 public class LibraryExcelDataService implements ExcelDataService {
-    @Autowired
-    BookRepository bookRepository;
+
+    private final BookRepository bookRepository;
 
     @Autowired
-    ExcelDataService excelService;
-
-    @Autowired
-    StorageService storageService;
+    public LibraryExcelDataService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     @Override
     public List<Book> getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String subject) {
@@ -172,12 +168,5 @@ public class LibraryExcelDataService implements ExcelDataService {
 //
 //        return newBookList;
 //    }
-
-    private String getPathToFile(MultipartFile fillName) {
-
-        String rootPath = "/Applications/ProgrammingFolder/JavaProgramming/WebLibraryPson/upload-dir/";
-
-        return storageService.load(rootPath + fillName.getOriginalFilename()).toString();
-    }
 }
 

@@ -1,8 +1,5 @@
 package kpi.diploma.ovcharenko.exception;
 
-/**
- * @author Aleksandr Ovcharenko
- */
 public class StorageFileNotFoundException extends StorageException {
 
     public StorageFileNotFoundException(String message) {

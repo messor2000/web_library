@@ -2,9 +2,6 @@ package kpi.diploma.ovcharenko.service.updloader;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * @author Aleksandr Ovcharenko
- */
 @ConfigurationProperties("storage")
 public class StorageProperties {
 

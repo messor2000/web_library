@@ -1,21 +1,22 @@
 package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.Book;
-import kpi.diploma.ovcharenko.util.Paged;
+import kpi.diploma.ovcharenko.entity.BookModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
-/**
- * @author Aleksandr Ovcharenko
- */
 public interface BookService {
-    List<Book> getAllBooksByNameAsc();
-
-    List<Book> getAllBookByCategory(String subject);
-
-    Book getByName(String name);
-
     void deleteBookByName(String name);
 
-    Paged<Book> getPage(int pageNumber, int size);
+    void updateBook(Book book);
+
+    Book findBookById(Long id);
+
+    Page<Book> getAllBooks(Pageable pageable);
+
+    Page<Book> getSortingBooksByYear(Pageable pageable);
+
+    Page<Book> getSortingBooksAlphabetical(Pageable pageable);
+
+    Page<Book> getBookByCategory(Pageable pageable, String subject);
 }
