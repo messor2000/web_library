@@ -44,6 +44,12 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
+    @Transactional
+    public void addNewBook(Book book) {
+        bookRepository.save(book);
+    }
+
+    @Override
     public Page<Book> findBookByName(String name) {
         Pageable findOneByName = PageRequest.of(0, 1);
 

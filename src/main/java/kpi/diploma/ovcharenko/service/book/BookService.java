@@ -11,6 +11,8 @@ public interface BookService {
 
     Book findBookById(Long id);
 
+    void addNewBook(Book book);
+
     Page<Book> findBookByName(String name);
 
     Page<Book> getAllBooks(Pageable pageable);

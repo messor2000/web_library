@@ -20,6 +20,7 @@
             <li><a href="/">Library</a></li>
             <li><a href="/table/books/all">Table library</a></li>
             <li><a href="/files/upload">Upload file</a></li>
+            <li><a href="/add">Add new book</a></li>
         </ul>
     </nav>
 
@@ -85,6 +86,15 @@
                             и телемеханика</a>
                         <a th:href="@{/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
                         <a th:href="@{/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
+
+
+                        <!--                        <a th:href="@{/(size=${books.size}, page=${currentPage}, category=${'САУ'})}" class="filter-item">САУ</a>-->
+
+<!--                        <a th:href="@{/(size=${books.size}, page=${currentPage})}" class="filter-item">Методички</a>-->
+
+<!--                        <a th:href="@{'/page/' + ${currentPage} + '?sort-field=firstName&sort-dir=' + ${reverseSortDir}}">First name</a>-->
+
+<!--                        {category}(category = ${'САУ'})-->
                     </div>
 
                     <div class="small-12 medium-3 columns">
@@ -132,6 +142,7 @@
                                     </div>
                                     <div class="overlay-desc activated">
                                         <h2 class="overlay_title" th:text="${book.bookName}"></h2>
+                                        <p class="author" th:text="${book.subject}"></p>
                                         <p class="author" th:text="${book.author}"></p>
                                         <p class="published" th:text="${book.year}"></p>
                                         <p>
@@ -177,7 +188,7 @@
                     <nav aria-label="Page navigation example">
                         <ul th:if="${books.totalPages > 0}" class="pagination">
                             <li class="page-item">
-                                <a class="page-link" href="#" aria-label="First"
+                                <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
                                    th:href="@{/(size=${books.size}, page=${1})}">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
@@ -187,11 +198,12 @@
                                                          th:text="${pageNumber}" class="page-link" href="#"></a></li>
                             </th:block>
                             <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Last"
+                                <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"
                                    th:href="@{/(size=${books.size}, page=${books.totalPages})}">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
+
                         </ul>
                     </nav>
 

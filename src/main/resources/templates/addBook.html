@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Edit book</title>
+    <title>Add new book</title>
     <link rel="shortcut icon" href="/static/img/logo.png"/>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
@@ -15,7 +16,7 @@
 <div id="main-container" class="main-container nav-effect-1">
 
     <nav class="nav-menu nav-effect-1" id="menu-1">
-        <h2 class="">Edit book</h2>
+        <h2 class="">Add new book</h2>
         <ul>
             <li><a href="/">Library</a></li>
             <li><a href="/table/books/all">Table library</a></li>
@@ -32,7 +33,7 @@
 
                 <!-- Logo -->
                 <div class="main-logo">
-                    <a href="#" class="logo">Edit book</a>
+                    <a href="#" class="logo">Add new book</a>
                 </div>
 
                 <div class="menu-search">
@@ -61,38 +62,40 @@
         <div class="page-container">
 
             <div class="page-title category-title">
-                <h1>Edit book </h1>
+                <h1>Add new book</h1>
             </div>
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form action="#" th:action="@{/update/{id}(id=${book.id})}"
-                              th:object="${book}" method="post">
-                            <label for="bookName">Book Name</label>
-                            <input type="text" th:field="${book.bookName}" id="bookName" placeholder="Book Name">
-                            <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
-
-                            <label for="author">Author</label>
-                            <input type="text" th:field="${book.author}" id="author" placeholder="Author">
-                            <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
-
-                            <label for="year">Year</label>
-                            <input type="text" th:field="${book.year}" id="year" placeholder="Year">
-                            <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
-
-                            <label>
-                                <select class="sort-options" th:field="*{subject}">
-                                    <option value="" selected disabled>Subject</option>
-                                    <option value="Теория колебания и динамика">Теория колебания и динамика
-                                    </option>
-                                    <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
-                                    <option value="САУ">САУ</option>
-                                    <option value="Методички">Методички</option>
-                                </select>
-                            </label>
-
-                            <input type="submit" class="btn btn-primary" value="Update Book">
+                        <form method="post" th:object="${book}">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="bookName">Book name</label>
+                                    <input type="text" class="form-control" id="bookName" th:field="*{bookName}"
+                                           placeholder="Book name"/>
+                                    <label for="author">Author</label>
+                                    <input type="text" class="form-control" id="author" th:field="*{author}"
+                                           placeholder="Author"/>
+                                    <label for="year">Year</label>
+                                    <input type="number" class="form-control" id="year"
+                                           placeholder="Year" th:field="*{year}"/>
+                                    <label>
+                                        <select class="sort-options" th:field="*{subject}">
+                                            <option value="" selected disabled>Subject</option>
+                                            <option value="Теория колебания и динамика">Теория колебания и динамика
+                                            </option>
+                                            <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
+                                            <option value="САУ">САУ</option>
+                                            <option value="Методички">Методички</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" value="Add new book" class="btn btn-primary"/>
+                            </div>
                         </form>
                     </div>
                 </div>
