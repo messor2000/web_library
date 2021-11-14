@@ -121,7 +121,7 @@ a.button:hover, a.button:focus {
     width: 150px;
     height: 40px;
     text-indent: -9999px;
-    background: url("../img/logo.png");
+    background: url("../../public/logo.png");
     transition: background-color 250ms ease-out;
 }
 
