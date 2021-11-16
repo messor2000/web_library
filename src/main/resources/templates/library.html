@@ -87,15 +87,6 @@
                             и телемеханика</a>
                         <a th:href="@{/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
                         <a th:href="@{/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
-
-
-                        <!--                        <a th:href="@{/(size=${books.size}, page=${currentPage}, category=${'САУ'})}" class="filter-item">САУ</a>-->
-
-<!--                        <a th:href="@{/(size=${books.size}, page=${currentPage})}" class="filter-item">Методички</a>-->
-
-<!--                        <a th:href="@{'/page/' + ${currentPage} + '?sort-field=firstName&sort-dir=' + ${reverseSortDir}}">First name</a>-->
-
-<!--                        {category}(category = ${'САУ'})-->
                     </div>
 
                     <div class="small-12 medium-3 columns">
@@ -190,17 +181,17 @@
                         <ul th:if="${books.totalPages > 0}" class="pagination">
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
-                                   th:href="@{/{category}/(size=${books.size}, page=${1})}">
+                                   th:href="@{/{category}(size=${books.size}, page=${1}, category=${category})}">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <th:block th:each="pageNumber : ${pageNumbers}">
-                                <li class="page-item"><a th:href="@{/(size=${books.size}, page=${pageNumber})}"
+                                <li class="page-item"><a th:href="@{/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
                                                          th:text="${pageNumber}" class="page-link" href="#"></a></li>
                             </th:block>
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"
-                                   th:href="@{/(size=${books.size}, page=${books.totalPages})}">
+                                   th:href="@{/{category}(size=${books.size}, page=${books.totalPages}, category=${category})}">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>

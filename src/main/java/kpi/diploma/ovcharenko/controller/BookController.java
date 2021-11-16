@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 @Controller
 public class BookController {
 
-    private static final int DEFAULT_CURRENT_PAGE = 1;
+    private static final int FIRST_PAGE = 1;
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     private final BookService bookService;
@@ -34,7 +34,7 @@ public class BookController {
 
     @GetMapping(value = "/")
     public String getAllBooks(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(DEFAULT_CURRENT_PAGE);
+        int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
         Page<Book> bookPage = bookService.getAllBooks(PageRequest.of(currentPage - 1, pageSize));
@@ -55,7 +55,7 @@ public class BookController {
 
     @GetMapping(value = "/published")
     public String getSortingBooksByYear(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(DEFAULT_CURRENT_PAGE);
+        int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
         Page<Book> bookPage = bookService.getSortingBooksByYear(PageRequest.of(currentPage - 1, pageSize));
@@ -75,7 +75,7 @@ public class BookController {
 
     @GetMapping(value = "/alphabetical")
     public String getSortingBooksAlphabetical(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(DEFAULT_CURRENT_PAGE);
+        int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
         Page<Book> bookPage = bookService.getSortingBooksAlphabetical(PageRequest.of(currentPage - 1, pageSize));
@@ -96,12 +96,13 @@ public class BookController {
     @GetMapping(value = "/{category}")
     public String getBooksByCategory(Model model, @PathVariable("category") String category,
                                      @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(DEFAULT_CURRENT_PAGE);
+        int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
         Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
 
         model.addAttribute("books", bookPage);
+        model.addAttribute("category", category);
 
         int totalPages = bookPage.getTotalPages();
         if (totalPages > 0) {
