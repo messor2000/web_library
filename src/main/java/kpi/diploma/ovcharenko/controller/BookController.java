@@ -40,7 +40,6 @@ public class BookController {
         Page<Book> bookPage = bookService.getAllBooks(PageRequest.of(currentPage - 1, pageSize));
 
         model.addAttribute("currentPage", currentPage);
-//        model.addAttribute("category", currentPage);
         model.addAttribute("books", bookPage);
 
         int totalPages = bookPage.getTotalPages();

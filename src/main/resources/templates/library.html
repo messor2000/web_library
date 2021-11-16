@@ -190,7 +190,7 @@
                         <ul th:if="${books.totalPages > 0}" class="pagination">
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
-                                   th:href="@{/(size=${books.size}, page=${1})}">
+                                   th:href="@{/{category}/(size=${books.size}, page=${1})}">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
