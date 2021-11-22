@@ -89,16 +89,16 @@
                         <a th:href="@{/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
                     </div>
 
-                    <div class="small-12 medium-3 columns">
-                        <label>
-                            <select class="sort-options">
-                                <option value="" disabled selected>Sort by</option>
-                                <option value="">Featured</option>
-                                <option th:href="@{/alphabetical}" value="title">Alphabetical</option>
-                                <option th:href="@{/published}" value="date-created">Published</option>
-                            </select>
-                        </label>
-                    </div>
+<!--                    <div class="small-12 medium-3 columns">-->
+<!--                        <label>-->
+<!--                            <select class="sort-options">-->
+<!--                                <option value="" disabled selected>Sort by</option>-->
+<!--                                <option value="">Featured</option>-->
+<!--                                <option th:href="@{/{sorting}(sorting = ${'Alphabetical'})}" value="title">Alphabetical</option>-->
+<!--                                <option th:href="@{/{sorting}(sorting = ${'Published'})}" value="date-created">Published</option>-->
+<!--                            </select>-->
+<!--                        </label>-->
+<!--                    </div>-->
                 </div>
 
                 <div class="grid-shuffle table table-bordered table-responsive-sm">
@@ -121,7 +121,7 @@
                                 <div class="item-details">
                                     <h3 class="book-item_title" th:text="${book.bookName}"></h3>
                                     <p class="author" th:text="${book.author}"></p>
-                                    <p th:text="${book.year}"></p>
+                                    <p class="published" th:text="${book.year}"></p>
                                     <a href="#" class="button">Details</a>
                                 </div>
 
@@ -145,34 +145,6 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="modal fade" id="exampleModal" tabindex="-1"
-                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-
-<!--                                            <form action="#" th:action="@{/update/{id}(id=${book.id})}"-->
-<!--                                                  th:object="${book}" method="post">-->
-<!--                                                <label for="bookName">bookName</label>-->
-<!--                                                <input type="text" th:field="${book.bookName}" id="bookName" placeholder="bookName">-->
-<!--                                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{bookName}"></span>-->
-
-<!--                                                <label for="author">author</label>-->
-<!--                                                <input type="text" th:field="${book.author}" id="author" placeholder="author">-->
-<!--                                                <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>-->
-
-<!--                                                <label for="year">year</label>-->
-<!--                                                <input type="text" th:field="${book.year}" id="year" placeholder="year">-->
-<!--                                                <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>-->
-
-<!--&lt;!&ndash;                                                <input type="submit" value="Update Book">&ndash;&gt;-->
-<!--                                                <div class="modal-footer">-->
-<!--                                                    <button type="button" class="btn btn-primary">Save changes</button>-->
-<!--                                                </div>-->
-<!--                                            </form>-->
-                                        </div>
-                                    </div>
-                                </div>
-
                             </li>
                         </tr>
                     </ul>
@@ -198,7 +170,6 @@
 
                         </ul>
                     </nav>
-
                 </div>
 
             </section>

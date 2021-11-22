@@ -11,7 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -48,4 +50,9 @@ public class Book implements Serializable {
 
     @Column(name = "amount")
     private int amount;
+
+    @Lob
+    @Column(name = "image", columnDefinition="longblob")
+    private byte[] image;
+
 }

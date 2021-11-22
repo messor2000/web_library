@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -20,6 +21,9 @@ import java.util.stream.IntStream;
 @RequestMapping(value = "/table")
 public class TableBookController {
 
+    private static final int FIRST_PAGE = 1;
+    private static final int DEFAULT_PAGE_SIZE = 20;
+
     private final BookService bookService;
 
     @Autowired
@@ -29,12 +33,34 @@ public class TableBookController {
 
     @GetMapping(value = "/books/all")
     public String getAllBooks(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(20);
+        int currentPage = page.orElse(FIRST_PAGE);
+        int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
         Page<Book> bookPage = bookService.getAllBooks(PageRequest.of(currentPage - 1, pageSize));
 
         model.addAttribute("books", bookPage);
+
+        int totalPages = bookPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "tableLibrary";
+    }
+
+    @GetMapping(value = "/books/{category}")
+    public String getBooksByCategory(Model model, @PathVariable("category") String category,
+                                     @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(FIRST_PAGE);
+        int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
+
+        Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
+
+        model.addAttribute("books", bookPage);
+        model.addAttribute("category", category);
 
         int totalPages = bookPage.getTotalPages();
         if (totalPages > 0) {

@@ -1,9 +1,7 @@
 package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.Book;
-import kpi.diploma.ovcharenko.entity.BookModel;
 import kpi.diploma.ovcharenko.repo.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +15,6 @@ public class LibraryBookService implements BookService {
 
     private final BookRepository bookRepository;
 
-    @Autowired
     public LibraryBookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -46,6 +43,14 @@ public class LibraryBookService implements BookService {
     @Override
     @Transactional
     public void addNewBook(Book book) {
+//        Book book1 = new Book();
+//        book1.setBookName(book.getBookName());
+//        book1.setAuthor(book.getAuthor());
+//        book1.setYear(book.getYear());
+//        book1.setSubject(book.getSubject());
+//        book1.setAmount(book.getYear());
+//        book1.setImage();
+
         bookRepository.save(book);
     }
 
@@ -73,6 +78,20 @@ public class LibraryBookService implements BookService {
         Pageable sortedByPriceDesc = PageRequest.of(1, 20, Sort.by("bookName").ascending());
 
         return bookRepository.findAll(sortedByPriceDesc);
+    }
+
+    @Override
+    public Page<Book> getBooksSorted(Pageable pageable, String sort) {
+        Pageable sorted = null;
+
+        if (sort.equals("Alphabetical")) {
+            sorted = PageRequest.of(1, 20, Sort.by("bookName").ascending());
+        } else if (sort.equals("Published")) {
+            sorted =  PageRequest.of(1, 20, Sort.by("year").descending());
+        }
+
+        assert sorted != null;
+        return bookRepository.findAll(sorted);
     }
 
     @Override

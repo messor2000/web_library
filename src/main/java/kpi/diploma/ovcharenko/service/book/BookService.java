@@ -21,5 +21,7 @@ public interface BookService {
 
     Page<Book> getSortingBooksAlphabetical(Pageable pageable);
 
+    Page<Book> getBooksSorted(Pageable pageable, String sort);
+
     Page<Book> getBookByCategory(Pageable pageable, String subject);
 }

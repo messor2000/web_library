@@ -66,13 +66,13 @@
 
             <div class="toolbar row">
                 <div class="filter-options small-12 medium-9 columns">
-                    <a th:href="@{/}" class="filter-item">All Categories</a>
-                    <a th:href="@{/{category}(category = ${'Теория колебания и динамика'})}"
+                    <a th:href="@{/table//books/all}" class="filter-item">All Categories</a>
+                    <a th:href="@{/table/books/{category}(category = ${'Теория колебания и динамика'})}"
                        class="filter-item">Теория колебания и динамика</a>
-                    <a th:href="@{/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
+                    <a th:href="@{/table/books/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
                         и телемеханика</a>
-                    <a th:href="@{/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
-                    <a th:href="@{/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
+                    <a th:href="@{/table/books/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
+                    <a th:href="@{/table/books/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
                 </div>
                 <div class="small-12 medium-3 columns">
                     <label>
@@ -118,18 +118,18 @@
                         <nav aria-label="Page navigation example">
                             <ul th:if="${books.totalPages > 0}" class="pagination">
                                 <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="First"
-                                       th:href="@{/(size=${books.size}, page=${1})}">
+                                    <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
+                                       th:href="@{/table/books/{category}(size=${books.size}, page=${1}, category=${category})}">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
                                 <th:block th:each="pageNumber : ${pageNumbers}">
-                                    <li class="page-item"><a th:href="@{/(size=${books.size}, page=${pageNumber})}"
+                                    <li class="page-item"><a th:href="@{/table/books/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
                                                              th:text="${pageNumber}" class="page-link" href="#"></a></li>
                                 </th:block>
                                 <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Last"
-                                       th:href="@{/(size=${books.size}, page=${books.totalPages})}">
+                                    <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"
+                                       th:href="@{/table/books/{category}(size=${books.size}, page=${books.totalPages}, category=${category})}">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>
