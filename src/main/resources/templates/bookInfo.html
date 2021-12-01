@@ -57,32 +57,32 @@
             <section id="book_list">
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <p>
-                                                    <img src="/img/detailsBookCover.jpeg" align=”left” alt="Book Cover">
-                                                </p>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <p>
+                                <img src="/img/detailsBookCover.jpeg" align=”left” alt="Book Cover">
+                            </p>
 
-                                                <label>Book Author</label>
-                                                <p th:text="${book.author}"> </p>
-                                                <label>Book Year</label>
-                                                <p th:text="${book.year}"></p>
-                                                <label>Book Author</label>
-                                                <p th:text="${book.subject}"></p>
-                                                <label>Book Subject</label>
-                                                <p th:text="${book.amount}"></p>
-                                                <label>Book Amount</label>
+                            <label>Book Author</label>
+                            <p th:text="${book.author}"></p>
+                            <label>Book Year</label>
+                            <p th:text="${book.year}"></p>
+                            <label>Book Subject</label>
+                            <p th:text="${book.subject}"></p>
+                            <label>Book Amount</label>
+                            <p th:text="${book.amount}"></p>
+                            <label>Book Description</label>
+                            <p th:text="${book.description}"></p>
 
-
-                                                <p>
-                                                    <a th:href="@{/edit/{id}(id=${book.id})}" type="button"
-                                                       class="btn btn-danger button btn btn-primary"
-                                                       data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
-                                                    <a th:href="@{/delete/{id}(id=${book.id})}"
-                                                       class="btn btn-danger button btn btn-primary">Delete</a>
-                                                </p>
-                                            </div>
-                                        </div>
+                            <table id="books" class="table table-bordered table-responsive-sm">
+                                <a th:href="@{/edit/{id}(id=${book.id})}" type="button"
+                                   class="btn btn-danger button btn btn-primary"
+                                   data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
+                                <a th:href="@{/delete/{id}(id=${book.id})}"
+                                   class="btn btn-danger button btn btn-primary">Delete</a>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Footer Content -->

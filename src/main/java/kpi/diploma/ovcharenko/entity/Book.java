@@ -50,6 +50,9 @@ public class Book implements Serializable {
     @Column(name = "amount")
     private int amount;
 
+    @Column(name = "description")
+    private String description;
+
     @Lob
     @Column(name = "image", columnDefinition="longblob")
     private byte[] image;

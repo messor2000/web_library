@@ -73,17 +73,17 @@
                                            placeholder="Year" th:field="*{year}"/>
                                     <label>
                                         <select class="sort-options" th:field="*{subject}">
-                                            <option value="" selected disabled>Subject</option>
-                                            <option value="Теория колебания и динамика">Теория колебания и динамика
+                                            <option th:each="category : ${categories}" th:value="${category}"
+                                                    th:text="${category}">
                                             </option>
-                                            <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
-                                            <option value="САУ">САУ</option>
-                                            <option value="Методички">Методички</option>
                                         </select>
                                     </label>
-
                                     <label for="image">Book cover: </label>
                                     <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
+
+                                    <label for="description">Description</label>
+                                    <input type="text" id="description" placeholder="Description">
+
                                 </div>
                             </div>
                             <div class="text-center">

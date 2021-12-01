@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Set;
 
 @Service
 public class LibraryBookService implements BookService {
@@ -73,22 +74,13 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public Page<Book> getBooksSorted(Pageable pageable, String sort) {
-        Pageable sorted = null;
-
-        if (sort.equals("Alphabetical")) {
-            sorted = PageRequest.of(1, 20, Sort.by("bookName").ascending());
-        } else if (sort.equals("Published")) {
-            sorted =  PageRequest.of(1, 20, Sort.by("year").descending());
-        }
-
-        assert sorted != null;
-        return bookRepository.findAll(sorted);
+    public Page<Book> getBookByCategory(Pageable pageable, String subject) {
+        return bookRepository.findBySubjectContains(pageable, subject);
     }
 
     @Override
-    public Page<Book> getBookByCategory(Pageable pageable, String subject) {
-        return bookRepository.findBySubjectContains(pageable, subject);
+    public Set<String> findAllCategories() {
+        return bookRepository.findAllCategories();
     }
 }
 

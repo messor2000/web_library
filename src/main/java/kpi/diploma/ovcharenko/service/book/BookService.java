@@ -4,6 +4,8 @@ import kpi.diploma.ovcharenko.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Set;
+
 public interface BookService {
     void deleteBookById(Long id);
 
@@ -21,7 +23,7 @@ public interface BookService {
 
     Page<Book> getSortingBooksAlphabetical(Pageable pageable);
 
-    Page<Book> getBooksSorted(Pageable pageable, String sort);
-
     Page<Book> getBookByCategory(Pageable pageable, String subject);
+
+    Set<String> findAllCategories();
 }

@@ -81,13 +81,10 @@
 
                 <div class="toolbar row">
                     <div class="filter-options small-12 medium-9 columns">
-                        <a th:href="@{/}" class="filter-item">All Categories</a>
-                        <a th:href="@{/{category}(category = ${'Теория колебания и динамика'})}"
-                           class="filter-item">Теория колебания и динамика</a>
-                        <a th:href="@{/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
-                            и телемеханика</a>
-                        <a th:href="@{/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
-                        <a th:href="@{/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
+                        <a th:href="@{/}" class="filter-item">Все категории</a>
+                        <tr th:each="category : ${categories}">
+                            <a th:href="@{/{category}(category = ${category})}" class="filter-item" th:text="${category}"></a>
+                        </tr>
                     </div>
 
 <!--                    <div class="small-12 medium-3 columns">-->
@@ -123,9 +120,9 @@
                                     <h3 class="book-item_title" th:text="${book.bookName}"></h3>
                                     <p class="author" th:text="${book.author}"></p>
                                     <p class="published" th:text="${book.year}"></p>
-<!--                                    <a href="#" class="button">Details</a>-->
+<!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
+                                    <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
 
-                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>
 
                                 </div>
 

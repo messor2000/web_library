@@ -17,6 +17,7 @@ public class BookModel implements Serializable {
     private String author;
     private String subject;
     private int amount;
+    private String description;
 
     @Override
     public boolean equals(Object o) {
@@ -76,6 +77,15 @@ public class BookModel implements Serializable {
 
     public BookModel setAmount(int amount) {
         this.amount = amount;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public BookModel setDescription(String description) {
+        this.description = description;
         return this;
     }
 }

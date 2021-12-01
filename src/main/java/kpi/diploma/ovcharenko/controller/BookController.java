@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,7 +40,9 @@ public class BookController {
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
         Page<Book> bookPage = bookService.getAllBooks(PageRequest.of(currentPage - 1, pageSize));
+        Set<String> categories = bookService.findAllCategories();
 
+        model.addAttribute("categories", categories);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("books", bookPage);
 
@@ -101,7 +104,9 @@ public class BookController {
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
         Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
+        Set<String> categories = bookService.findAllCategories();
 
+        model.addAttribute("categories", categories);
         model.addAttribute("books", bookPage);
         model.addAttribute("category", category);
 
@@ -119,8 +124,6 @@ public class BookController {
 
     @GetMapping(value = "/find/{id}")
     public String findBookByName(@PathVariable(value = "id", required = false) Long id, Model model) {
-//        Page<Book> book = bookService.findBookByName(name);
-
         Book book = bookService.findBookById(id);
 
         model.addAttribute("book", book);
@@ -137,6 +140,9 @@ public class BookController {
 
     @GetMapping("/add")
     public String showAddForm(Book book, Model model) {
+        Set<String> categories = bookService.findAllCategories();
+
+        model.addAttribute("categories", categories);
         model.addAttribute("book", book);
         return "addBook";
     }
@@ -148,7 +154,6 @@ public class BookController {
         }
 
         try {
-
             byte[] image = file.getBytes();
             book.setImage(image);
             bookService.addNewBook(book);
@@ -166,13 +171,15 @@ public class BookController {
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Book book = bookService.findBookById(id);
+        Set<String> categories = bookService.findAllCategories();
 
+        model.addAttribute("categories", categories);
         model.addAttribute("book", book);
         return "editBook";
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") long id, @Valid Book book, BindingResult result) {
+    public String updateBook(@PathVariable("id") long id, @Valid Book book, BindingResult result) {
         if (result.hasErrors()) {
             book.setId(id);
             return "editBook";
@@ -182,50 +189,4 @@ public class BookController {
 
         return "redirect:/";
     }
-
-//    @PostMapping("/image/saveImageDetails")
-//    public @ResponseBody ResponseEntity<?> createProduct(@RequestParam("name") String name,
-//                                                         @RequestParam("price") double price, @RequestParam("description") String description, Model model, HttpServletRequest request
-//            ,final @RequestParam("image") MultipartFile file) {
-//        try {
-//            //String uploadDirectory = System.getProperty("user.dir") + uploadFolder;
-//            String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
-//            String fileName = file.getOriginalFilename();
-//            String filePath = Paths.get(uploadDirectory, fileName).toString();
-//
-//            if (fileName == null || fileName.contains("..")) {
-//
-//            }
-//
-//            try {
-//                File dir = new File(uploadDirectory);
-//                if (!dir.exists()) {
-//                    log.info("Folder Created");
-//                    dir.mkdirs();
-//                }
-//                // Save the file locally
-//                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-//                stream.write(file.getBytes());
-//                stream.close();
-//            } catch (Exception e) {
-//                log.info("in catch");
-//                e.printStackTrace();
-//            }
-//            byte[] imageData = file.getBytes();
-//            ImageGallery imageGallery = new ImageGallery();
-//            imageGallery.setName(names[0]);
-//            imageGallery.setImage(imageData);
-//            imageGallery.setPrice(price);
-//            imageGallery.setDescription(descriptions[0]);
-//            imageGallery.setCreateDate(createDate);
-//            imageGalleryService.saveImage(imageGallery);
-//            log.info("HttpStatus===" + new ResponseEntity<>(HttpStatus.OK));
-//            return new ResponseEntity<>("Product Saved With File - " + fileName, HttpStatus.OK);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log.info("Exception: " + e);
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
 }

@@ -55,7 +55,8 @@
             </div>
 
             <section id="book_list">
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <form action="#" th:action="@{/update/{id}(id=${book.id})}"
@@ -69,19 +70,20 @@
                                 <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
 
                                 <label for="year">Year</label>
-                                <input type="text" th:field="${book.year}" id="year" placeholder="Year">
+                                <input type="number" th:field="${book.year}" id="year" placeholder="Year">
                                 <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
 
                                 <label>
                                     <select class="sort-options" th:field="*{subject}">
-                                        <option value="" selected disabled>Subject</option>
-                                        <option value="Теория колебания и динамика">Теория колебания и динамика
+                                        <option th:each="category : ${categories}" th:value="${category}"
+                                                th:text="${category}">
                                         </option>
-                                        <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
-                                        <option value="САУ">САУ</option>
-                                        <option value="Методички">Методички</option>
                                     </select>
                                 </label>
+
+                                <label for="description">Description</label>
+                                <input type="text" th:field="${book.description}" id="description"
+                                       placeholder="Description">
 
                                 <input type="submit" class="btn btn-primary" value="Update Book">
                             </form>

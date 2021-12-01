@@ -3,7 +3,6 @@ package kpi.diploma.ovcharenko.service.data;
 import kpi.diploma.ovcharenko.entity.Book;
 import kpi.diploma.ovcharenko.entity.BookModel;
 import kpi.diploma.ovcharenko.repo.BookRepository;
-import kpi.diploma.ovcharenko.service.updloader.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -19,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -58,20 +59,20 @@ public class LibraryExcelDataService implements ExcelDataService {
                 BookModel book = new BookModel();
                 book.setAuthor(getCellValue(row, 1));
                 book.setBookName(getCellValue(row, 2));
-
                 book.setYear(convertStringToInt(getCellValue(row, 3)));
-
-                book.setSubject(subject);
-
+                if (subject.equals("-")) {
+                    book.setSubject("Без категории");
+                } else {
+                    book.setSubject(subject);
+                }
                 book.setAmount(1);
+                book.setDescription("---");
 
                 bookModels.add(book);
             }
         }
 
-//        System.out.println(allBooks.size());
-//        allBooks = checkDuplicatesInArray(allBooks);
-//        System.out.println(allBooks.size());
+        bookModels = removeDuplicates(bookModels);
 
         List<Book> books = new ArrayList<>();
 
@@ -83,9 +84,9 @@ public class LibraryExcelDataService implements ExcelDataService {
                 book.setYear(x.getYear());
                 book.setSubject(x.getSubject());
                 book.setAmount(x.getAmount());
+                book.setDescription(x.getDescription());
                 books.add(book);
             });
-
         }
 
         return books;
@@ -125,48 +126,16 @@ public class LibraryExcelDataService implements ExcelDataService {
         return numberOfNonEmptyCells;
     }
 
-//    private static List<BookModel> checkDuplicatesInArray(List<BookModel> bookModels) {
-//        ArrayList<BookModel> newBookList = new ArrayList<>();
-//
-//        for (BookModel book : bookModels) {
-//            if (newBookList.contains(book)) {
-//
-////                BookModel newBook = new BookModel();
-////                newBook.setBookName(book.getBookName());
-////                newBook.setAuthor(book.getAuthor());
-////                newBook.setYear(book.getYear());
-////                newBook.setSubject(book.getSubject());
-////                newBook.setAmount(book.getAmount() + 1);
-////
-////                newBookList.add(newBook);
-////                newBookList.remove(book);
-////                int currentAmount = book.getAmount();
-//                book.setAmount(book.getAmount() + 1);
-//            }
-//            newBookList.add(book);
-//        }
-//
-//        return newBookList;
-//    }
+    private static List<BookModel> removeDuplicates(List<BookModel> books) {
+        Set<BookModel> filteredBooks = new HashSet<>();
+        for (BookModel bookModel: books) {
+            if (!filteredBooks.add(bookModel)) {
+                BookModel book = filteredBooks.stream().filter(data -> Objects.equals(data, bookModel)).findFirst().get();
+                book.setAmount(book.getAmount() + 1);
+            }
+        }
 
-//    private static List<BookModel> checkDuplicatesInArray(List<BookModel> bookModels) {
-//
-//        ArrayList<BookModel> newBookList = new ArrayList<>();
-//
-//        for (int i = 0; i < bookModels.size(); i++) {
-//            BookModel firstBookModel = bookModels.get(i);
-//            for (int j = i + 1; j < bookModels.size(); j++) {
-//                BookModel secondBookModel = bookModels.get(j);
-//                if (firstBookModel.getBookName().equals(secondBookModel.getBookName())) {
-//                    secondBookModel.setAmount(firstBookModel.getAmount() + 1);
-//                    newBookList.add(secondBookModel);
-//                    newBookList.remove(firstBookModel);
-//                }
-//                newBookList.add(secondBookModel);
-//            }
-//        }
-//
-//        return newBookList;
-//    }
+        return new ArrayList<>(filteredBooks);
+    }
 }
 
