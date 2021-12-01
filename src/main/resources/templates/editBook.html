@@ -49,42 +49,44 @@
         <div class="page-container">
 
             <div class="page-title category-title">
-                <h1>Edit book </h1>
+                <h1>Edit book</h1>
             </div>
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form action="#" th:action="@{/update/{id}(id=${book.id})}"
-                              th:object="${book}" method="post">
-                            <label for="bookName">Book Name</label>
-                            <input type="text" th:field="${book.bookName}" id="bookName" placeholder="Book Name">
-                            <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
+            <section id="book_list">
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="#" th:action="@{/update/{id}(id=${book.id})}"
+                                  th:object="${book}" method="post">
+                                <label for="bookName">Book Name</label>
+                                <input type="text" th:field="${book.bookName}" id="bookName" placeholder="Book Name">
+                                <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
 
-                            <label for="author">Author</label>
-                            <input type="text" th:field="${book.author}" id="author" placeholder="Author">
-                            <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
+                                <label for="author">Author</label>
+                                <input type="text" th:field="${book.author}" id="author" placeholder="Author">
+                                <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
 
-                            <label for="year">Year</label>
-                            <input type="text" th:field="${book.year}" id="year" placeholder="Year">
-                            <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
+                                <label for="year">Year</label>
+                                <input type="text" th:field="${book.year}" id="year" placeholder="Year">
+                                <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
 
-                            <label>
-                                <select class="sort-options" th:field="*{subject}">
-                                    <option value="" selected disabled>Subject</option>
-                                    <option value="Теория колебания и динамика">Теория колебания и динамика
-                                    </option>
-                                    <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
-                                    <option value="САУ">САУ</option>
-                                    <option value="Методички">Методички</option>
-                                </select>
-                            </label>
+                                <label>
+                                    <select class="sort-options" th:field="*{subject}">
+                                        <option value="" selected disabled>Subject</option>
+                                        <option value="Теория колебания и динамика">Теория колебания и динамика
+                                        </option>
+                                        <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
+                                        <option value="САУ">САУ</option>
+                                        <option value="Методички">Методички</option>
+                                    </select>
+                                </label>
 
-                            <input type="submit" class="btn btn-primary" value="Update Book">
-                        </form>
+                                <input type="submit" class="btn btn-primary" value="Update Book">
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Footer Content -->
             <footer id="footer" class="page-footer">

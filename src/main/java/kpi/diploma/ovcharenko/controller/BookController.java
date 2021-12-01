@@ -117,13 +117,15 @@ public class BookController {
     }
 
 
-    @GetMapping(value = "/find")
-    public String findBookByName(@RequestParam(value = "bookName", required = false) String name, Model model) {
-        Page<Book> book = bookService.findBookByName(name);
+    @GetMapping(value = "/find/{id}")
+    public String findBookByName(@PathVariable(value = "id", required = false) Long id, Model model) {
+//        Page<Book> book = bookService.findBookByName(name);
 
-        model.addAttribute("books", book);
+        Book book = bookService.findBookById(id);
 
-        return "library";
+        model.addAttribute("book", book);
+
+        return "bookInfo";
     }
 
     @GetMapping(value = "/delete/{id}")

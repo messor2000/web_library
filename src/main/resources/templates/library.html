@@ -5,7 +5,6 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Pson Library</title>
-<!--    <link rel="shortcut icon" href="/img/logo.png"/>-->
     <link rel="shortcut icon" type="image/png" th:href="@{favicon.ico}"/>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
@@ -122,29 +121,32 @@
                                     <h3 class="book-item_title" th:text="${book.bookName}"></h3>
                                     <p class="author" th:text="${book.author}"></p>
                                     <p class="published" th:text="${book.year}"></p>
-                                    <a href="#" class="button">Details</a>
+<!--                                    <a href="#" class="button">Details</a>-->
+
+                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>
+
                                 </div>
 
-                                <div class="overlay-details">
-                                    <a href="#" class="close-overlay-btn">Close</a>
-                                    <div class="overlay-image">
-                                        <img src="/img/detailsBookCover.jpeg"
-                                             alt="Book Cover">
-                                        <div class="back-color"></div>
-                                    </div>
-                                    <div class="overlay-desc activated">
-                                        <h2 class="overlay_title" th:text="${book.bookName}"></h2>
-                                        <p class="author" th:text="${book.subject}"></p>
-                                        <p class="author" th:text="${book.author}"></p>
-                                        <p class="published" th:text="${book.year}"></p>
-                                        <p>
-                                            <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
-                                               data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
-                                            <a th:href="@{/delete/{id}(id=${book.id})}"
-                                               class="btn btn-danger button btn btn-primary">Delete</a>
-                                        </p>
-                                    </div>
-                                </div>
+<!--                                <div class="overlay-details">-->
+<!--                                    <a href="#" class="close-overlay-btn">Close</a>-->
+<!--                                    <div class="overlay-image">-->
+<!--                                        <img src="/img/detailsBookCover.jpeg"-->
+<!--                                             alt="Book Cover">-->
+<!--                                        <div class="back-color"></div>-->
+<!--                                    </div>-->
+<!--                                    <div class="overlay-desc activated">-->
+<!--                                        <h2 class="overlay_title" th:text="${book.bookName}"></h2>-->
+<!--                                        <p class="author" th:text="${book.subject}"></p>-->
+<!--                                        <p class="author" th:text="${book.author}"></p>-->
+<!--                                        <p class="published" th:text="${book.year}"></p>-->
+<!--                                        <p>-->
+<!--                                            <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"-->
+<!--                                               data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>-->
+<!--                                            <a th:href="@{/delete/{id}(id=${book.id})}"-->
+<!--                                               class="btn btn-danger button btn btn-primary">Delete</a>-->
+<!--                                        </p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </li>
                         </tr>
                     </ul>
