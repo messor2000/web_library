@@ -43,14 +43,6 @@ public class LibraryBookService implements BookService {
     @Override
     @Transactional
     public void addNewBook(Book book) {
-//        Book book1 = new Book();
-//        book1.setBookName(book.getBookName());
-//        book1.setAuthor(book.getAuthor());
-//        book1.setYear(book.getYear());
-//        book1.setSubject(book.getSubject());
-//        book1.setAmount(book.getYear());
-//        book1.setImage();
-
         bookRepository.save(book);
     }
 

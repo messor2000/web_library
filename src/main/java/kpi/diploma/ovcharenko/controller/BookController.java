@@ -3,7 +3,6 @@ package kpi.diploma.ovcharenko.controller;
 import kpi.diploma.ovcharenko.entity.Book;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -15,13 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,9 +26,6 @@ public class BookController {
 
     private static final int FIRST_PAGE = 1;
     private static final int DEFAULT_PAGE_SIZE = 20;
-
-    @Value("${uploadDir}")
-    private String uploadFolder;
 
     private final BookService bookService;
 
@@ -150,7 +140,7 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public String addNewBook(@Valid Book book, BindingResult result, HttpServletRequest request, @RequestParam("image") MultipartFile file) {
+    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam("image") MultipartFile file) {
         if (result.hasErrors()) {
             return "addBook";
         }

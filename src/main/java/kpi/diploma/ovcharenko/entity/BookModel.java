@@ -11,6 +11,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class BookModel implements Serializable {
+
     private String bookName;
     private int year;
     private String author;
