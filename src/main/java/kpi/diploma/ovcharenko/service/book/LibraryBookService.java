@@ -1,7 +1,9 @@
 package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.Book;
+import kpi.diploma.ovcharenko.entity.BookCategory;
 import kpi.diploma.ovcharenko.repo.BookRepository;
+import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -9,15 +11,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
 public class LibraryBookService implements BookService {
 
     private final BookRepository bookRepository;
+    private final CategoryRepository categoryRepository;
 
-    public LibraryBookService(BookRepository bookRepository) {
+    public LibraryBookService(BookRepository bookRepository, CategoryRepository categoryRepository) {
         this.bookRepository = bookRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -31,9 +36,15 @@ public class LibraryBookService implements BookService {
 
     @Override
     @Transactional
-    public void updateBook(Book book) {
+    public void updateBook(Book book, String category) {
+        BookCategory bookCategory = new BookCategory(category);
+
+        book.addCategory(bookCategory);
+
         bookRepository.save(book);
     }
+
+
 
     @Override
     public Book findBookById(Long id) {
@@ -43,7 +54,13 @@ public class LibraryBookService implements BookService {
 
     @Override
     @Transactional
-    public void addNewBook(Book book) {
+    public void addNewBook(Book book, String category) {
+        BookCategory bookCategory = new BookCategory(category);
+
+//        book.getCategories().add(bookCategory);
+
+        book.addCategory(bookCategory);
+
         bookRepository.save(book);
     }
 
@@ -74,13 +91,40 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public Page<Book> getBookByCategory(Pageable pageable, String subject) {
-        return bookRepository.findBySubjectContains(pageable, subject);
+    public Page<Book> getBookByCategory(Pageable pageable, String category) {
+//        BookCategory bookCategory = categoryRepository.findFirstByCategory(category);
+//
+//        String categoryName = bookCategory.getCategory();
+//
+//        return bookRepository.findAllByCategoriesContaining(pageable, categoryName);
+
+//        List<Integer> bookIds = categoryRepository.findAllBookIdByCategory(category);
+//
+//        Page<Book> books = null;
+//        for (Integer id: bookIds) {
+//            Page<Book> book = bookRepository.findById(id, pageable);
+//            books.;
+//        }
+
+        return bookRepository.findByCategoryContains(category, pageable);
     }
 
     @Override
     public Set<String> findAllCategories() {
-        return bookRepository.findAllCategories();
+        return categoryRepository.findAllCategories();
+    }
+
+    @Override
+    public Set<String> findBookCategories(Book book) {
+        Set<BookCategory> categories = book.getCategories();
+
+        Set<String> bookCategories = new HashSet<>();
+
+        for (BookCategory category: categories) {
+            bookCategories.add(category.getCategory());
+        }
+
+        return bookCategories;
     }
 }
 

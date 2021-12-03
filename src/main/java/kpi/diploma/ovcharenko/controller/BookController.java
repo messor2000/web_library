@@ -1,6 +1,7 @@
 package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.Book;
+import kpi.diploma.ovcharenko.entity.BookCategory;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -106,9 +107,9 @@ public class BookController {
         Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
         Set<String> categories = bookService.findAllCategories();
 
-        model.addAttribute("categories", categories);
         model.addAttribute("books", bookPage);
-        model.addAttribute("category", category);
+//        model.addAttribute("category", category);
+        model.addAttribute("categories", categories);
 
         int totalPages = bookPage.getTotalPages();
         if (totalPages > 0) {
@@ -148,22 +149,23 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam("image") MultipartFile file) {
+//    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam("image") MultipartFile file, @RequestParam(value = "category") String category) {
+    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "category") String category) {
         if (result.hasErrors()) {
             return "addBook";
         }
 
-        try {
-            byte[] image = file.getBytes();
-            book.setImage(image);
-            bookService.addNewBook(book);
+//        try {
+//            byte[] image = file.getBytes();
+//            book.setImage(image);
+//            bookService.addNewBook(book, category);
+//
+//        } catch (Exception e) {
+//            log.error("ERROR", e);
+//            return "error";
+//        }
 
-        } catch (Exception e) {
-            log.error("ERROR", e);
-            return "error";
-        }
-
-        bookService.addNewBook(book);
+        bookService.addNewBook(book, category);
 
         return "redirect:/";
     }
@@ -172,20 +174,22 @@ public class BookController {
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Book book = bookService.findBookById(id);
         Set<String> categories = bookService.findAllCategories();
+        Set<String> bookCategories = bookService.findBookCategories(book);
 
         model.addAttribute("categories", categories);
+        model.addAttribute("bookCategories", bookCategories);
         model.addAttribute("book", book);
         return "editBook";
     }
 
     @PostMapping("/update/{id}")
-    public String updateBook(@PathVariable("id") long id, @Valid Book book, BindingResult result) {
+    public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "category") String category, BindingResult result) {
         if (result.hasErrors()) {
             book.setId(id);
             return "editBook";
         }
 
-        bookService.updateBook(book);
+        bookService.updateBook(book, category);
 
         return "redirect:/";
     }

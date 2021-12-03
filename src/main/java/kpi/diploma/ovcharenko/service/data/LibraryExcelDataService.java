@@ -1,8 +1,10 @@
 package kpi.diploma.ovcharenko.service.data;
 
 import kpi.diploma.ovcharenko.entity.Book;
+import kpi.diploma.ovcharenko.entity.BookCategory;
 import kpi.diploma.ovcharenko.entity.BookModel;
 import kpi.diploma.ovcharenko.repo.BookRepository;
+import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -28,15 +30,17 @@ import java.util.Set;
 public class LibraryExcelDataService implements ExcelDataService {
 
     private final BookRepository bookRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public LibraryExcelDataService(BookRepository bookRepository) {
+    public LibraryExcelDataService(BookRepository bookRepository, CategoryRepository categoryRepository) {
         this.bookRepository = bookRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public List<Book> getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String subject) {
-        List<BookModel> bookModels = new ArrayList<>();
+    public void getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String category) {
+        List<Book> books = new ArrayList<>();
 
         XSSFWorkbook workbook = null;
         try {
@@ -56,46 +60,52 @@ public class LibraryExcelDataService implements ExcelDataService {
             if (index > 0) {
                 XSSFRow row = worksheet.getRow(index);
 
-                BookModel book = new BookModel();
+                Book book = new Book();
+
                 book.setAuthor(getCellValue(row, 1));
                 book.setBookName(getCellValue(row, 2));
                 book.setYear(convertStringToInt(getCellValue(row, 3)));
-                if (subject.equals("-")) {
-                    book.setSubject("Без категории");
-                } else {
-                    book.setSubject(subject);
-                }
+
+//                book.getCategories().add(bookCategory);
+
+                BookCategory bookCategory = new BookCategory();
+                bookCategory.setCategory(category);
+                book.addCategory(bookCategory);
+
                 book.setAmount(1);
                 book.setDescription("---");
 
-                bookModels.add(book);
+                books.add(book);
             }
         }
 
-        bookModels = removeDuplicates(bookModels);
+        books = removeDuplicates(books);
 
-        List<Book> books = new ArrayList<>();
+//        List<Book> books = new ArrayList<>();
+//
+//        if (!books.isEmpty()) {
+//            books.forEach(x -> {
+//                Book book = new Book();
+//                book.setAuthor(x.getAuthor());
+//                book.setBookName(x.getBookName());
+//                book.setYear(x.getYear());
+////                book.setSubject(x.getSubject());
+//                book.setCategories(x.getCategories());
+//                book.setAmount(x.getAmount());
+//                book.setDescription(x.getDescription());
+//                books.add(book);
+//            });
+//        }
 
-        if (!bookModels.isEmpty()) {
-            bookModels.forEach(x -> {
-                Book book = new Book();
-                book.setAuthor(x.getAuthor());
-                book.setBookName(x.getBookName());
-                book.setYear(x.getYear());
-                book.setSubject(x.getSubject());
-                book.setAmount(x.getAmount());
-                book.setDescription(x.getDescription());
-                books.add(book);
-            });
-        }
-
-        return books;
-    }
-
-    @Override
-    public void saveExcelData(List<Book> books) {
         bookRepository.saveAll(books);
+
+//        return books;
     }
+
+//    @Override
+//    public void saveExcelData(List<Book> books) {
+//        bookRepository.saveAll(books);
+//    }
 
     private int convertStringToInt(String str) {
         int result = 0;
@@ -126,12 +136,12 @@ public class LibraryExcelDataService implements ExcelDataService {
         return numberOfNonEmptyCells;
     }
 
-    private static List<BookModel> removeDuplicates(List<BookModel> books) {
-        Set<BookModel> filteredBooks = new HashSet<>();
-        for (BookModel bookModel: books) {
-            if (!filteredBooks.add(bookModel)) {
-                BookModel book = filteredBooks.stream().filter(data -> Objects.equals(data, bookModel)).findFirst().get();
-                book.setAmount(book.getAmount() + 1);
+    private static List<Book> removeDuplicates(List<Book> books) {
+        Set<Book> filteredBooks = new HashSet<>();
+        for (Book book: books) {
+            if (!filteredBooks.add(book)) {
+                Book updatedBook = filteredBooks.stream().filter(data -> Objects.equals(data, book)).findFirst().get();
+                updatedBook.setAmount(updatedBook.getAmount() + 1);
             }
         }
 

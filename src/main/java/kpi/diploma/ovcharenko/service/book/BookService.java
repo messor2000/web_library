@@ -9,11 +9,11 @@ import java.util.Set;
 public interface BookService {
     void deleteBookById(Long id);
 
-    void updateBook(Book book);
+    void updateBook(Book book, String category);
 
     Book findBookById(Long id);
 
-    void addNewBook(Book book);
+    void addNewBook(Book book, String category);
 
     Page<Book> findBookByName(String name);
 
@@ -26,4 +26,6 @@ public interface BookService {
     Page<Book> getBookByCategory(Pageable pageable, String subject);
 
     Set<String> findAllCategories();
+
+    Set<String> findBookCategories(Book book);
 }

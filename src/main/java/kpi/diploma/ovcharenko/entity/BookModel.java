@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,9 +16,10 @@ public class BookModel implements Serializable {
     private String bookName;
     private int year;
     private String author;
-    private String subject;
+//    private String subject;
     private int amount;
     private String description;
+    private transient Set<BookCategory> categories;
 
     @Override
     public boolean equals(Object o) {
@@ -25,14 +27,16 @@ public class BookModel implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         BookModel bookModel = (BookModel) o;
         return year == bookModel.year &&
+                amount == bookModel.amount &&
                 Objects.equals(bookName, bookModel.bookName) &&
                 Objects.equals(author, bookModel.author) &&
-                Objects.equals(subject, bookModel.subject);
+                Objects.equals(description, bookModel.description) &&
+                Objects.equals(categories, bookModel.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookName, year, author, subject, amount);
+        return Objects.hash(bookName, year, author, amount, description, categories);
     }
 
     public String getBookName() {
@@ -62,12 +66,12 @@ public class BookModel implements Serializable {
         return this;
     }
 
-    public String getSubject() {
-        return subject;
+    public Set<BookCategory> getCategories() {
+        return categories;
     }
 
-    public BookModel setSubject(String subject) {
-        this.subject = subject;
+    public BookModel setCategories(Set<BookCategory> categories) {
+        this.categories = categories;
         return this;
     }
 

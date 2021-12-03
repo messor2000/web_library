@@ -51,27 +51,27 @@ public class TableBookController {
         return "tableLibrary";
     }
 
-    @GetMapping(value = "/books/{category}")
-    public String getBooksByCategory(Model model, @PathVariable("category") String category,
-                                     @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(FIRST_PAGE);
-        int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
-
-        Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
-
-        model.addAttribute("books", bookPage);
-        model.addAttribute("category", category);
-
-        int totalPages = bookPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-
-        return "tableLibrary";
-    }
+//    @GetMapping(value = "/books/{category}")
+//    public String getBooksByCategory(Model model, @PathVariable("category") String category,
+//                                     @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+//        int currentPage = page.orElse(FIRST_PAGE);
+//        int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
+//
+//        Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
+//
+//        model.addAttribute("books", bookPage);
+//        model.addAttribute("category", category);
+//
+//        int totalPages = bookPage.getTotalPages();
+//        if (totalPages > 0) {
+//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
+//
+//        return "tableLibrary";
+//    }
 
     @GetMapping(value = "/find")
     public String findBookByName(@RequestParam(value = "bookName", required = false) String name, Model model) {

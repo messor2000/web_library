@@ -2,22 +2,29 @@ package kpi.diploma.ovcharenko.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,10 +50,6 @@ public class Book implements Serializable {
     @NotBlank(message = "Year is mandatory")
     private String author;
 
-    @Column(name = "subjects")
-    @NotBlank(message = "Year is mandatory")
-    private String subject;
-
     @Column(name = "amount")
     private int amount;
 
@@ -57,4 +60,11 @@ public class Book implements Serializable {
     @Column(name = "image", columnDefinition="longblob")
     private byte[] image;
 
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<BookCategory> categories = new HashSet<>();
+
+    public void addCategory(BookCategory category){
+        categories.add(category);
+        category.setBook(this);
+    }
 }

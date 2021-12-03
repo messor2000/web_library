@@ -73,12 +73,18 @@
                                 <input type="number" th:field="${book.year}" id="year" placeholder="Year">
                                 <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
 
-                                <label>
-                                    <select class="sort-options" th:field="*{subject}">
+                                <label>Book Categories</label>
+                                <tr th:each="category : ${bookCategories}">
+                                    <a th:text="${category}"></a>
+                                </tr>
+
+                                <label> Add new book category
+                                    <input style = "width:250px; height:20px;" list="select" name="category" th:name="category" id="category" placeholder="Category">
+                                    <datalist class="form-control" id="select" name="category" th:name="category">
                                         <option th:each="category : ${categories}" th:value="${category}"
                                                 th:text="${category}">
                                         </option>
-                                    </select>
+                                    </datalist>
                                 </label>
 
                                 <label for="description">Description</label>

@@ -54,26 +54,36 @@
                 <table>
                     <tr>
                         <td>File to upload:</td>
-                        <td><input type="file" name="file"/></td>
+                        <td><input type="file" name="file" accept="xls, xlsx"/></td>
                     </tr>
 
                     <tr>
                         <td>Page for saved:</td>
-                        <td><input type="text" name="pageNum"></td>
+                        <td><label>
+                            <input type="text" name="pageNum">
+                        </label></td>
                     </tr>
 
                     <tr>
                         <td>Select subject for book:</td>
                         <td>
                             <label>
-                                <select class="sort-options" name="subject">
-                                    <option value="-">-</option>
+                                <select class="sort-options" name="category" th:name="category">
+                                    <option value="Без категории">Без категории</option>
                                     <option value="Теория колебания и динамика">Теория колебания и динамика</option>
                                     <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
                                     <option value="САУ">САУ</option>
                                     <option value="Методички">Методички</option>
                                 </select>
                             </label>
+
+                            <!--                            <label>-->
+                            <!--                                <select class="sort-options" name="category" th:name="category">-->
+                            <!--                                    <option th:each="category : ${categories}" th:value="${category}"-->
+                            <!--                                            th:text="${category}">-->
+                            <!--                                    </option>-->
+                            <!--                                </select>-->
+                            <!--                            </label>-->
                         </td>
                     </tr>
 
