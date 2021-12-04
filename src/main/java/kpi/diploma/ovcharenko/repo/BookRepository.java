@@ -14,8 +14,6 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
 
     Page<Book> findByBookName(String bookName, Pageable pageable);
 
-    Page<Book> findById(Long id, Pageable pageable);
-
-    @Query(value = "SELECT b from Book b inner join BookCategory bc on bc.book.id = b.id where bc.category = :category")
+    @Query(value = "SELECT distinct b from Book b inner join BookCategory bc on bc.book.id = b.id where bc.category = :category")
     Page<Book> findByCategoryContains(@Param("category") String category, Pageable pageable);
 }

@@ -28,4 +28,8 @@ public interface BookService {
     Set<String> findAllCategories();
 
     Set<String> findBookCategories(Book book);
+
+    void deleteCategory(String category);
+
+    void updateCategory(String category, String newCategory);
 }

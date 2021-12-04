@@ -22,6 +22,7 @@
             <li><a href="/table/books/all">Table library</a></li>
             <li><a href="/files/upload">Upload file</a></li>
             <li><a href="/add">Add new book</a></li>
+            <li><a href="/changeCategories">Change Categories</a></li>
         </ul>
     </nav>
 
@@ -71,13 +72,22 @@
                                     <label for="year">Year</label>
                                     <input type="number" class="form-control" id="year"
                                            placeholder="Year" th:field="*{year}"/>
+<!--                                    <label>-->
+<!--                                        <select class="sort-options" name="category" th:name="category">-->
+<!--                                            <option th:each="category : ${categories}" th:value="${category}"-->
+<!--                                                    th:text="${category}">-->
+<!--                                            </option>-->
+<!--                                        </select>-->
+<!--                                    </label>-->
                                     <label>
-                                        <select class="sort-options" name="category" th:name="category">
+                                        <input style = "width:250px; height:20px;" list="select" name="category" th:name="category" id="category" placeholder="Category">
+                                        <datalist class="form-control" id="select" name="category" th:name="category">
                                             <option th:each="category : ${categories}" th:value="${category}"
                                                     th:text="${category}">
                                             </option>
-                                        </select>
+                                        </datalist>
                                     </label>
+
                                     <label for="image">Book cover: </label>
                                     <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
 

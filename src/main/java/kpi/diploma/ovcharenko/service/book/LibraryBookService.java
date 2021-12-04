@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -44,8 +45,6 @@ public class LibraryBookService implements BookService {
         bookRepository.save(book);
     }
 
-
-
     @Override
     public Book findBookById(Long id) {
         return bookRepository.findById(id)
@@ -56,8 +55,6 @@ public class LibraryBookService implements BookService {
     @Transactional
     public void addNewBook(Book book, String category) {
         BookCategory bookCategory = new BookCategory(category);
-
-//        book.getCategories().add(bookCategory);
 
         book.addCategory(bookCategory);
 
@@ -92,20 +89,6 @@ public class LibraryBookService implements BookService {
 
     @Override
     public Page<Book> getBookByCategory(Pageable pageable, String category) {
-//        BookCategory bookCategory = categoryRepository.findFirstByCategory(category);
-//
-//        String categoryName = bookCategory.getCategory();
-//
-//        return bookRepository.findAllByCategoriesContaining(pageable, categoryName);
-
-//        List<Integer> bookIds = categoryRepository.findAllBookIdByCategory(category);
-//
-//        Page<Book> books = null;
-//        for (Integer id: bookIds) {
-//            Page<Book> book = bookRepository.findById(id, pageable);
-//            books.;
-//        }
-
         return bookRepository.findByCategoryContains(category, pageable);
     }
 
@@ -125,6 +108,22 @@ public class LibraryBookService implements BookService {
         }
 
         return bookCategories;
+    }
+
+    @Override
+    public void deleteCategory(String category) {
+        categoryRepository.deleteAllByCategory(category);
+    }
+
+    @Override
+    public void updateCategory(String category, String newCategory) {
+        List<BookCategory> bookCategories = categoryRepository.findAllByCategoryContains(category);
+
+        for (BookCategory bookCategory: bookCategories) {
+            bookCategory.setCategory(newCategory);
+        }
+
+        categoryRepository.saveAll(bookCategories);
     }
 }
 

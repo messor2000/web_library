@@ -35,6 +35,7 @@ public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "idbooks", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
     private Long id;
 
     @Column(name = "book_name")
@@ -60,6 +61,7 @@ public class Book implements Serializable {
     @Column(name = "image", columnDefinition="longblob")
     private byte[] image;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
 

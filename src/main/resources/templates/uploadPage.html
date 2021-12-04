@@ -21,6 +21,7 @@
             <li><a href="/table/books/all">Table library</a></li>
             <li><a href="/files/upload">Upload file</a></li>
             <li><a href="/add">Add new book</a></li>
+            <li><a href="/changeCategories">Change Categories</a></li>
         </ul>
     </nav>
     <div class="main clearfix">
@@ -68,14 +69,32 @@
                         <td>Select subject for book:</td>
                         <td>
                             <label>
-                                <select class="sort-options" name="category" th:name="category">
+<!--                                <select class="sort-options" name="category" th:name="category">-->
+<!--                                    <option value="Без категории">Без категории</option>-->
+<!--                                    <option value="Теория колебания и динамика">Теория колебания и динамика</option>-->
+<!--                                    <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>-->
+<!--                                    <option value="САУ">САУ</option>-->
+<!--                                    <option value="Методички">Методички</option>-->
+<!--                                </select>-->
+
+                                <input style = "width:400px; height:40px;" list="select" name="category" th:name="category" placeholder="Category">
+                                <datalist class="form-control" id="select" name="category" th:name="category">
                                     <option value="Без категории">Без категории</option>
                                     <option value="Теория колебания и динамика">Теория колебания и динамика</option>
                                     <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
                                     <option value="САУ">САУ</option>
                                     <option value="Методички">Методички</option>
-                                </select>
+                                </datalist>
                             </label>
+
+<!--                            <label> Add new book category-->
+<!--                                <input style = "width:250px; height:20px;" list="select" name="category" th:name="category" id="category" placeholder="Category">-->
+<!--                                <datalist class="form-control" id="select" name="category" th:name="category">-->
+<!--                                    <option th:each="category : ${categories}" th:value="${category}"-->
+<!--                                            th:text="${category}">-->
+<!--                                    </option>-->
+<!--                                </datalist>-->
+<!--                            </label>-->
 
                             <!--                            <label>-->
                             <!--                                <select class="sort-options" name="category" th:name="category">-->
@@ -91,9 +110,9 @@
                         <td></td>
                         <td><input type="submit" value="Upload"/></td>
                     </tr>
-                    <div th:if="${message}">
-                        <h2 th:text="${message}"></h2>
-                    </div>
+<!--                    <div th:if="${message}">-->
+<!--                        <h2 th:text="${message}"></h2>-->
+<!--                    </div>-->
                 </table>
 
                 <ul>

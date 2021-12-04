@@ -1,7 +1,6 @@
 package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.Book;
-import kpi.diploma.ovcharenko.entity.BookCategory;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -190,6 +188,28 @@ public class BookController {
         }
 
         bookService.updateBook(book, category);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/changeCategories")
+    public String changeCategories(Model model) {
+        Set<String> categories = bookService.findAllCategories();
+
+        model.addAttribute("categories", categories);
+        return "changeBookCategories";
+    }
+
+    @PostMapping("/changeCategory/{newCategory}")
+    public String changeCategory(@RequestParam("category") String category, @PathVariable("newCategory") String newCategory) {
+        bookService.updateCategory(category, newCategory);
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/deleteCategory/{category}")
+    public String deleteCategory(@PathVariable("category") String category) {
+        bookService.deleteCategory(category);
 
         return "redirect:/";
     }

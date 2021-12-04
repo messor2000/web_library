@@ -21,6 +21,7 @@
             <li><a href="/table/books/all">Table library</a></li>
             <li><a href="/files/upload">Upload file</a></li>
             <li><a href="/add">Add new book</a></li>
+            <li><a href="/changeCategories">Change Categories</a></li>
         </ul>
     </nav>
 
@@ -75,7 +76,7 @@
 
                                 <label>Book Categories</label>
                                 <tr th:each="category : ${bookCategories}">
-                                    <a th:text="${category}"></a>
+                                    <td th:text="${category}"></td>
                                 </tr>
 
                                 <label> Add new book category
