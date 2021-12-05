@@ -7,11 +7,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -106,7 +108,6 @@ public class BookController {
         Set<String> categories = bookService.findAllCategories();
 
         model.addAttribute("books", bookPage);
-//        model.addAttribute("category", category);
         model.addAttribute("categories", categories);
 
         int totalPages = bookPage.getTotalPages();
@@ -124,7 +125,9 @@ public class BookController {
     @GetMapping(value = "/find/{id}")
     public String findBookByName(@PathVariable(value = "id", required = false) Long id, Model model) {
         Book book = bookService.findBookById(id);
+        Set<String> bookCategories = bookService.findBookCategories(book);
 
+        model.addAttribute("bookCategories", bookCategories);
         model.addAttribute("book", book);
 
         return "bookInfo";
@@ -147,23 +150,13 @@ public class BookController {
     }
 
     @PostMapping("/add")
-//    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam("image") MultipartFile file, @RequestParam(value = "category") String category) {
-    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "category") String category) {
+    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "image", required = false) MultipartFile file,
+                             @RequestParam(value = "category") String category) {
         if (result.hasErrors()) {
             return "addBook";
         }
 
-//        try {
-//            byte[] image = file.getBytes();
-//            book.setImage(image);
-//            bookService.addNewBook(book, category);
-//
-//        } catch (Exception e) {
-//            log.error("ERROR", e);
-//            return "error";
-//        }
-
-        bookService.addNewBook(book, category);
+        bookService.addNewBook(book, category, file);
 
         return "redirect:/";
     }
@@ -181,13 +174,17 @@ public class BookController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "category") String category, BindingResult result) {
+    public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "category") String category,
+                             @RequestParam(value = "image", required = false) MultipartFile multipartFile, BindingResult result) {
         if (result.hasErrors()) {
             book.setId(id);
             return "editBook";
         }
 
-        bookService.updateBook(book, category);
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        System.out.println(fileName);
+
+        bookService.updateBook(book, category, multipartFile);
 
         return "redirect:/";
     }

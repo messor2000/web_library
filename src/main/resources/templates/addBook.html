@@ -60,7 +60,7 @@
                  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form method="post" th:object="${book}" enctype="multipart/form-data" action="/add">
+                        <form method="post" th:object="${book}" enctype="multipart/form-data" th:action="@{/add}">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="bookName">Book name</label>
@@ -72,13 +72,7 @@
                                     <label for="year">Year</label>
                                     <input type="number" class="form-control" id="year"
                                            placeholder="Year" th:field="*{year}"/>
-<!--                                    <label>-->
-<!--                                        <select class="sort-options" name="category" th:name="category">-->
-<!--                                            <option th:each="category : ${categories}" th:value="${category}"-->
-<!--                                                    th:text="${category}">-->
-<!--                                            </option>-->
-<!--                                        </select>-->
-<!--                                    </label>-->
+
                                     <label>
                                         <input style = "width:250px; height:20px;" list="select" name="category" th:name="category" id="category" placeholder="Category">
                                         <datalist class="form-control" id="select" name="category" th:name="category">

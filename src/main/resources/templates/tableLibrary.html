@@ -69,24 +69,21 @@
 
             <div class="toolbar row">
                 <div class="filter-options small-12 medium-9 columns">
-                    <a th:href="@{/table//books/all}" class="filter-item">All Categories</a>
-                    <a th:href="@{/table/books/{category}(category = ${'Теория колебания и динамика'})}"
-                       class="filter-item">Теория колебания и динамика</a>
-                    <a th:href="@{/table/books/{category}(category = ${'Автоматика и телемеханика'})}" class="filter-item">Автоматика
-                        и телемеханика</a>
-                    <a th:href="@{/table/books/{category}(category = ${'САУ'})}" class="filter-item">САУ</a>
-                    <a th:href="@{/table/books/{category}(category = ${'Методички'})}" class="filter-item">Методички</a>
+                    <a th:href="@{/}" class="filter-item">Все категории</a>
+                    <tr th:each="category : ${categories}">
+                        <a th:href="@{/{category}(category = ${category})}" class="filter-item" th:text="${category}"></a>
+                    </tr>
                 </div>
-                <div class="small-12 medium-3 columns">
-                    <label>
-                        <select class="sort-options">
-                            <option value="" disabled selected>Sort by</option>
-                            <option value="">Featured</option>
-                            <option value="title">Alphabetical</option>
-                            <option value="date-created">Published</option>
-                        </select>
-                    </label>
-                </div>
+<!--                <div class="small-12 medium-3 columns">-->
+<!--                    <label>-->
+<!--                        <select class="sort-options">-->
+<!--                            <option value="" disabled selected>Sort by</option>-->
+<!--                            <option value="">Featured</option>-->
+<!--                            <option value="title">Alphabetical</option>-->
+<!--                            <option value="date-created">Published</option>-->
+<!--                        </select>-->
+<!--                    </label>-->
+<!--                </div>-->
             </div>
 
             <div class="container">

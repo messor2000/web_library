@@ -61,7 +61,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <form action="#" th:action="@{/update/{id}(id=${book.id})}"
-                                  th:object="${book}" method="post">
+                                  th:object="${book}" method="post" enctype="multipart/form-data">
                                 <label for="bookName">Book Name</label>
                                 <input type="text" th:field="${book.bookName}" id="bookName" placeholder="Book Name">
                                 <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
@@ -87,6 +87,9 @@
                                         </option>
                                     </datalist>
                                 </label>
+
+                                <label for="image">Book cover: </label>
+                                <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
 
                                 <label for="description">Description</label>
                                 <input type="text" th:field="${book.description}" id="description"

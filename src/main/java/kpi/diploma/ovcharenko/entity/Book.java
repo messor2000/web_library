@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -57,9 +58,12 @@ public class Book implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Lob
-    @Column(name = "image", columnDefinition="longblob")
-    private byte[] image;
+//    @Lob
+//    @Column(name = "image", columnDefinition="longblob")
+//    private Byte[] image;
+
+    @Column(name = "image", nullable = true, length = 64)
+    private String image;
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -68,5 +72,12 @@ public class Book implements Serializable {
     public void addCategory(BookCategory category){
         categories.add(category);
         category.setBook(this);
+    }
+
+    @Transient
+    public String getCoverImagePath() {
+        if (image == null || id == null) return null;
+
+        return "/covers/" + id + "/" + image;
     }
 }

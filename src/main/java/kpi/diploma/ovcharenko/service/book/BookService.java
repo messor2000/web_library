@@ -3,17 +3,20 @@ package kpi.diploma.ovcharenko.service.book;
 import kpi.diploma.ovcharenko.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
 public interface BookService {
     void deleteBookById(Long id);
 
-    void updateBook(Book book, String category);
+    void updateBook(Book book, String category, MultipartFile file);
 
     Book findBookById(Long id);
 
-    void addNewBook(Book book, String category);
+    void addNewBook(Book book, String category, MultipartFile file);
+
+//    void saveBookWithImg(Book book, MultipartFile file);
 
     Page<Book> findBookByName(String name);
 
