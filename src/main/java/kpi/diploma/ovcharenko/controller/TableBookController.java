@@ -1,6 +1,6 @@
 package kpi.diploma.ovcharenko.controller;
 
-import kpi.diploma.ovcharenko.entity.Book;
+import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

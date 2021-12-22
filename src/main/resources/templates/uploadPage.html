@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -19,9 +19,26 @@
         <ul>
             <li><a href="/">Library</a></li>
             <li><a href="/table/books/all">Table library</a></li>
-            <li><a href="/files/upload">Upload file</a></li>
-            <li><a href="/add">Add new book</a></li>
-            <li><a href="/changeCategories">Change Categories</a></li>
+
+            <div sec:authorize="!isAuthenticated()">
+                <li><a href="/registration">Registration</a></li>
+                <li><a href="/login">Login</a></li>
+            </div>
+
+            <div sec:authorize="hasAuthority('ADMIN')">
+                <li><a href="/files/upload">Upload file</a></li>
+                <li><a href="/add">Add new book</a></li>
+                <li><a href="/changeCategories">Change Categories</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </div>
+
+            <div sec:authorize="hasAuthority('USER')">
+                <li><a href="/logout">Logout</a></li>
+            </div>
+
+<!--            <div sec:authorize="isAuthenticated()">-->
+<!--                <li><a href="/logout">Logout</a></li>-->
+<!--            </div>-->
         </ul>
     </nav>
     <div class="main clearfix">

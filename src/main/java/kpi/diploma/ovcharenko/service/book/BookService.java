@@ -1,6 +1,6 @@
 package kpi.diploma.ovcharenko.service.book;
 
-import kpi.diploma.ovcharenko.entity.Book;
+import kpi.diploma.ovcharenko.entity.book.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;

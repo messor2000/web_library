@@ -1,8 +1,7 @@
 package kpi.diploma.ovcharenko.service.data;
 
-import kpi.diploma.ovcharenko.entity.Book;
-import kpi.diploma.ovcharenko.entity.BookCategory;
-import kpi.diploma.ovcharenko.entity.BookModel;
+import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;

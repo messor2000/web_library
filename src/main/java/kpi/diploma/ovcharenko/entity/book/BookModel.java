@@ -1,4 +1,4 @@
-package kpi.diploma.ovcharenko.entity;
+package kpi.diploma.ovcharenko.entity.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

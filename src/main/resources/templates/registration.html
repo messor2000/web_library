@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Pson Library</title>
+    <link rel="shortcut icon" type="/image/png" th:href="@{favicon.ico}"/>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+</head>
+
+<body>
+<div id="main-container" class="main-container nav-effect-1">
+
+    <nav class="nav-menu nav-effect-1" id="menu-1">
+        <h2 class="">The Library</h2>
+        <ul>
+            <li><a href="/">Library</a></li>
+            <li><a href="/table/books/all">Table library</a></li>
+
+            <div sec:authorize="hasAuthority('ADMIN')">
+                <li><a href="/files/upload">Upload file</a></li>
+                <li><a href="/add">Add new book</a></li>
+                <li><a href="/changeCategories">Change Categories</a></li>
+            </div>
+
+            <div sec:authorize="!isAuthenticated()">
+                <li><a href="/registration">Registration</a></li>
+                <li><a href="/login">Login</a></li>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                <li><a href="/logout">Logout</a></li>
+            </div>
+        </ul>
+    </nav>
+
+    <div class="main clearfix">
+
+        <!-- Header Content -->
+        <header id="header" class="page-header">
+            <div class="page-header-container row">
+
+                <!-- Logo -->
+                <div class="main-logo">
+                    <a href="/">
+                        <img class="main-header-logo" src="/img/logo.jpeg" alt="">
+                    </a>
+                </div>
+
+                <div class="menu-search">
+                    <!-- Main Navigation -->
+                    <div class="main-navigation">
+                        <a href="#">Menu</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- Main Section -->
+        <div class="page-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+
+                        <div th:if="${param.success}">
+                            <div class="alert alert-info">
+                                You've successfully registered to our awesome app!
+                            </div>
+                        </div>
+
+                        <h1>Registration</h1>
+                        <form th:action="@{/registration}" th:object="${user}" method="post">
+
+                            <p class="error-message"
+                               th:if="${#fields.hasGlobalErrors()}"
+                               th:each="error : ${#fields.errors('global')}"
+                               th:text="${error}">Validation error</p>
+
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('firstName')}? 'has-error':''">
+                                <label for="firstName" class="control-label">First name</label>
+                                <input id="firstName"
+                                       class="form-control"
+                                       th:field="*{firstName}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('firstName')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('lastName')}? 'has-error':''">
+                                <label for="lastName" class="control-label">Last name</label>
+                                <input id="lastName"
+                                       class="form-control"
+                                       th:field="*{lastName}"/>
+                                <p class="error-message"
+                                   th:each="error : ${#fields.errors('lastName')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('email')}? 'has-error':''">
+                                <label for="email" class="control-label">E-mail</label>
+                                <input id="email"
+                                       class="form-control"
+                                       th:field="*{email}"/>
+                                <p class="error-message"
+                                   th:each="error : ${#fields.errors('email')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('confirmEmail')}? 'has-error':''">
+                                <label for="confirmEmail" class="control-label">Confirm e-mail</label>
+                                <input id="confirmEmail"
+                                       class="form-control"
+                                       th:field="*{confirmEmail}"/>
+                                <p class="error-message"
+                                   th:each="error : ${#fields.errors('confirmEmail')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
+                                <label for="password" class="control-label">Password</label>
+                                <input id="password"
+                                       class="form-control"
+                                       type="password"
+                                       th:field="*{password}"/>
+                                <p class="error-message"
+                                   th:each="error : ${#fields.errors('password')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('confirmPassword')}? 'has-error':''">
+                                <label for="confirmPassword" class="control-label">Confirm password</label>
+                                <input id="confirmPassword"
+                                       class="form-control"
+                                       type="password"
+                                       th:field="*{confirmPassword}"/>
+                                <p class="error-message"
+                                   th:each="error : ${#fields.errors('confirmPassword')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">Register</button>
+                                <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /main -->
+
+    <div class="main-overlay">
+        <div class="overlay-full"></div>
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/4.0.0/shuffle.min.js"></script>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

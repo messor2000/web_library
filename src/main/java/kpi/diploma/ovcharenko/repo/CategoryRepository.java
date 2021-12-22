@@ -1,6 +1,6 @@
 package kpi.diploma.ovcharenko.repo;
 
-import kpi.diploma.ovcharenko.entity.BookCategory;
+import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
