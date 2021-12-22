@@ -25,12 +25,12 @@
                 <li><a href="/login">Login</a></li>
             </div>
 
-            <div sec:authorize="isAuthenticated()">
-                <div sec:authorize="hasAuthority('ADMIN')">
-                    <li><a href="/files/upload">Upload file</a></li>
-                    <li><a href="/add">Add new book</a></li>
-                    <li><a href="/changeCategories">Change Categories</a></li>
-                </div>
+            <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                <li><a href="/files/upload">Upload file</a></li>
+                <li><a href="/add">Add new book</a></li>
+                <li><a href="/changeCategories">Change Categories</a></li>
+            </div>
+            <div sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')">
                 <li><a href="/logout">Logout</a></li>
             </div>
         </ul>
@@ -78,10 +78,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="email">Email</label>
+                                <label for="username">Email</label>
                                 <input type="email"
-                                       id="email"
-                                       name="email"
+                                       id="username"
+                                       name="username"
                                        class="form-control"
                                        autofocus="autofocus"
                                        placeholder="Email"/>

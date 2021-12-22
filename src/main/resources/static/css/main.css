@@ -933,3 +933,15 @@ a.button:hover, a.button:focus {
     font-size: 12px;
     text-align: center;
 }
+
+h1 {
+    color: #78ab46;
+}
+
+.error-message {
+    color: #a94442;
+}
+
+.error-message:first-letter {
+    text-transform: capitalize;
+}

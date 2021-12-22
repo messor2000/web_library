@@ -25,20 +25,14 @@
                 <li><a href="/login">Login</a></li>
             </div>
 
-            <div sec:authorize="hasAuthority('ADMIN')">
+            <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                 <li><a href="/files/upload">Upload file</a></li>
                 <li><a href="/add">Add new book</a></li>
                 <li><a href="/changeCategories">Change Categories</a></li>
+            </div>
+            <div sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')">
                 <li><a href="/logout">Logout</a></li>
             </div>
-
-            <div sec:authorize="hasAuthority('USER')">
-                <li><a href="/logout">Logout</a></li>
-            </div>
-
-<!--            <div sec:authorize="isAuthenticated()">-->
-<!--                <li><a href="/logout">Logout</a></li>-->
-<!--            </div>-->
         </ul>
     </nav>
     <div class="main clearfix">

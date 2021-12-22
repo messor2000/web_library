@@ -27,7 +27,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/registration",
                         "/",
-                        "/table/**",
+                        "/{category}",
+                        "/find",
+                        "/table/books/*",
                         "/js/**",
                         "/css/**",
                         "/img/**",
@@ -36,14 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-//                .successForwardUrl("/")
                 .permitAll()
                 .and()
                 .logout()
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//                .logoutSuccessUrl("/login?logout")
                 .logoutSuccessUrl("/")
                 .permitAll();
     }
@@ -61,14 +61,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return auth;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authenticationProvider());
+    @Bean
+    public AuthenticationManager customAuthenticationManager() throws Exception {
+        return authenticationManager();
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
+
 }
