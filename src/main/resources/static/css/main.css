@@ -934,6 +934,12 @@ a.button:hover, a.button:focus {
     text-align: center;
 }
 
+/*.page-footer {*/
+/*    position: fixed;*/
+/*    bottom: 0;*/
+/*    width: 100%;*/
+/*}*/
+
 h1 {
     color: #78ab46;
 }

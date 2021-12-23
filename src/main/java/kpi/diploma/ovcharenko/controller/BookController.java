@@ -182,7 +182,6 @@ public class BookController {
         }
 
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        System.out.println(fileName);
 
         bookService.updateBook(book, category, multipartFile);
 

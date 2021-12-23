@@ -31,7 +31,8 @@
                 <li><a href="/add">Add new book</a></li>
                 <li><a href="/changeCategories">Change Categories</a></li>
             </div>
-            <div sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')">
+            <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+                <li><a href="/profile" th:text="${#authentication.name}"></a></li>
                 <li><a href="/logout">Logout</a></li>
             </div>
         </ul>

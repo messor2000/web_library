@@ -5,7 +5,7 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Pson Library</title>
-    <link rel="shortcut icon" href="/public/logo.png"/>
+    <link rel="shortcut icon" type="/image/png" th:href="@{favicon.ico}"/>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
 
@@ -15,7 +15,7 @@
 <div id="main-container" class="main-container nav-effect-1">
 
     <nav class="nav-menu nav-effect-1" id="menu-1">
-        <h2 class="">Edit book</h2>
+        <h2 class="">The Library</h2>
         <ul>
             <li><a href="/">Library</a></li>
             <li><a href="/table/books/all">Table library</a></li>
@@ -38,7 +38,6 @@
     </nav>
 
     <div class="main clearfix">
-
         <!-- Header Content -->
         <header id="header" class="page-header">
             <div class="page-header-container row">
@@ -59,12 +58,11 @@
             </div>
         </header>
 
-
         <!-- Main Section -->
         <div class="page-container">
 
             <div class="page-title category-title">
-                <h1>Edit book</h1>
+                <h1>User Profile</h1>
             </div>
 
             <section id="book_list">
@@ -72,63 +70,37 @@
                      aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form action="#" th:action="@{/update/{id}(id=${book.id})}"
-                                  th:object="${book}" method="post" enctype="multipart/form-data">
-                                <label for="bookName">Book Name</label>
-                                <input type="text" th:field="${book.bookName}" id="bookName" placeholder="Book Name">
-                                <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
+                            <label>First Name</label>
+                            <p th:text="${appUser.firstName}"></p>
+                            <label>Last Name</label>
+                            <p th:text="${appUser.lastName}"></p>
+                            <label>Email</label>
+                            <p th:text="${appUser.email}"></p>
 
-                                <label for="author">Author</label>
-                                <input type="text" th:field="${book.author}" id="author" placeholder="Author">
-                                <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
-
-                                <label for="year">Year</label>
-                                <input type="number" th:field="${book.year}" id="year" placeholder="Year">
-                                <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
-
-                                <label>Book Categories</label>
-                                <tr th:each="category : ${bookCategories}">
-                                    <td th:text="${category}"></td>
-                                </tr>
-
-                                <label> Add new book category
-                                    <input style = "width:250px; height:20px;" list="select" name="category" th:name="category" id="category" placeholder="Category">
-                                    <datalist class="form-control" id="select" name="category" th:name="category">
-                                        <option th:each="category : ${categories}" th:value="${category}"
-                                                th:text="${category}">
-                                        </option>
-                                    </datalist>
-                                </label>
-
-                                <label for="image">Book cover: </label>
-                                <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
-
-                                <label for="description">Description</label>
-                                <input type="text" th:field="${book.description}" id="description"
-                                       placeholder="Description">
-
-                                <input type="submit" class="btn btn-primary" value="Update Book">
-                            </form>
+                            <table id="books" class="table table-bordered table-responsive-sm">
+                                <a th:href="@{/update/{email}(email=${appUser.email})}" type="button"
+                                   class="btn btn-danger button btn btn-primary"
+                                   data-bs-toggle="modal" data-bs-target="#exampleModal">Update password or email</a>
+                            </table>
                         </div>
                     </div>
                 </div>
+
+                <!-- Footer Content -->
+                <footer id="footer" class="page-footer">
+                    <div class="row footer-wrapper">
+                        <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
+                    </div>
+                </footer>
             </section>
-
-            <!-- Footer Content -->
-            <footer id="footer" class="page-footer">
-                <div class="row footer-wrapper">
-                    <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
-                </div>
-            </footer>
-
         </div>
-        <!-- /main -->
-
-        <div class="main-overlay">
-            <div class="overlay-full"></div>
-        </div>
-
     </div>
+    <!-- /main -->
+
+    <div class="main-overlay">
+        <div class="overlay-full"></div>
+    </div>
+
 </div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">

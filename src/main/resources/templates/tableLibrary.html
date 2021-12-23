@@ -30,7 +30,8 @@
                 <li><a href="/add">Add new book</a></li>
                 <li><a href="/changeCategories">Change Categories</a></li>
             </div>
-            <div sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')">
+            <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+                <li><a href="/profile" th:text="${#authentication.name}"></a></li>
                 <li><a href="/logout">Logout</a></li>
             </div>
         </ul>
@@ -117,10 +118,12 @@
                                 <td th:text="${book.author}">body</td>
                                 <td th:text="${book.year}">body</td>
                                 <td>
-                                    <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
-                                       data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
-                                    <a th:href="@{/delete/{id}(id=${book.id})}"
-                                       class="btn btn-danger button btn btn-primary">Delete</a>
+                                    <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                                        <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
+                                           data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
+                                        <a th:href="@{/delete/{id}(id=${book.id})}"
+                                           class="btn btn-danger button btn btn-primary">Delete</a>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>

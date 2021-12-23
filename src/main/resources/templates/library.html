@@ -30,7 +30,8 @@
                 <li><a href="/add">Add new book</a></li>
                 <li><a href="/changeCategories">Change Categories</a></li>
             </div>
-            <div sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')">
+            <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+                <li><a href="/profile" th:text="${#authentication.name}"></a></li>
                 <li><a href="/logout">Logout</a></li>
             </div>
         </ul>
@@ -134,56 +135,33 @@
                                     <p class="published" th:text="${book.year}"></p>
 <!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
                                     <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
-
-
                                 </div>
-
-<!--                                <div class="overlay-details">-->
-<!--                                    <a href="#" class="close-overlay-btn">Close</a>-->
-<!--                                    <div class="overlay-image">-->
-<!--                                        <img src="/img/detailsBookCover.jpeg"-->
-<!--                                             alt="Book Cover">-->
-<!--                                        <div class="back-color"></div>-->
-<!--                                    </div>-->
-<!--                                    <div class="overlay-desc activated">-->
-<!--                                        <h2 class="overlay_title" th:text="${book.bookName}"></h2>-->
-<!--                                        <p class="author" th:text="${book.subject}"></p>-->
-<!--                                        <p class="author" th:text="${book.author}"></p>-->
-<!--                                        <p class="published" th:text="${book.year}"></p>-->
-<!--                                        <p>-->
-<!--                                            <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"-->
-<!--                                               data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>-->
-<!--                                            <a th:href="@{/delete/{id}(id=${book.id})}"-->
-<!--                                               class="btn btn-danger button btn btn-primary">Delete</a>-->
-<!--                                        </p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                             </li>
                         </tr>
                     </ul>
-
-                    <nav aria-label="Page navigation example">
-                        <ul th:if="${books.totalPages > 0}" class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
-                                   th:href="@{/{category}(size=${books.size}, page=${1}, category=${category})}">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <th:block th:each="pageNumber : ${pageNumbers}">
-                                <li class="page-item"><a th:href="@{/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
-                                                         th:text="${pageNumber}" class="page-link" href="#"></a></li>
-                            </th:block>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"
-                                   th:href="@{/{category}(size=${books.size}, page=${books.totalPages}, category=${category})}">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </nav>
                 </div>
+
+                <nav aria-label="Page navigation example">
+                    <ul th:if="${books.totalPages > 0}" class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
+                               th:href="@{/{category}(size=${books.size}, page=${1}, category=${category})}">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <th:block th:each="pageNumber : ${pageNumbers}">
+                            <li class="page-item"><a th:href="@{/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
+                                                     th:text="${pageNumber}" class="page-link" href="#"></a></li>
+                        </th:block>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"
+                               th:href="@{/{category}(size=${books.size}, page=${books.totalPages}, category=${category})}">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
 
             </section>
         </div>

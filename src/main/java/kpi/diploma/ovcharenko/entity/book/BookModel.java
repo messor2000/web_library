@@ -16,7 +16,6 @@ public class BookModel implements Serializable {
     private String bookName;
     private int year;
     private String author;
-//    private String subject;
     private int amount;
     private String description;
     private transient Set<BookCategory> categories;

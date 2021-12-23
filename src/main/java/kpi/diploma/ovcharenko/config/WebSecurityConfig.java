@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/registration",
                         "/",
                         "/{category}",
-                        "/find",
+                        "/find/*",
                         "/table/books/*",
                         "/js/**",
                         "/css/**",

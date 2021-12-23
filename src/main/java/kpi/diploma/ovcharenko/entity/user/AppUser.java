@@ -50,8 +50,6 @@ public class AppUser {
     @NotEmpty
     private String password;
 
-    private boolean enabled;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -60,21 +58,19 @@ public class AppUser {
     )
     private Collection<UserRole> roles = new HashSet<>();
 
-    public AppUser(String firstName, String lastName, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    }
-
-    public AppUser(String firstName, String lastName, String email, String password, Collection<UserRole> roles) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-    }
     public void setRoles(Collection<UserRole> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String  toString() {
+        return "AppUser{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
