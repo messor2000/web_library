@@ -90,8 +90,6 @@
                             <p th:text="${book.description}"></p>
 
                             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                                <!--                                <a th:href="@{/takeBook/{id}(id=${book.id})}"-->
-                                <!--                                   class="btn btn-danger button btn btn-primary">Take book</a>-->
                                 <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
                                     <div class="col-sm-6 col-sm-offset-3">
                                         <input type="submit"
@@ -99,6 +97,15 @@
                                                id="book-take-submit"
                                                class="form-control btn btn-info"
                                                value="Take Book"/>
+                                    </div>
+                                </form>
+                                <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <input type="submit"
+                                               name="login-submit"
+                                               id="book-return-submit"
+                                               class="form-control btn btn-info"
+                                               value="Return Book"/>
                                     </div>
                                 </form>
                             </div>

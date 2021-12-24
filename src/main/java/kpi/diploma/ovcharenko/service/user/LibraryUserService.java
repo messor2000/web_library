@@ -1,8 +1,10 @@
 package kpi.diploma.ovcharenko.service.user;
 
+import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.UserRole;
+import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,11 +21,14 @@ import java.util.stream.Collectors;
 public class LibraryUserService implements UserService {
 
     private final UserRepository userRepository;
+    private final BookRepository bookRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public LibraryUserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public LibraryUserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
+                              BookRepository bookRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.bookRepository = bookRepository;
     }
 
     @Override
@@ -49,6 +54,26 @@ public class LibraryUserService implements UserService {
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
         return userRepository.save(user);
+    }
+
+    @Override
+    public void takeBook(Long id, String username) {
+        AppUser user = findByEmail(username);
+        Book book = bookRepository.findById(id).get();
+
+        user.getBooks().add(book);
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void returnBook(Long id, String username) {
+        AppUser user = findByEmail(username);
+        Book book = bookRepository.findById(id).get();
+
+        user.getBooks().remove(book);
+
+        userRepository.save(user);
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles){

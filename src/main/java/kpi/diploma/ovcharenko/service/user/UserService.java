@@ -8,4 +8,8 @@ public interface UserService extends UserDetailsService {
     AppUser findByEmail(String email);
 
     AppUser save(UserModel registration);
+
+    void takeBook(Long id, String username);
+
+    void returnBook(Long id, String username);
 }

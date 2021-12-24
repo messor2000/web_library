@@ -1,5 +1,6 @@
 package kpi.diploma.ovcharenko.entity.book;
 
+import kpi.diploma.ovcharenko.entity.user.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,13 +15,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -28,14 +31,12 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Builder(toBuilder = true)
 @Table(name = "books")
-public class Book implements Serializable {
+public class Book {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "idbooks", insertable = false, updatable = false)
-    @EqualsAndHashCode.Exclude
     private Long id;
 
     @Column(name = "book_name")
@@ -61,12 +62,16 @@ public class Book implements Serializable {
 //    @Column(name = "image", columnDefinition="longblob")
 //    private Byte[] image;
 
-    @Column(name = "image", nullable = true, length = 64)
+    @Column(name = "image", length = 64)
     private String image;
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
+
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private AppUser appUser;
 
     public void addCategory(BookCategory category){
         categories.add(category);
@@ -78,5 +83,25 @@ public class Book implements Serializable {
         if (image == null || id == null) return null;
 
         return "/covers/" + id + "/" + image;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return year == book.year &&
+                amount == book.amount &&
+                Objects.equals(id, book.id) &&
+                Objects.equals(bookName, book.bookName) &&
+                Objects.equals(author, book.author) &&
+                Objects.equals(description, book.description) &&
+                Objects.equals(image, book.image) &&
+                Objects.equals(categories, book.categories);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, bookName, year, author, amount, description, image, categories);
     }
 }
