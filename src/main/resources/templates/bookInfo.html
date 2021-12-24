@@ -89,6 +89,20 @@
                             <label>Book Description</label>
                             <p th:text="${book.description}"></p>
 
+                            <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+                                <!--                                <a th:href="@{/takeBook/{id}(id=${book.id})}"-->
+                                <!--                                   class="btn btn-danger button btn btn-primary">Take book</a>-->
+                                <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <input type="submit"
+                                               name="login-submit"
+                                               id="book-take-submit"
+                                               class="form-control btn btn-info"
+                                               value="Take Book"/>
+                                    </div>
+                                </form>
+                            </div>
+
                             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                 <table id="books" class="table table-bordered table-responsive-sm">
                                     <a th:href="@{/edit/{id}(id=${book.id})}" type="button"

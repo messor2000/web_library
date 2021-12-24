@@ -76,6 +76,32 @@
                             <p th:text="${appUser.lastName}"></p>
                             <label>Email</label>
                             <p th:text="${appUser.email}"></p>
+                            <label>Registration date</label>
+                            <p th:text="${appUser.registrationDate}"></p>
+
+                            <tr th:each="book : ${userBooks}">
+                                <li class="book-item small-12 medium-6 columns">
+                                    <div class="bk-img">
+                                        <div class="bk-wrapper">
+                                            <div class="bk-book bk-bookdefault">
+                                                <div class="bk-front">
+                                                    <div class="bk-cover"
+                                                         style="background-image: url('/img/bookCover.gif')"></div>
+                                                </div>
+                                                <div class="bk-back"></div>
+                                                <div class="bk-left"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item-details">
+                                        <h3 class="book-item_title" th:text="${book.bookName}"></h3>
+                                        <p class="author" th:text="${book.author}"></p>
+                                        <p class="published" th:text="${book.year}"></p>
+                                        <!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
+                                        <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
+                                    </div>
+                                </li>
+                            </tr>
 
                             <table id="books" class="table table-bordered table-responsive-sm">
                                 <a th:href="@{/update/{email}(email=${appUser.email})}" type="button"
