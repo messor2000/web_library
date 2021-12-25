@@ -45,8 +45,8 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String registerUserAccount(@ModelAttribute("user") @Valid UserModel userDto, BindingResult result) {
-        AppUser existing = userService.findByEmail(userDto.getEmail());
+    public String registerUserAccount(@ModelAttribute("user") @Valid UserModel userModel, BindingResult result) {
+        AppUser existing = userService.findByEmail(userModel.getEmail());
         if (existing != null) {
             result.rejectValue("email", null, "There is already an account registered with that email");
         }
@@ -55,9 +55,9 @@ public class UserController {
             return "registration";
         }
 
-        userService.save(userDto);
+        userService.save(userModel);
 
-        securityService.autoLogin(userDto.getEmail(), userDto.getConfirmPassword());
+        securityService.autoLogin(userModel.getEmail(), userModel.getConfirmPassword());
 
         return "redirect:/";
     }

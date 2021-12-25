@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,12 +21,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +36,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder(toBuilder = true)
-@Table(name = "library_user")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"), name = "library_user")
 public class AppUser {
     @Id
     @Column(name = "id")
