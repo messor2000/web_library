@@ -15,7 +15,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -72,6 +71,9 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private AppUser user;
+
     public void addCategory(BookCategory category){
         categories.add(category);
         category.setBook(this);
@@ -96,11 +98,12 @@ public class Book {
                 Objects.equals(author, book.author) &&
                 Objects.equals(description, book.description) &&
                 Objects.equals(image, book.image) &&
+                Objects.equals(bookStatus, book.bookStatus) &&
                 Objects.equals(categories, book.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookName, year, author, amount, description, image, categories);
+        return Objects.hash(id, bookName, year, author, amount, description, image, bookStatus, categories);
     }
 }

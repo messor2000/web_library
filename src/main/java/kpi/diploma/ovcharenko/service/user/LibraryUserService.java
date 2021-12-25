@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -57,6 +58,7 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public void takeBook(Long id, String username) {
         AppUser user = findByEmail(username);
         Book book = bookRepository.findById(id).get();
@@ -66,12 +68,13 @@ public class LibraryUserService implements UserService {
             book.setBookStatus("used");
         }
 
-        user.getBooks().add(book);
+        user.addBook(book);
 
         userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void returnBook(Long id, String username) {
         AppUser user = findByEmail(username);
         Book book = bookRepository.findById(id).get();
@@ -79,7 +82,7 @@ public class LibraryUserService implements UserService {
         book.setAmount(book.getAmount() + 1);
         book.setBookStatus("unused");
 
-        user.getBooks().remove(book);
+        user.removeBook(book);
 
         userRepository.save(user);
     }

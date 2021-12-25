@@ -76,8 +76,8 @@
                             <p th:text="${appUser.lastName}"></p>
                             <label>Email</label>
                             <p th:text="${appUser.email}"></p>
-<!--                            <label>Registration date</label>-->
-<!--                            <p th:text="${appUser.registrationDate}"></p>-->
+                            <label>Registration date</label>
+                            <p th:text="${appUser.registrationDate}"></p>
 
                             <tr th:each="book : ${userBooks}">
                                 <li class="book-item small-12 medium-6 columns">
@@ -104,18 +104,16 @@
 <!--                                            <span th:case="'0'">Book is taken</span>-->
 <!--                                            <span th:case="'1'"></span>-->
 <!--                                        </td>-->
-
+                                        <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <input type="submit"
+                                                       name="login-submit"
+                                                       id="book-return-submit"
+                                                       class="form-control btn btn-info"
+                                                       value="Return Book"/>
+                                            </div>
+                                        </form>
                                     </div>
-
-                                    <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
-                                        <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit"
-                                                   name="login-submit"
-                                                   id="book-return-submit"
-                                                   class="form-control btn btn-info"
-                                                   value="Return Book"/>
-                                        </div>
-                                    </form>
                                 </li>
                             </tr>
 

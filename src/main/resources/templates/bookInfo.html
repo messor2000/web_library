@@ -92,15 +92,17 @@
                             <p th:text="${book.bookStatus}"></p>
 
                             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                                <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
-                                    <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit"
-                                               name="login-submit"
-                                               id="book-take-submit"
-                                               class="form-control btn btn-info"
-                                               value="Take Book"/>
-                                    </div>
-                                </form>
+                                <div th:if="${book.amount} >= 1">
+                                    <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="submit"
+                                                   name="login-submit"
+                                                   id="book-take-submit"
+                                                   class="form-control btn btn-info"
+                                                   value="Take Book"/>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
 
                             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">

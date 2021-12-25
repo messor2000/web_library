@@ -47,20 +47,25 @@ public class AppUser {
     private Long id;
 
     @NotEmpty
+    @Column(name = "first_name")
     private String firstName;
 
     @NotEmpty
+    @Column(name = "last_name")
     private String lastName;
 
     @NotEmpty
     @Email
+    @Column(name = "email")
     private String email;
 
     @NotEmpty
+    @Column(name = "password")
     private String password;
 
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-//    private Date date;
+    @CreationTimestamp
+    @Column(name = "create_time")
+    private Timestamp registrationDate;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
@@ -70,11 +75,20 @@ public class AppUser {
     )
     private Collection<UserRole> roles = new HashSet<>();
 
-//    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<Book> books;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Book> books = new HashSet<>();
+
+    public void addBook(Book book){
+        books.add(book);
+        book.setUser(this);
+    }
+    public void removeBook(Book book){
+        books.remove(book);
+        book.setUser(null);
+    }
+
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private Set<Book> books = new HashSet<>();
 
 //    public void addBook(Book book){
 //        books.add(book);
