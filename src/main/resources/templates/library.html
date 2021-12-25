@@ -18,7 +18,7 @@
         <h2 class="">The Library</h2>
         <ul>
             <li><a href="/">Library</a></li>
-            <li><a href="/table/books/all">Table library</a></li>
+            <li><a href="/table/">Table library</a></li>
 
             <div sec:authorize="!isAuthenticated()">
                 <li><a href="/registration">Registration</a></li>
@@ -133,6 +133,7 @@
                                     <h3 class="book-item_title" th:text="${book.bookName}"></h3>
                                     <p class="author" th:text="${book.author}"></p>
                                     <p class="published" th:text="${book.year}"></p>
+                                    <p class="status" th:text="${book.bookStatus}"></p>
 <!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
                                     <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
                                 </div>

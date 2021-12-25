@@ -32,7 +32,7 @@ public class TableBookController {
         this.bookService = bookService;
     }
 
-    @GetMapping(value = "/books/all")
+    @GetMapping(value = "/")
     public String getAllBooks(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
@@ -54,7 +54,7 @@ public class TableBookController {
         return "tableLibrary";
     }
 
-    @GetMapping(value = "/books/{category}")
+    @GetMapping(value = "/{category}")
     public String getBooksByCategory(Model model, @PathVariable("category") String category,
                                      @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(FIRST_PAGE);

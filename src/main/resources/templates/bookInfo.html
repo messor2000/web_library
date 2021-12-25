@@ -88,6 +88,8 @@
                             <p th:text="${book.amount}"></p>
                             <label>Book Description</label>
                             <p th:text="${book.description}"></p>
+                            <label>Book Status</label>
+                            <p th:text="${book.bookStatus}"></p>
 
                             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
                                 <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
@@ -97,15 +99,6 @@
                                                id="book-take-submit"
                                                class="form-control btn btn-info"
                                                value="Take Book"/>
-                                    </div>
-                                </form>
-                                <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
-                                    <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit"
-                                               name="login-submit"
-                                               id="book-return-submit"
-                                               class="form-control btn btn-info"
-                                               value="Return Book"/>
                                     </div>
                                 </form>
                             </div>

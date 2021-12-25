@@ -61,6 +61,11 @@ public class LibraryUserService implements UserService {
         AppUser user = findByEmail(username);
         Book book = bookRepository.findById(id).get();
 
+        book.setAmount(book.getAmount() - 1);
+        if (book.getAmount() == 0) {
+            book.setBookStatus("used");
+        }
+
         user.getBooks().add(book);
 
         userRepository.save(user);
@@ -70,6 +75,9 @@ public class LibraryUserService implements UserService {
     public void returnBook(Long id, String username) {
         AppUser user = findByEmail(username);
         Book book = bookRepository.findById(id).get();
+
+        book.setAmount(book.getAmount() + 1);
+        book.setBookStatus("unused");
 
         user.getBooks().remove(book);
 

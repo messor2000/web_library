@@ -18,7 +18,7 @@
         <h2 class="">The Library</h2>
         <ul>
             <li><a href="/">Library</a></li>
-            <li><a href="/table/books/all">Table library</a></li>
+            <li><a href="/table/">Table library</a></li>
 
             <div sec:authorize="!isAuthenticated()">
                 <li><a href="/registration">Registration</a></li>
@@ -108,6 +108,7 @@
                                 <th>Book Name</th>
                                 <th>Author</th>
                                 <th>Year</th>
+                                <td>Status</td>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -117,6 +118,7 @@
                                 <td th:text="${book.bookName}">title</td>
                                 <td th:text="${book.author}">body</td>
                                 <td th:text="${book.year}">body</td>
+                                <td th:text="${book.bookStatus}">body</td>
                                 <td>
                                     <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                         <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
@@ -133,17 +135,17 @@
                             <ul th:if="${books.totalPages > 0}" class="pagination">
                                 <li class="page-item">
                                     <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
-                                       th:href="@{/table/books/{category}(size=${books.size}, page=${1}, category=${category})}">
+                                       th:href="@{/table/{category}(size=${books.size}, page=${1}, category=${category})}">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
                                 <th:block th:each="pageNumber : ${pageNumbers}">
-                                    <li class="page-item"><a th:href="@{/table/books/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
+                                    <li class="page-item"><a th:href="@{/table/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
                                                              th:text="${pageNumber}" class="page-link" href="#"></a></li>
                                 </th:block>
                                 <li class="page-item">
                                     <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"
-                                       th:href="@{/table/books/{category}(size=${books.size}, page=${books.totalPages}, category=${category})}">
+                                       th:href="@{/table/{category}(size=${books.size}, page=${books.totalPages}, category=${category})}">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>

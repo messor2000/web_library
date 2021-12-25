@@ -65,13 +65,12 @@ public class Book {
     @Column(name = "image", length = 64)
     private String image;
 
+    @Column(name = "book_status")
+    private String bookStatus;
+
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
-
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private AppUser appUser;
 
     public void addCategory(BookCategory category){
         categories.add(category);

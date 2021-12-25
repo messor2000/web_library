@@ -99,7 +99,23 @@
                                         <p class="published" th:text="${book.year}"></p>
                                         <!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
                                         <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
+
+<!--                                        <td th:switch="${#lists.size(book.amount)}">-->
+<!--                                            <span th:case="'0'">Book is taken</span>-->
+<!--                                            <span th:case="'1'"></span>-->
+<!--                                        </td>-->
+
                                     </div>
+
+                                    <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="submit"
+                                                   name="login-submit"
+                                                   id="book-return-submit"
+                                                   class="form-control btn btn-info"
+                                                   value="Return Book"/>
+                                        </div>
+                                    </form>
                                 </li>
                             </tr>
 

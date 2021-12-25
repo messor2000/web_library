@@ -70,9 +70,9 @@ public class LibraryExcelDataService implements ExcelDataService {
                 BookCategory bookCategory = new BookCategory();
                 bookCategory.setCategory(category);
                 book.addCategory(bookCategory);
-
                 book.setAmount(1);
                 book.setDescription("---");
+                book.setBookStatus("unused");
 
                 books.add(book);
             }
