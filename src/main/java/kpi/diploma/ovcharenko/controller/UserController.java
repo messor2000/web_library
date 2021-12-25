@@ -9,7 +9,6 @@ import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.LibraryUserService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
 import kpi.diploma.ovcharenko.service.user.UserService;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,13 +25,11 @@ import java.util.Set;
 public class UserController {
 
     private final UserService userService;
-    private final BookService bookService;
     private final SecurityService securityService;
 
-    public UserController(LibraryUserService userService, LibrarySecurityService securityService, LibraryBookService bookService) {
+    public UserController(LibraryUserService userService, LibrarySecurityService securityService) {
         this.userService = userService;
         this.securityService = securityService;
-        this.bookService = bookService;
     }
 
     @GetMapping("/registration")
@@ -82,21 +79,6 @@ public class UserController {
         return "userProfile";
     }
 
-//    @PostMapping("/takeBook/{id}")
-//    public String takeBook(@PathVariable(name = "id") Long id, BindingResult result) {
-//        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-//        AppUser user = userService.findByEmail(currentUser);
-//        Book book = bookService.findBookById(id);
-//
-//        if (result.hasErrors()) {
-//            return "/takeBook/{id}";
-//        }
-////            result.rejectValue("username", "usernameInUse", "Username is already in use");
-////        userService.takeBook(id, user.getEmail());
-//
-//        return "redirect:/";
-//    }
-
     @PostMapping("/takeBook/{id}")
     public String takeBook(@PathVariable(name = "id") Long id) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -116,14 +98,4 @@ public class UserController {
 
         return "redirect:/";
     }
-
-
-//    @PostMapping("/update/profile")
-//    public String updateUserProfile(@AuthenticationPrincipal UserModel userDto, Model model) {
-//        AppUser user = userService.findByEmail(userDto.getEmail());
-//
-//        model.addAttribute("appUser", user);
-//
-//        return "userProfile";
-//    }
 }

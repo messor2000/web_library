@@ -13,6 +13,5 @@ public interface CategoryRepository extends CrudRepository<BookCategory, Long> {
 
     void deleteAllByCategory(String category);
 
-//    @Query(value = "select * from web_library.book_categories where category in (select category from book_categories group by category having count(*) > 1)", nativeQuery = true)
     List<BookCategory> findAllByCategoryContains(String category);
 }
