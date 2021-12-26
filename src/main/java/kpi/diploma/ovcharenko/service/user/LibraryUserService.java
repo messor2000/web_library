@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class LibraryUserService implements UserService {
 
     private final UserRepository userRepository;
@@ -91,5 +92,27 @@ public class LibraryUserService implements UserService {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
+    }
+
+    public void updateResetPasswordToken(String token, String email) throws UsernameNotFoundException {
+        AppUser user = userRepository.findByEmail(email);
+        if (user != null) {
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+        } else {
+            throw new UsernameNotFoundException("Could not find any user with the email " + email);
+        }
+    }
+
+    public AppUser getByResetPasswordToken(String token) {
+        return userRepository.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(AppUser customer, String newPassword) {
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        customer.setPassword(encodedPassword);
+
+        customer.setResetPasswordToken(null);
+        userRepository.save(customer);
     }
 }

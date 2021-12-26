@@ -15,24 +15,24 @@
 <div id="main-container" class="main-container nav-effect-1">
 
     <nav class="nav-menu nav-effect-1" id="menu-1">
-        <h2 class="">The Library</h2>
+        <h2 class="" th:text="#{title}">The Library</h2>
         <ul>
-            <li><a href="/">Library</a></li>
-            <li><a href="/table/">Table library</a></li>
+            <li><a href="/" th:text="#{nav.home}">Library</a></li>
+            <li><a href="/table/" th:text="#{nav.table}">Table library</a></li>
 
             <div sec:authorize="!isAuthenticated()">
-                <li><a href="/registration">Registration</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/registration" th:text="#{nav.registration}">Registration</a></li>
+                <li><a href="/login" th:text="#{nav.login}">Login</a></li>
             </div>
 
             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                <li><a href="/files/upload">Upload file</a></li>
-                <li><a href="/add">Add new book</a></li>
-                <li><a href="/changeCategories">Change Categories</a></li>
+                <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
+                <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
+                <li><a href="/changeCategories" th:text="#{nav.change.categories}">Change Categories</a></li>
             </div>
             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                <li><a href="/profile" th:text="${#authentication.name}"></a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>
+                <li><a href="/logout" th:text="#{nav.logout}">Logout</a></li>
             </div>
         </ul>
     </nav>
@@ -50,10 +50,21 @@
                     </a>
                 </div>
 
+                <div class="localization" th:if="${#locale.toString() == 'uk_UK'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_US')}">
+                        <i>EN</i>
+                    </a>
+                </div>
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UK')}">
+                        <i>UK</i>
+                    </a>
+                </div>
+
                 <div class="menu-search">
                     <!-- Main Navigation -->
                     <div class="main-navigation">
-                        <a href="#">Menu</a>
+                        <a href="#" th:text="#{nav.menu}">Menu</a>
                     </div>
 
                     <!-- Search -->
@@ -76,12 +87,12 @@
         <div class="page-container">
 
             <div class="page-title category-title">
-                <h1>Books table</h1>
+                <h1 th:text="#{table.title}">Books table</h1>
             </div>
 
             <div class="toolbar row">
                 <div class="filter-options small-12 medium-9 columns">
-                    <a th:href="@{/}" class="filter-item">Все категории</a>
+                    <a th:href="@{/}" class="filter-item">Всі категорії</a>
                     <tr th:each="category : ${categories}">
                         <a th:href="@{/{category}(category = ${category})}" class="filter-item" th:text="${category}"></a>
                     </tr>
@@ -104,12 +115,12 @@
                         <table id="books" class="table table-bordered table-responsive-sm">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Book Name</th>
-                                <th>Author</th>
-                                <th>Year</th>
-                                <td>Status</td>
-                                <th>Action</th>
+                                <th th:text="#{table.id}">ID</th>
+                                <th th:text="#{book.name}">Book Name</th>
+                                <th th:text="#{book.author}">Author</th>
+                                <th th:text="#{book.year}">Year</th>
+                                <td th:text="#{book.status}">Status</td>
+                                <th th:text="#{book.action}">Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -120,11 +131,24 @@
                                 <td th:text="${book.year}">body</td>
                                 <td th:text="${book.bookStatus}">body</td>
                                 <td>
+                                    <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+                                        <div th:if="${book.amount} >= 1">
+                                            <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
+                                                <div class="col-sm-6 col-sm-offset-3">
+                                                    <input type="submit"
+                                                           name="login-submit"
+                                                           id="book-take-submit"
+                                                           class="form-control btn btn-info"
+                                                           value="Take Book"/>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
                                     <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                         <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
-                                           data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
+                                           data-bs-toggle="modal" data-bs-target="#exampleModal" th:text="#{book.update}">Update</a>
                                         <a th:href="@{/delete/{id}(id=${book.id})}"
-                                           class="btn btn-danger button btn btn-primary">Delete</a>
+                                           class="btn btn-danger button btn btn-primary" th:text="#{book.delete}">Delete</a>
                                     </div>
                                 </td>
                             </tr>

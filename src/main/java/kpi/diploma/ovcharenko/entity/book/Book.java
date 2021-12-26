@@ -43,12 +43,9 @@ public class Book {
     private String bookName;
 
     @Column(name = "year")
-    @NotBlank(message = "Year is mandatory")
-    @Size(min = 4, max = 4, message = "Year should be like 1984")
     private int year;
 
     @Column(name = "author")
-    @NotBlank(message = "Year is mandatory")
     private String author;
 
     @Column(name = "amount")

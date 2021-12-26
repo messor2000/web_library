@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      lang="">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -15,24 +16,24 @@
 <div id="main-container" class="main-container nav-effect-1">
 
     <nav class="nav-menu nav-effect-1" id="menu-1">
-        <h2 class="">The Library</h2>
+        <h2 class="" th:text="#{title}">The Library</h2>
         <ul>
-            <li><a href="/">Library</a></li>
-            <li><a href="/table/">Table library</a></li>
+            <li><a href="/" th:text="#{nav.home}">Library</a></li>
+            <li><a href="/table/" th:text="#{nav.table}">Table library</a></li>
 
             <div sec:authorize="!isAuthenticated()">
-                <li><a href="/registration">Registration</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/registration" th:text="#{nav.registration}">Registration</a></li>
+                <li><a href="/login" th:text="#{nav.login}">Login</a></li>
             </div>
 
             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                <li><a href="/files/upload">Upload file</a></li>
-                <li><a href="/add">Add new book</a></li>
-                <li><a href="/changeCategories">Change Categories</a></li>
+                <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
+                <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
+                <li><a href="/changeCategories" th:text="#{nav.change.categories}">Change Categories</a></li>
             </div>
             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                <li><a href="/profile" th:text="${#authentication.name}"></a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>
+                <li><a href="/logout" th:text="#{nav.logout}">Logout</a></li>
             </div>
         </ul>
     </nav>
@@ -50,24 +51,24 @@
                     </a>
                 </div>
 
+                <div class="localization" th:if="${#locale.toString() == 'uk_UK'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_US')}">
+                        <i>EN</i>
+                    </a>
+                </div>
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UK')}">
+                        <i>UK</i>
+                    </a>
+                </div>
+
                 <div class="menu-search">
                     <!-- Main Navigation -->
                     <div class="main-navigation">
-                        <a href="#">Menu</a>
+                        <a href="#" th:text="#{nav.menu}">Menu</a>
                     </div>
 
                     <!-- Search -->
-
-<!--                    <div class="catalog-search">-->
-<!--                        <form th:action="@{/find}" method="get">-->
-<!--                            <input class="shuffle-search input_field " type="search" autocomplete="off" value=""-->
-<!--                                   maxlength="128" id="input-search" name="bookName"/>-->
-<!--                            <label class="input_label" for="input-search">-->
-<!--                                <span class="input_label-content">Search Library</span>-->
-<!--                                <span class="input_label-search"></span>-->
-<!--                            </label>-->
-<!--                        </form>-->
-<!--                    </div>-->
                     <form action="#" th:action="@{/find}" th:object="${books}">
                         <div class="catalog-search">
                             <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
@@ -87,7 +88,7 @@
         <div class="page-container">
 
             <div class="page-title category-title">
-                <h1>Books</h1>
+                <h1 th:text="#{body.title}">Books</h1>
             </div>
 
             <section id="book_list">
@@ -96,20 +97,21 @@
                     <div class="filter-options small-12 medium-9 columns">
                         <a th:href="@{/}" class="filter-item">Все категории</a>
                         <tr th:each="category : ${categories}">
-                            <a th:href="@{/{category}(category = ${category})}" class="filter-item" th:text="${category}"></a>
+                            <a th:href="@{/{category}(category = ${category})}" class="filter-item"
+                               th:text="${category}"></a>
                         </tr>
                     </div>
 
-<!--                    <div class="small-12 medium-3 columns">-->
-<!--                        <label>-->
-<!--                            <select class="sort-options">-->
-<!--                                <option value="" disabled selected>Sort by</option>-->
-<!--                                <option value="">Featured</option>-->
-<!--                                <option th:href="@{/{sorting}(sorting = ${'Alphabetical'})}" value="title">Alphabetical</option>-->
-<!--                                <option th:href="@{/{sorting}(sorting = ${'Published'})}" value="date-created">Published</option>-->
-<!--                            </select>-->
-<!--                        </label>-->
-<!--                    </div>-->
+                    <!--                    <div class="small-12 medium-3 columns">-->
+                    <!--                        <label>-->
+                    <!--                            <select class="sort-options">-->
+                    <!--                                <option value="" disabled selected>Sort by</option>-->
+                    <!--                                <option value="">Featured</option>-->
+                    <!--                                <option th:href="@{/{sorting}(sorting = ${'Alphabetical'})}" value="title">Alphabetical</option>-->
+                    <!--                                <option th:href="@{/{sorting}(sorting = ${'Published'})}" value="date-created">Published</option>-->
+                    <!--                            </select>-->
+                    <!--                        </label>-->
+                    <!--                    </div>-->
                 </div>
 
                 <div class="grid-shuffle table table-bordered table-responsive-sm">
@@ -134,8 +136,8 @@
                                     <p class="author" th:text="${book.author}"></p>
                                     <p class="published" th:text="${book.year}"></p>
                                     <p class="status" th:text="${book.bookStatus}"></p>
-<!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
-                                    <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
+                                    <!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
+                                    <a class="col-sm-6 col-sm-offset-3" th:href="@{/find/{id}(id=${book.id})}" th:text="#{book.details}">Details</a>
                                 </div>
                             </li>
                         </tr>
@@ -151,8 +153,9 @@
                             </a>
                         </li>
                         <th:block th:each="pageNumber : ${pageNumbers}">
-                            <li class="page-item"><a th:href="@{/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
-                                                     th:text="${pageNumber}" class="page-link" href="#"></a></li>
+                            <li class="page-item"><a
+                                    th:href="@{/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
+                                    th:text="${pageNumber}" class="page-link" href="#"></a></li>
                         </th:block>
                         <li class="page-item">
                             <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"

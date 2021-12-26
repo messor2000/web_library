@@ -116,6 +116,12 @@ a.button:hover, a.button:focus {
     width: auto;
 }
 
+.localization {
+    display: inline-block;
+    padding: 1em;
+    width: auto;
+}
+
 .main-logo a.logo {
     display: block;
     width: 150px;
@@ -417,6 +423,11 @@ a.button:hover, a.button:focus {
     transition: opacity 0.5s, width 0.1s 0.5s, height 0.1s 0.5s;
 }
 
+.page-title {
+    position: relative;
+    right: -125px;
+}
+
 /*
  *  book List
 */
@@ -442,7 +453,7 @@ a.button:hover, a.button:focus {
     padding-bottom: 18px;
     font-size: 14px;
     color: #313131;
-    border-bottom: 0px solid transparent;
+    border-bottom: 0 solid transparent;
     transition: all 250ms ease-out;
 }
 
@@ -482,12 +493,12 @@ a.button:hover, a.button:focus {
 }
 
 .book-item:hover:after {
-    box-shadow: 0px 1px 1px 1px rgba(210, 214, 213, 0.5);
+    box-shadow: 0 1px 1px 1px rgba(210, 214, 213, 0.5);
     background-color: #fff;
 }
 
 .book-item:hover .item-img img {
-    box-shadow: 0px 0px 10px 0px rgba(49, 49, 49, 0.25);
+    box-shadow: 0 0 10px 0 rgba(49, 49, 49, 0.25);
 }
 
 .book-item:hover a.button {

@@ -16,24 +16,24 @@
 <div id="main-container" class="main-container nav-effect-1">
 
     <nav class="nav-menu nav-effect-1" id="menu-1">
-        <h2 class="">Add new book</h2>
+        <h2 class="" th:text="#{title}">The Library</h2>
         <ul>
-            <li><a href="/">Library</a></li>
-            <li><a href="/table/books/all">Table library</a></li>
+            <li><a href="/" th:text="#{nav.home}">Library</a></li>
+            <li><a href="/table/" th:text="#{nav.table}">Table library</a></li>
 
             <div sec:authorize="!isAuthenticated()">
-                <li><a href="/registration">Registration</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/registration" th:text="#{nav.registration}">Registration</a></li>
+                <li><a href="/login" th:text="#{nav.login}">Login</a></li>
             </div>
 
             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                <li><a href="/files/upload">Upload file</a></li>
-                <li><a href="/add">Add new book</a></li>
-                <li><a href="/changeCategories">Change Categories</a></li>
+                <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
+                <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
+                <li><a href="/changeCategories" th:text="#{nav.change.categories}">Change Categories</a></li>
             </div>
             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                <li><a href="/profile" th:text="${#authentication.name}"></a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>
+                <li><a href="/logout" th:text="#{nav.logout}">Logout</a></li>
             </div>
         </ul>
     </nav>
@@ -51,10 +51,21 @@
                     </a>
                 </div>
 
+                <div class="localization" th:if="${#locale.toString() == 'uk_UK'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_US')}">
+                        <i>EN</i>
+                    </a>
+                </div>
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UK')}">
+                        <i>UK</i>
+                    </a>
+                </div>
+
                 <div class="menu-search">
                     <!-- Main Navigation -->
                     <div class="main-navigation">
-                        <a href="#">Menu</a>
+                        <a href="#" th:text="#{nav.menu}">Menu</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +76,7 @@
         <div class="page-container">
 
             <div class="page-title category-title">
-                <h1>Add new book</h1>
+                <h1 th:text="#{book.add}">Add new book</h1>
             </div>
 
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -75,13 +86,13 @@
                         <form method="post" th:object="${book}" enctype="multipart/form-data" th:action="@{/add}">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="bookName">Book name</label>
+                                    <label for="bookName" th:text="#{book.name}">Book name</label>
                                     <input type="text" class="form-control" id="bookName" th:field="*{bookName}"
                                            placeholder="Book name"/>
-                                    <label for="author">Author</label>
+                                    <label for="author" th:text="#{book.author}">Author</label>
                                     <input type="text" class="form-control" id="author" th:field="*{author}"
                                            placeholder="Author"/>
-                                    <label for="year">Year</label>
+                                    <label for="year" th:text="#{book.year}">Year</label>
                                     <input type="number" class="form-control" id="year"
                                            placeholder="Year" th:field="*{year}"/>
 
@@ -94,10 +105,10 @@
                                         </datalist>
                                     </label>
 
-                                    <label for="image">Book cover: </label>
+                                    <label for="image" th:text="#{book.cover}">Book cover: </label>
                                     <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
 
-                                    <label for="description">Description</label>
+                                    <label for="description" th:text="#{book.description}">Description</label>
                                     <input type="text" id="description" placeholder="Description">
 
                                 </div>

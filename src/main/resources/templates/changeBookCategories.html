@@ -16,24 +16,24 @@
 <div id="main-container" class="main-container nav-effect-1">
 
     <nav class="nav-menu nav-effect-1" id="menu-1">
-        <h2 class="">Edit book</h2>
+        <h2 class="" th:text="#{title}">The Library</h2>
         <ul>
-            <li><a href="/">Library</a></li>
-            <li><a href="/table/books/all">Table library</a></li>
+            <li><a href="/" th:text="#{nav.home}">Library</a></li>
+            <li><a href="/table/" th:text="#{nav.table}">Table library</a></li>
 
             <div sec:authorize="!isAuthenticated()">
-                <li><a href="/registration">Registration</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/registration" th:text="#{nav.registration}">Registration</a></li>
+                <li><a href="/login" th:text="#{nav.login}">Login</a></li>
             </div>
 
             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                <li><a href="/files/upload">Upload file</a></li>
-                <li><a href="/add">Add new book</a></li>
-                <li><a href="/changeCategories">Change Categories</a></li>
+                <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
+                <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
+                <li><a href="/changeCategories" th:text="#{nav.change.categories}">Change Categories</a></li>
             </div>
             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                <li><a href="/profile" th:text="${#authentication.name}"></a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>
+                <li><a href="/logout" th:text="#{nav.logout}">Logout</a></li>
             </div>
         </ul>
     </nav>
@@ -51,10 +51,21 @@
                     </a>
                 </div>
 
+                <div class="localization" th:if="${#locale.toString() == 'uk_UK'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_US')}">
+                        <i>EN</i>
+                    </a>
+                </div>
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UK')}">
+                        <i>UK</i>
+                    </a>
+                </div>
+
                 <div class="menu-search">
                     <!-- Main Navigation -->
                     <div class="main-navigation">
-                        <a href="#">Menu</a>
+                        <a href="#" th:text="#{nav.menu}">Menu</a>
                     </div>
                 </div>
             </div>

@@ -15,24 +15,24 @@
 <div id="main-container" class="main-container nav-effect-1">
 
     <nav class="nav-menu nav-effect-1" id="menu-1">
-        <h2 class="">Edit book</h2>
+        <h2 class="" th:text="#{title}">The Library</h2>
         <ul>
-            <li><a href="/">Library</a></li>
-            <li><a href="/table/books/all">Table library</a></li>
+            <li><a href="/" th:text="#{nav.home}">Library</a></li>
+            <li><a href="/table/" th:text="#{nav.table}">Table library</a></li>
 
             <div sec:authorize="!isAuthenticated()">
-                <li><a href="/registration">Registration</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/registration" th:text="#{nav.registration}">Registration</a></li>
+                <li><a href="/login" th:text="#{nav.login}">Login</a></li>
             </div>
 
             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                <li><a href="/files/upload">Upload file</a></li>
-                <li><a href="/add">Add new book</a></li>
-                <li><a href="/changeCategories">Change Categories</a></li>
+                <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
+                <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
+                <li><a href="/changeCategories" th:text="#{nav.change.categories}">Change Categories</a></li>
             </div>
             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                <li><a href="/profile" th:text="${#authentication.name}"></a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>
+                <li><a href="/logout" th:text="#{nav.logout}">Logout</a></li>
             </div>
         </ul>
     </nav>
@@ -50,10 +50,21 @@
                     </a>
                 </div>
 
+                <div class="localization" th:if="${#locale.toString() == 'uk_UK'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_US')}">
+                        <i>EN</i>
+                    </a>
+                </div>
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UK')}">
+                        <i>UK</i>
+                    </a>
+                </div>
+
                 <div class="menu-search">
                     <!-- Main Navigation -->
                     <div class="main-navigation">
-                        <a href="#">Menu</a>
+                        <a href="#" th:text="#{nav.menu}">Menu</a>
                     </div>
                 </div>
             </div>
@@ -64,7 +75,7 @@
         <div class="page-container">
 
             <div class="page-title category-title">
-                <h1>Edit book</h1>
+                <h1 th:text="#{edit.title}">Edit book</h1>
             </div>
 
             <section id="book_list">
@@ -74,24 +85,24 @@
                         <div class="modal-content">
                             <form action="#" th:action="@{/update/{id}(id=${book.id})}"
                                   th:object="${book}" method="post" enctype="multipart/form-data">
-                                <label for="bookName">Book Name</label>
+                                <label for="bookName" th:text="#{book.name}">Book Name</label>
                                 <input type="text" th:field="${book.bookName}" id="bookName" placeholder="Book Name">
                                 <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
 
                                 <label for="author">Author</label>
-                                <input type="text" th:field="${book.author}" id="author" placeholder="Author">
+                                <input type="text" th:text="#{book.author}" th:field="${book.author}" id="author" placeholder="Author">
                                 <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
 
                                 <label for="year">Year</label>
-                                <input type="number" th:field="${book.year}" id="year" placeholder="Year">
+                                <input type="number" th:text="#{book.year}" th:field="${book.year}" id="year" placeholder="Year">
                                 <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
 
-                                <label>Book Categories</label>
+                                <label th:text="#{book.categories}">Book Categories</label>
                                 <tr th:each="category : ${bookCategories}">
                                     <td th:text="${category}"></td>
                                 </tr>
 
-                                <label> Add new book category
+                                <label th:text="#{edit.category}"> Add new book category
                                     <input style = "width:250px; height:20px;" list="select" name="category" th:name="category" id="category" placeholder="Category">
                                     <datalist class="form-control" id="select" name="category" th:name="category">
                                         <option th:each="category : ${categories}" th:value="${category}"
@@ -100,10 +111,10 @@
                                     </datalist>
                                 </label>
 
-                                <label for="image">Book cover: </label>
+                                <label for="image" th:text="#{book.cover}">Book cover: </label>
                                 <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
 
-                                <label for="description">Description</label>
+                                <label for="description" th:text="#{book.description}">Description</label>
                                 <input type="text" th:field="${book.description}" id="description"
                                        placeholder="Description">
 
