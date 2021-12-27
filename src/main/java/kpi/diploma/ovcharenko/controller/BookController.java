@@ -1,19 +1,20 @@
 package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.book.BookModel;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -173,40 +174,39 @@ public class BookController {
         return "editBook";
     }
 
+//    @PostMapping("/update/{id}")
+//    public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "category") String category,
+//                             @RequestParam(value = "image", required = false) MultipartFile multipartFile, BindingResult result) {
+//        if (result.hasErrors()) {
+//            book.setId(id);
+//            return "editBook";
+//        }
+//
+//        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+//
+//        bookService.updateBook(book, category, multipartFile);
+//
+//        return "redirect:/";
+//    }
+
     @PostMapping("/update/{id}")
     public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "category") String category,
-                             @RequestParam(value = "image", required = false) MultipartFile multipartFile, BindingResult result) {
+                             BindingResult result) {
         if (result.hasErrors()) {
             book.setId(id);
             return "editBook";
         }
 
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-        bookService.updateBook(book, category, multipartFile);
+        bookService.updateBook(book, category);
 
         return "redirect:/";
     }
 
-    @GetMapping("/changeCategories")
-    public String changeCategories(Model model) {
-        Set<String> categories = bookService.findAllCategories();
+    @PostMapping("/deleteCategory/{id}")
+    public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category, RedirectAttributes redirectAttributes) {
+        bookService.deleteCategory(id, category);
 
-        model.addAttribute("categories", categories);
-        return "changeBookCategories";
-    }
-
-    @PostMapping("/changeCategory/{newCategory}")
-    public String changeCategory(@RequestParam("category") String category, @PathVariable("newCategory") String newCategory) {
-        bookService.updateCategory(category, newCategory);
-
-        return "redirect:/";
-    }
-
-    @PostMapping("/deleteCategory/{category}")
-    public String deleteCategory(@PathVariable("category") String category) {
-        bookService.deleteCategory(category);
-
-        return "redirect:/";
+        redirectAttributes.addAttribute("bookId", id);
+        return "redirect:/edit/{bookId}";
     }
 }

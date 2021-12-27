@@ -58,7 +58,7 @@ public class Book {
 //    @Column(name = "image", columnDefinition="longblob")
 //    private Byte[] image;
 
-    @Column(name = "image", length = 64)
+    @Column(name = "image")
     private String image;
 
     @Column(name = "book_status")
@@ -74,6 +74,11 @@ public class Book {
     public void addCategory(BookCategory category){
         categories.add(category);
         category.setBook(this);
+    }
+
+    public void removeCategory(BookCategory category) {
+        categories.remove(category);
+        category.setBook(null);
     }
 
     @Transient

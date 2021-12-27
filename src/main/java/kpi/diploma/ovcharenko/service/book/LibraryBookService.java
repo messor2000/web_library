@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -40,24 +39,33 @@ public class LibraryBookService implements BookService {
         bookRepository.delete(book);
     }
 
+//    @Override
+//    @Transactional
+//    public void updateBook(Book book, String category, MultipartFile file) {
+//        BookCategory bookCategory = new BookCategory(category);
+//
+//        book.addCategory(bookCategory);
+//
+//        if (file.isEmpty()) {
+//            bookRepository.save(book);
+//        } else {
+////            saveBookWithImg(book, file);
+//            try {
+//                saveBookCover(book, file);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+////        bookRepository.save(book);
+//    }
+
     @Override
     @Transactional
-    public void updateBook(Book book, String category, MultipartFile file) {
+    public void updateBook(Book book, String category) {
         BookCategory bookCategory = new BookCategory(category);
 
         book.addCategory(bookCategory);
-
-        if (file.isEmpty()) {
-            bookRepository.save(book);
-        } else {
-//            saveBookWithImg(book, file);
-            try {
-                saveBookCover(book, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-//        bookRepository.save(book);
+        bookRepository.save(book);
     }
 
     @Override
@@ -73,17 +81,7 @@ public class LibraryBookService implements BookService {
 
         book.addCategory(bookCategory);
 
-//        bookRepository.save(book);
-        if (file.isEmpty()) {
-            bookRepository.save(book);
-        } else {
-//            saveBookWithImg(book, file);
-            try {
-                saveBookCover(book, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        bookRepository.save(book);
     }
 
 //    @Override
@@ -172,20 +170,26 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public void deleteCategory(String category) {
-        categoryRepository.deleteAllByCategory(category);
+    @Transactional
+    public void deleteCategory(Long id, String category) {
+        Book book = findBookById(id);
+        BookCategory bookCategory = categoryRepository.findByCategoryAndBook(category, book);
+        book.removeCategory(bookCategory);
+
+        categoryRepository.deleteById(bookCategory.getId());
+        bookRepository.save(book);
     }
-
-    @Override
-    public void updateCategory(String category, String newCategory) {
-        List<BookCategory> bookCategories = categoryRepository.findAllByCategoryContains(category);
-
-        for (BookCategory bookCategory: bookCategories) {
-            bookCategory.setCategory(newCategory);
-        }
-
-        categoryRepository.saveAll(bookCategories);
-    }
+//
+//    @Override
+//    public void updateCategory(String category, String newCategory) {
+//        List<BookCategory> bookCategories = categoryRepository.findAllByCategoryContains(category);
+//
+//        for (BookCategory bookCategory: bookCategories) {
+//            bookCategory.setCategory(newCategory);
+//        }
+//
+//        categoryRepository.saveAll(bookCategories);
+//    }
 }
 
 

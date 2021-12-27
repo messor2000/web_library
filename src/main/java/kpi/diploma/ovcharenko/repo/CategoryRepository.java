@@ -1,5 +1,6 @@
 package kpi.diploma.ovcharenko.repo;
 
+import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,6 +13,10 @@ public interface CategoryRepository extends CrudRepository<BookCategory, Long> {
     Set<String> findAllCategories();
 
     void deleteAllByCategory(String category);
+
+    BookCategory findByCategoryAndBook(String category, Book book);
+
+    void deleteByCategoryAndBook(String category, Book book);
 
     List<BookCategory> findAllByCategoryContains(String category);
 }

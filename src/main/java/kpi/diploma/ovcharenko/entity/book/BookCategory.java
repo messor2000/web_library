@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -23,7 +22,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "book_categories")
-public class BookCategory implements Serializable {
+public class BookCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idcategory", insertable = false, updatable = false)
@@ -33,7 +32,6 @@ public class BookCategory implements Serializable {
     private String category;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
     public BookCategory(String category) {

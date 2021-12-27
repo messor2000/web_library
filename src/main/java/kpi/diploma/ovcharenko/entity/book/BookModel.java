@@ -13,11 +13,14 @@ import java.util.Set;
 @Builder(toBuilder = true)
 public class BookModel implements Serializable {
 
+    private Long id;
     private String bookName;
     private int year;
     private String author;
     private int amount;
     private String description;
+    private String bookStatus;
+    private String image;
     private transient Set<BookCategory> categories;
 
     @Override
@@ -27,15 +30,45 @@ public class BookModel implements Serializable {
         BookModel bookModel = (BookModel) o;
         return year == bookModel.year &&
                 amount == bookModel.amount &&
+                Objects.equals(id, bookModel.id) &&
                 Objects.equals(bookName, bookModel.bookName) &&
                 Objects.equals(author, bookModel.author) &&
                 Objects.equals(description, bookModel.description) &&
+                Objects.equals(bookStatus, bookModel.bookStatus) &&
+                Objects.equals(image, bookModel.image) &&
                 Objects.equals(categories, bookModel.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookName, year, author, amount, description, categories);
+        return Objects.hash(id, bookName, year, author, amount, description, bookStatus, image, categories);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public BookModel setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getBookStatus() {
+        return bookStatus;
+    }
+
+    public BookModel setBookStatus(String bookStatus) {
+        this.bookStatus = bookStatus;
+        return this;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public BookModel setImage(String image) {
+        this.image = image;
+        return this;
     }
 
     public String getBookName() {

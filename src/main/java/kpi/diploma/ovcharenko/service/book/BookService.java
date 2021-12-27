@@ -1,6 +1,7 @@
 package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.book.BookModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,7 +11,9 @@ import java.util.Set;
 public interface BookService {
     void deleteBookById(Long id);
 
-    void updateBook(Book book, String category, MultipartFile file);
+//    void updateBook(Book book, String category, MultipartFile file);
+
+    void updateBook(Book book, String category);
 
     Book findBookById(Long id);
 
@@ -32,7 +35,5 @@ public interface BookService {
 
     Set<String> findBookCategories(Book book);
 
-    void deleteCategory(String category);
-
-    void updateCategory(String category, String newCategory);
+    void deleteCategory(Long id, String category);
 }

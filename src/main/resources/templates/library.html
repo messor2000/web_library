@@ -72,8 +72,8 @@
                     <form action="#" th:action="@{/find}" th:object="${books}">
                         <div class="catalog-search">
                             <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
-                                   maxlength="128" id="input-search" name="bookName"/>
-                            <label class="input_label" for="book_list">
+                                   maxlength="128" id="input-search" name="bookName author year"/>
+                            <label class="input_label" for="book_list" th:text="#{nav.search}">
                                 <span class="input_label-content">Search Library</span>
                                 <span class="input_label-search"></span>
                             </label>
@@ -92,7 +92,6 @@
             </div>
 
             <section id="book_list">
-
                 <div class="toolbar row">
                     <div class="filter-options small-12 medium-9 columns">
                         <a th:href="@{/}" class="filter-item">Все категории</a>
