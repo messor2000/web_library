@@ -91,9 +91,9 @@
 
             <div class="toolbar row">
                 <div class="filter-options small-12 medium-9 columns">
-                    <a th:href="@{/}" class="filter-item">Всі категорії</a>
+                    <a th:href="@{/table/}" class="filter-item">Всі категорії</a>
                     <tr th:each="category : ${categories}">
-                        <a th:href="@{/{category}(category = ${category})}" class="filter-item" th:text="${category}"></a>
+                        <a th:href="@{/table/{category}(category = ${category})}" class="filter-item" th:text="${category}"></a>
                     </tr>
                 </div>
 <!--                <div class="small-12 medium-3 columns">-->
@@ -114,7 +114,6 @@
                         <table id="books" class="table table-bordered table-responsive-sm">
                             <thead>
                             <tr>
-                                <th th:text="#{table.id}">ID</th>
                                 <th th:text="#{book.name}">Book Name</th>
                                 <th th:text="#{book.author}">Author</th>
                                 <th th:text="#{book.year}">Year</th>
@@ -124,12 +123,12 @@
                             </thead>
                             <tbody>
                             <tr th:each="book : ${books.content}">
-                                <td th:text="${book.id}">id</td>
                                 <td th:text="${book.bookName}">title</td>
                                 <td th:text="${book.author}">body</td>
                                 <td th:text="${book.year}">body</td>
                                 <td th:text="${book.bookStatus}">body</td>
                                 <td>
+                                    <a class="col-sm-6 col-sm-offset-3" th:href="@{/find/{id}(id=${book.id})}" th:text="#{book.details}">Details</a>
                                     <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
                                         <div th:if="${book.amount} >= 1">
                                             <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
