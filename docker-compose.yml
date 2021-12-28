@@ -1,9 +1,0 @@
-database_mysql:
-image: mysql:8.026
-environment:
-  - MYSQL_ROOT_PASSWORD=password
-  - MYSQL_DATABASE=web_library
-ports:
-  - 3308:3306
-container_name: MySQLContainer
-command: mysqld --sql-mode=""
