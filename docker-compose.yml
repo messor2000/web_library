@@ -10,8 +10,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3308/web_library?allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
-#    networks:
-#      - common-network
+    networks:
+      - common-network
   db:
     image: library/mysql:8.0.26
     ports:
@@ -22,10 +22,11 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
-#    volumes:
-#      - db-data:/var/lib/mysql
-#    networks:
-#      - common-network
-#  networks:
-#    common-network:
-#      driver: bridge
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - common-network
+  networks:
+    common-network:
+      driver: bridge
+
