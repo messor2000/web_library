@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,12 +16,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -54,12 +55,12 @@ public class Book {
     @Column(name = "description")
     private String description;
 
-//    @Lob
-//    @Column(name = "image", columnDefinition="longblob")
-//    private Byte[] image;
-
-    @Column(name = "image")
-    private String image;
+    @Lob
+    @Column(name = "image", columnDefinition="longblob")
+    private byte[] image;
+//
+//    @Column(name = "book_cover", length = 64)
+//    private String cover;
 
     @Column(name = "book_status")
     private String bookStatus;
@@ -81,12 +82,14 @@ public class Book {
         category.setBook(null);
     }
 
-    @Transient
-    public String getCoverImagePath() {
-        if (image == null || id == null) return null;
-
-        return "/covers/" + id + "/" + image;
-    }
+//    @Transient
+//    public String getCoverPath() {
+//        if (cover == null || id == null) {
+//            return null;
+//        }
+//
+//        return "/cover/" + id + "/" + cover;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -99,13 +102,14 @@ public class Book {
                 Objects.equals(bookName, book.bookName) &&
                 Objects.equals(author, book.author) &&
                 Objects.equals(description, book.description) &&
-                Objects.equals(image, book.image) &&
+//                Objects.equals(cover, book.cover) &&
                 Objects.equals(bookStatus, book.bookStatus) &&
-                Objects.equals(categories, book.categories);
+                Objects.equals(categories, book.categories) &&
+                Objects.equals(user, book.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookName, year, author, amount, description, image, bookStatus, categories);
+        return Objects.hash(id, bookName, year, author, amount, description, bookStatus, categories, user);
     }
 }

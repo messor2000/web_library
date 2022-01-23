@@ -1,7 +1,6 @@
 package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
-import kpi.diploma.ovcharenko.entity.book.BookModel;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -189,18 +188,34 @@ public class BookController {
 //        return "redirect:/";
 //    }
 
-    @PostMapping("/update/{id}")
+    @PostMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
     public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "category") String category,
-                             BindingResult result) {
+                             BindingResult result, @RequestParam(value = "image", required = false) MultipartFile multipartFile) {
         if (result.hasErrors()) {
             book.setId(id);
             return "editBook";
         }
 
-        bookService.updateBook(book, category);
+        bookService.updateBook(book, category, multipartFile);
 
         return "redirect:/";
     }
+//
+//    @GetMapping("/images/{filename}")
+//    public void getImage(@PathVariable("filename") String filename, HttpServletResponse response) throws Exception {
+//        Optional<ImageGallary> img = imageRepository.findByName(filename);
+//        if (img.isPresent()) {
+//            System.out.println("returning file:" + filename);
+//            byte[] bytes = img.get().getFileByte();
+//            InputStream is = new BufferedInputStream(new ByteArrayInputStream(bytes));
+//            String mimeType = URLConnection.guessContentTypeFromStream(is);
+//            response.setContentType(mimeType);
+//            OutputStream outputStream = response.getOutputStream();
+//            outputStream.write(bytes);
+//            outputStream.flush();
+//            outputStream.close();
+//        }
+//    }
 
     @PostMapping("/deleteCategory/{id}")
     public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category, RedirectAttributes redirectAttributes) {

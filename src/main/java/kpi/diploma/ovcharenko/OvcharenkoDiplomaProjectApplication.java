@@ -25,5 +25,4 @@ public class OvcharenkoDiplomaProjectApplication {
             storageService.init();
         };
     }
-
 }

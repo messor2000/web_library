@@ -4,23 +4,29 @@ import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
-import kpi.diploma.ovcharenko.util.FileUploadUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class LibraryBookService implements BookService {
+
+    @Value("${image.folder}")
+    private String imageFolder;
 
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
@@ -41,30 +47,29 @@ public class LibraryBookService implements BookService {
 
 //    @Override
 //    @Transactional
-//    public void updateBook(Book book, String category, MultipartFile file) {
+//    public void updateBook(Book book, String category) {
 //        BookCategory bookCategory = new BookCategory(category);
 //
 //        book.addCategory(bookCategory);
-//
-//        if (file.isEmpty()) {
-//            bookRepository.save(book);
-//        } else {
-////            saveBookWithImg(book, file);
-//            try {
-//                saveBookCover(book, file);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-////        bookRepository.save(book);
+//        bookRepository.save(book);
 //    }
 
     @Override
     @Transactional
-    public void updateBook(Book book, String category) {
+    public void updateBook(Book book, String category, MultipartFile file) {
         BookCategory bookCategory = new BookCategory(category);
 
         book.addCategory(bookCategory);
+
+//        try {
+//            Path path = Paths.get(imageFolder, imageFile.getOriginalFilename());
+//            Files.write(path, imageFile.getBytes());
+//            return path.toFile();
+//        } catch (IOException e) {
+//            logger.error(e.getMessage(), e);
+//            return null;
+//        }
+
         bookRepository.save(book);
     }
 
@@ -82,42 +87,6 @@ public class LibraryBookService implements BookService {
         book.addCategory(bookCategory);
 
         bookRepository.save(book);
-    }
-
-//    @Override
-    @Transactional
-    public void saveBookWithImg(Book book, MultipartFile file) {
-
-        try {
-            Byte[] byteObjects = new Byte[file.getBytes().length];
-
-            int i = 0;
-
-            for (byte b : file.getBytes()){
-                byteObjects[i++] = b;
-            }
-
-//            book.setImage(byteObjects);
-
-            bookRepository.save(book);
-        } catch (IOException e) {
-            //todo handle better
-//            log.error("Error occurred", e);
-
-            e.printStackTrace();
-        }
-    }
-
-    @Transactional
-    public void saveBookCover(Book book, MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        book.setImage(fileName);
-
-        Book savedBook = bookRepository.save(book);
-
-        String uploadDir = "covers/" + savedBook.getId();
-
-        FileUploadUtil.saveFile(uploadDir, fileName, file);
     }
 
     @Override
@@ -179,17 +148,6 @@ public class LibraryBookService implements BookService {
         categoryRepository.deleteById(bookCategory.getId());
         bookRepository.save(book);
     }
-//
-//    @Override
-//    public void updateCategory(String category, String newCategory) {
-//        List<BookCategory> bookCategories = categoryRepository.findAllByCategoryContains(category);
-//
-//        for (BookCategory bookCategory: bookCategories) {
-//            bookCategory.setCategory(newCategory);
-//        }
-//
-//        categoryRepository.saveAll(bookCategories);
-//    }
 }
 
 

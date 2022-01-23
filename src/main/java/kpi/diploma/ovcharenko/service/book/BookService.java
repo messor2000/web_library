@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Set;
 
 public interface BookService {
@@ -13,13 +14,13 @@ public interface BookService {
 
 //    void updateBook(Book book, String category, MultipartFile file);
 
-    void updateBook(Book book, String category);
+//    void updateBook(Book book, String category);
 
     Book findBookById(Long id);
 
     void addNewBook(Book book, String category, MultipartFile file);
 
-//    void saveBookWithImg(Book book, MultipartFile file);
+    void updateBook(Book book, String category, MultipartFile file);
 
     Page<Book> findBookByName(String name);
 
