@@ -49,7 +49,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping("/")
     public String getAllBooks(Model model, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);

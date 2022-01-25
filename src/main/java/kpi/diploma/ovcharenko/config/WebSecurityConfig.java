@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -21,35 +20,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private LibraryUserService userDetailsService;
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf()
+                .disable()
                 .authorizeRequests()
-                .antMatchers(
-                        "/registration",
-                        "/",
-                        "/{category}",
-                        "/find/*",
-                        "/table/*",
-                        "/cavers/**",
-                        "/js/**",
-                        "/css/**",
-                        "/img/**",
-                        "/webjars/**").permitAll()
-                .antMatchers("/add").hasRole("ADMIN")
+                    .antMatchers("/registration").not().fullyAuthenticated()
+                    .antMatchers("/add", "/uploadPage", "/delete/*", "/edit/*", "/deleteCategory/*")
+                    .hasRole("ADMIN")
+                    .antMatchers("/profile").hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/",
+                            "/{category}",
+                            "/find/*",
+                            "/table/*",
+                            "/cavers/**",
+                            "/js/**",
+                            "/css/**",
+                            "/img/**",
+                            "/webjars/**").permitAll()
                 .anyRequest().authenticated()
-                .and()
+                    .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
+                    .loginPage("/login")
+                .defaultSuccessUrl("/")
+                    .permitAll()
                 .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/")
-                .permitAll();
+                    .logout()
+                    .permitAll()
+                    .logoutSuccessUrl("/");
     }
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

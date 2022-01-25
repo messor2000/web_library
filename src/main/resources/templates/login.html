@@ -18,7 +18,7 @@
     <nav class="nav-menu nav-effect-1" id="menu-1">
         <h2 class="" th:text="#{title}">The Library</h2>
         <ul>
-            <li><a href="/" th:text="#{nav.home}">Library</a></li>
+            <li><a href="/library/all" th:text="#{nav.home}">Library</a></li>
             <li><a href="/table/" th:text="#{nav.table}">Table library</a></li>
 
             <div sec:authorize="!isAuthenticated()">
