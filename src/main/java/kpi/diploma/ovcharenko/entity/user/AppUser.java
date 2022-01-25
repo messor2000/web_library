@@ -27,6 +27,7 @@ import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -79,6 +80,25 @@ public class AppUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Book> books = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppUser user = (AppUser) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(registrationDate, user.registrationDate) &&
+                Objects.equals(resetPasswordToken, user.resetPasswordToken);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, password, registrationDate, resetPasswordToken);
+    }
+
     public void addBook(Book book){
         books.add(book);
         book.setUser(this);
@@ -87,18 +107,6 @@ public class AppUser {
         books.remove(book);
         book.setUser(null);
     }
-
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private Set<Book> books = new HashSet<>();
-
-//    public void addBook(Book book){
-//        books.add(book);
-//        book.setAppUser(this);
-//    }
-//    public void removeBook(Book book){
-//        books.remove(book);
-//        book.setAppUser(null);
-//    }
 
     public void setRoles(Collection<UserRole> roles) {
         this.roles = roles;

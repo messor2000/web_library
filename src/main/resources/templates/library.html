@@ -123,9 +123,11 @@
                                         <div class="bk-book bk-bookdefault">
                                             <div class="bk-front">
 <!--                                                <div class="bk-cover"-->
-<!--                                                     style="background-image: url('/img/bookCover.gif')"></div>-->
+<!--                                                     style="background-image: url('/img/IMAGE 2022-01-23 16_01_21.jpg')">-->
+<!--                                                    -->
+<!--                                                </div>-->
                                                 <div class="bk-cover">
-                                                    <img th:src="@{${book.image}}" />
+                                                    <img th:src="@{${'/book/cover/'+ book.id}}"alt=""/>
                                                 </div>
                                             </div>
                                             <div class="bk-back"></div>

@@ -14,19 +14,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 @Slf4j
 @Service
 public class LibraryBookService implements BookService {
-
-    @Value("${image.folder}")
-    private String imageFolder;
 
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
@@ -56,27 +54,17 @@ public class LibraryBookService implements BookService {
 
     @Override
     @Transactional
-    public void updateBook(Book book, String category, MultipartFile file) {
+    public void updateBook(Book book, String category, byte[] imageData) {
         BookCategory bookCategory = new BookCategory(category);
-
         book.addCategory(bookCategory);
-
-//        try {
-//            Path path = Paths.get(imageFolder, imageFile.getOriginalFilename());
-//            Files.write(path, imageFile.getBytes());
-//            return path.toFile();
-//        } catch (IOException e) {
-//            logger.error(e.getMessage(), e);
-//            return null;
-//        }
-
+        book.setImage(imageData);
         bookRepository.save(book);
     }
 
     @Override
     public Book findBookById(Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid retrievedBook Id:" + id));
     }
 
     @Override
@@ -131,7 +119,7 @@ public class LibraryBookService implements BookService {
 
         Set<String> bookCategories = new HashSet<>();
 
-        for (BookCategory category: categories) {
+        for (BookCategory category : categories) {
             bookCategories.add(category.getCategory());
         }
 
@@ -147,6 +135,43 @@ public class LibraryBookService implements BookService {
 
         categoryRepository.deleteById(bookCategory.getId());
         bookRepository.save(book);
+    }
+
+    private static byte[] compressBytes(byte[] data) {
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        deflater.finish();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            log.error("Error in compressing file", e);
+        }
+
+        return outputStream.toByteArray();
+    }
+
+    private static byte[] decompressBytes(byte[] data) {
+        Inflater inflater = new Inflater();
+        inflater.setInput(data);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        try {
+            while (!inflater.finished()) {
+                int count = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, count);
+            }
+            outputStream.close();
+        } catch (IOException | DataFormatException e) {
+            log.error("Error in decompressing file", e);
+        }
+        return outputStream.toByteArray();
     }
 }
 

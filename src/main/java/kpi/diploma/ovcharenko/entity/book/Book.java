@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,7 +19,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Objects;
@@ -56,11 +54,8 @@ public class Book {
     private String description;
 
     @Lob
-    @Column(name = "image", columnDefinition="longblob")
+    @Column(name = "image", length = Integer.MAX_VALUE)
     private byte[] image;
-//
-//    @Column(name = "book_cover", length = 64)
-//    private String cover;
 
     @Column(name = "book_status")
     private String bookStatus;
@@ -82,14 +77,15 @@ public class Book {
         category.setBook(null);
     }
 
-//    @Transient
-//    public String getCoverPath() {
-//        if (cover == null || id == null) {
-//            return null;
-//        }
-//
-//        return "/cover/" + id + "/" + cover;
-//    }
+    public Book(String bookName, int year, String author, int amount, String description, String bookStatus, byte[] image) {
+        this.bookName = bookName;
+        this.year = year;
+        this.author = author;
+        this.amount = amount;
+        this.description = description;
+        this.bookStatus = bookStatus;
+        this.image = image;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -102,7 +98,6 @@ public class Book {
                 Objects.equals(bookName, book.bookName) &&
                 Objects.equals(author, book.author) &&
                 Objects.equals(description, book.description) &&
-//                Objects.equals(cover, book.cover) &&
                 Objects.equals(bookStatus, book.bookStatus) &&
                 Objects.equals(categories, book.categories) &&
                 Objects.equals(user, book.user);

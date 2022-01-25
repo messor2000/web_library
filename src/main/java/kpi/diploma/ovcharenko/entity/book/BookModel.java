@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class BookModel implements Serializable {
     private int amount;
     private String description;
     private String bookStatus;
-    private String image;
+    private byte[] image;
     private transient Set<BookCategory> categories;
 
     @Override
@@ -35,13 +36,15 @@ public class BookModel implements Serializable {
                 Objects.equals(author, bookModel.author) &&
                 Objects.equals(description, bookModel.description) &&
                 Objects.equals(bookStatus, bookModel.bookStatus) &&
-                Objects.equals(image, bookModel.image) &&
+                Arrays.equals(image, bookModel.image) &&
                 Objects.equals(categories, bookModel.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookName, year, author, amount, description, bookStatus, image, categories);
+        int result = Objects.hash(id, bookName, year, author, amount, description, bookStatus, categories);
+        result = 31 * result + Arrays.hashCode(image);
+        return result;
     }
 
     public Long getId() {
@@ -59,15 +62,6 @@ public class BookModel implements Serializable {
 
     public BookModel setBookStatus(String bookStatus) {
         this.bookStatus = bookStatus;
-        return this;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public BookModel setImage(String image) {
-        this.image = image;
         return this;
     }
 
