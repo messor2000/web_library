@@ -1,5 +1,6 @@
 package kpi.diploma.ovcharenko.service.book;
 
+import antlr.StringUtils;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.repo.BookRepository;
@@ -54,7 +55,7 @@ public class LibraryBookService implements BookService {
 
     @Override
     @Transactional
-    public void updateBook(Book book, String category, byte[] imageData) {
+    public void updateBook(Book book, String category, MultipartFile imageData) {
         BookCategory bookCategory = new BookCategory(category);
         book.addCategory(bookCategory);
         book.setImage(imageData);

@@ -187,65 +187,65 @@ public class BookController {
         return "editBook";
     }
 
-    @PostMapping("/update/{id}")
-    public @ResponseBody ResponseEntity<?> createProduct(@PathVariable("id") long id, @Valid Book book,
-                                    @RequestParam(value = "category") String category, Model model,
-                                    HttpServletRequest request, final @RequestParam("image") MultipartFile file) {
-        try {
-            //String uploadDirectory = System.getProperty("user.dir") + uploadFolder;
-            String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
-            log.info("uploadDirectory:: " + uploadDirectory);
-            String fileName = file.getOriginalFilename();
-            String filePath = Paths.get(uploadDirectory, fileName).toString();
-            log.info("FileName: " + file.getOriginalFilename());
-            if (fileName == null || fileName.contains("..")) {
-                model.addAttribute("invalid", "Sorry! Filename contains invalid path sequence \" + fileName");
-                return new ResponseEntity<>("Sorry! Filename contains invalid path sequence " + fileName, HttpStatus.BAD_REQUEST);
-            }
-            File dir = new File(uploadDirectory);
-            if (!dir.exists()) {
-                log.info("Folder Created");
-                dir.mkdirs();
-            }
-            // Save the file locally
-            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-            stream.write(file.getBytes());
-            stream.close();
-            byte[] imageData = file.getBytes();
-
-            bookService.updateBook(book, category, imageData);
-
-            log.info("HttpStatus===" + new ResponseEntity<>(HttpStatus.OK));
-            return new ResponseEntity<>("Product Saved With File - " + fileName, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.info("Exception: " + e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/book/cover/{id}")
-    @ResponseBody
-    public void showImage(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
-        log.info("Id :: " + id);
-        Book book = bookService.findBookById(id);
-        response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
-        response.getOutputStream().write(book.getImage());
-        response.getOutputStream().close();
-    }
-
-//    @PostMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
-//    public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "category") String category,
-//                             BindingResult result, @RequestParam(value = "image", required = false) MultipartFile multipartFile) {
-//        if (result.hasErrors()) {
-//            book.setId(id);
-//            return "editBook";
+//    @PostMapping("/update/{id}")
+//    public @ResponseBody ResponseEntity<?> createProduct(@PathVariable("id") long id, @Valid Book book,
+//                                    @RequestParam(value = "category") String category, Model model,
+//                                    HttpServletRequest request, final @RequestParam("image") MultipartFile file) {
+//        try {
+//            //String uploadDirectory = System.getProperty("user.dir") + uploadFolder;
+//            String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
+//            log.info("uploadDirectory:: " + uploadDirectory);
+//            String fileName = file.getOriginalFilename();
+//            String filePath = Paths.get(uploadDirectory, fileName).toString();
+//            log.info("FileName: " + file.getOriginalFilename());
+//            if (fileName == null || fileName.contains("..")) {
+//                model.addAttribute("invalid", "Sorry! Filename contains invalid path sequence \" + fileName");
+//                return new ResponseEntity<>("Sorry! Filename contains invalid path sequence " + fileName, HttpStatus.BAD_REQUEST);
+//            }
+//            File dir = new File(uploadDirectory);
+//            if (!dir.exists()) {
+//                log.info("Folder Created");
+//                dir.mkdirs();
+//            }
+//            // Save the file locally
+//            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
+//            stream.write(file.getBytes());
+//            stream.close();
+//            byte[] imageData = file.getBytes();
+//
+//            bookService.updateBook(book, category, file);
+//
+//            log.info("HttpStatus===" + new ResponseEntity<>(HttpStatus.OK));
+//            return new ResponseEntity<>("Product Saved With File - " + fileName, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.info("Exception: " + e);
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //        }
-//
-//        bookService.updateBook(book, category, multipartFile);
-//
-//        return "redirect:/";
 //    }
+
+//    @GetMapping("/book/cover/{id}")
+//    @ResponseBody
+//    public void showImage(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+//        log.info("Id :: " + id);
+//        Book book = bookService.findBookById(id);
+//        response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
+//        response.getOutputStream().write(book.get);
+//        response.getOutputStream().close();
+//    }
+
+    @PostMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
+    public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "category") String category,
+                             BindingResult result, @RequestParam(value = "image", required = false) MultipartFile multipartFile) {
+        if (result.hasErrors()) {
+            book.setId(id);
+            return "editBook";
+        }
+
+        bookService.updateBook(book, category, multipartFile);
+
+        return "redirect:/";
+    }
 
     @PostMapping("/deleteCategory/{id}")
     public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category, RedirectAttributes redirectAttributes) {

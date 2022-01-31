@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -55,7 +56,7 @@ public class Book {
 
     @Lob
     @Column(name = "image", length = Integer.MAX_VALUE)
-    private byte[] image;
+    private MultipartFile image;
 
     @Column(name = "book_status")
     private String bookStatus;
@@ -77,15 +78,15 @@ public class Book {
         category.setBook(null);
     }
 
-    public Book(String bookName, int year, String author, int amount, String description, String bookStatus, byte[] image) {
-        this.bookName = bookName;
-        this.year = year;
-        this.author = author;
-        this.amount = amount;
-        this.description = description;
-        this.bookStatus = bookStatus;
-        this.image = image;
-    }
+//    public Book(String bookName, int year, String author, int amount, String description, String bookStatus, byte[] image) {
+//        this.bookName = bookName;
+//        this.year = year;
+//        this.author = author;
+//        this.amount = amount;
+//        this.description = description;
+//        this.bookStatus = bookStatus;
+//        this.image = image;
+//    }
 
     @Override
     public boolean equals(Object o) {

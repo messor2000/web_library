@@ -16,7 +16,7 @@ public interface BookService {
 
 //    void updateBook(Book book, String category, MultipartFile file);
 
-    void updateBook(Book book, String category, byte[] imageData);
+    void updateBook(Book book, String category, MultipartFile imageData);
 
     Page<Book> findBookByName(String name);
 
