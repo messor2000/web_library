@@ -1,31 +1,30 @@
-version: "3.8"
+version: "3"
 services:
   web:
     build: .
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - MySQLContainer
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3308/web_library?allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
     networks:
-      - common-network
-  db:
-    image: library/mysql:8.0.26
+      - weblibrary-mysql
+
+  MySQLContainer:
+    image: mysql
     ports:
       - "3308:3306"
-    restart: always
     environment:
-      MYSQL_DATABASE: web_library
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
-    volumes:
-      - db-data:/var/lib/mysql
+      - MYSQL_DATABASE: web_library
+      - MYSQL_USER: user
+      - MYSQL_PASSWORD: password
+      - MYSQL_ROOT_PASSWORD: password
     networks:
-      - common-network
-  networks:
-    common-network:
-      driver: bridge
+      - weblibrary-mysql
+
+networks:
+  weblibrary-mysql:
+    driver: bridge
