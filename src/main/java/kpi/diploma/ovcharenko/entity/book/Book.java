@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,7 +15,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -54,10 +52,6 @@ public class Book {
     @Column(name = "description")
     private String description;
 
-    @Lob
-    @Column(name = "image", length = Integer.MAX_VALUE)
-    private MultipartFile image;
-
     @Column(name = "book_status")
     private String bookStatus;
 
@@ -78,15 +72,27 @@ public class Book {
         category.setBook(null);
     }
 
-//    public Book(String bookName, int year, String author, int amount, String description, String bookStatus, byte[] image) {
-//        this.bookName = bookName;
-//        this.year = year;
-//        this.author = author;
-//        this.amount = amount;
-//        this.description = description;
-//        this.bookStatus = bookStatus;
-//        this.image = image;
-//    }
+    public static Book of(Long id, String bookName, int year, String author, int amount, String description, String bookStatus, Set<BookCategory> categories) {
+        return Book.builder()
+                .id(id)
+                .bookName(bookName)
+                .year(year)
+                .author(author)
+                .amount(amount)
+                .description(description)
+                .bookStatus(bookStatus)
+                .categories(categories)
+                .build();
+    }
+
+    public static Book fromModel(BookModel bookModel) {
+        return Book.of(bookModel.getId(), bookModel.getBookName(), bookModel.getYear(), bookModel.getAuthor(),
+                bookModel.getAmount(), bookModel.getDescription(), bookModel.getBookStatus(), bookModel.getCategories());
+    }
+
+    public BookModel toDto() {
+        return BookModel.of(id, bookName, year, author, amount, description, bookStatus, categories);
+    }
 
     @Override
     public boolean equals(Object o) {

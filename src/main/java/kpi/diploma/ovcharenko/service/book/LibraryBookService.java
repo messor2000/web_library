@@ -1,27 +1,20 @@
 package kpi.diploma.ovcharenko.service.book;
 
-import antlr.StringUtils;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.book.BookModel;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
 @Slf4j
 @Service
@@ -44,21 +37,12 @@ public class LibraryBookService implements BookService {
         bookRepository.delete(book);
     }
 
-//    @Override
-//    @Transactional
-//    public void updateBook(Book book, String category) {
-//        BookCategory bookCategory = new BookCategory(category);
-//
-//        book.addCategory(bookCategory);
-//        bookRepository.save(book);
-//    }
-
     @Override
     @Transactional
-    public void updateBook(Book book, String category, MultipartFile imageData) {
+    public void updateBook(Book book, String category) {
         BookCategory bookCategory = new BookCategory(category);
+
         book.addCategory(bookCategory);
-        book.setImage(imageData);
         bookRepository.save(book);
     }
 
@@ -69,11 +53,12 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    @Transactional
-    public void addNewBook(Book book, String category, MultipartFile file) {
+    public void addNewBook(Book book, String category) {
         BookCategory bookCategory = new BookCategory(category);
 
         book.addCategory(bookCategory);
+        book.setAmount(1);
+        book.setBookStatus("unused");
 
         bookRepository.save(book);
     }
@@ -136,43 +121,6 @@ public class LibraryBookService implements BookService {
 
         categoryRepository.deleteById(bookCategory.getId());
         bookRepository.save(book);
-    }
-
-    private static byte[] compressBytes(byte[] data) {
-        Deflater deflater = new Deflater();
-        deflater.setInput(data);
-        deflater.finish();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer);
-            outputStream.write(buffer, 0, count);
-        }
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            log.error("Error in compressing file", e);
-        }
-
-        return outputStream.toByteArray();
-    }
-
-    private static byte[] decompressBytes(byte[] data) {
-        Inflater inflater = new Inflater();
-        inflater.setInput(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] buffer = new byte[1024];
-        try {
-            while (!inflater.finished()) {
-                int count = inflater.inflate(buffer);
-                outputStream.write(buffer, 0, count);
-            }
-            outputStream.close();
-        } catch (IOException | DataFormatException e) {
-            log.error("Error in decompressing file", e);
-        }
-        return outputStream.toByteArray();
     }
 }
 

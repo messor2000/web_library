@@ -29,12 +29,10 @@ import java.util.Set;
 public class LibraryExcelDataService implements ExcelDataService {
 
     private final BookRepository bookRepository;
-    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public LibraryExcelDataService(BookRepository bookRepository, CategoryRepository categoryRepository) {
+    public LibraryExcelDataService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -65,8 +63,6 @@ public class LibraryExcelDataService implements ExcelDataService {
                 book.setBookName(getCellValue(row, 2));
                 book.setYear(convertStringToInt(getCellValue(row, 3)));
 
-//                book.getCategories().add(bookCategory);
-
                 BookCategory bookCategory = new BookCategory();
                 bookCategory.setCategory(category);
                 book.addCategory(bookCategory);
@@ -80,31 +76,8 @@ public class LibraryExcelDataService implements ExcelDataService {
 
         books = removeDuplicates(books);
 
-//        List<Book> books = new ArrayList<>();
-//
-//        if (!books.isEmpty()) {
-//            books.forEach(x -> {
-//                Book book = new Book();
-//                book.setAuthor(x.getAuthor());
-//                book.setBookName(x.getBookName());
-//                book.setYear(x.getYear());
-////                book.setSubject(x.getSubject());
-//                book.setCategories(x.getCategories());
-//                book.setAmount(x.getAmount());
-//                book.setDescription(x.getDescription());
-//                books.add(book);
-//            });
-//        }
-
         bookRepository.saveAll(books);
-
-//        return books;
     }
-
-//    @Override
-//    public void saveExcelData(List<Book> books) {
-//        bookRepository.saveAll(books);
-//    }
 
     private int convertStringToInt(String str) {
         int result = 0;
