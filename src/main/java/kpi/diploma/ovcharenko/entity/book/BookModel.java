@@ -41,7 +41,8 @@ public class BookModel {
         return Objects.hash(id, bookName, year, author, amount, description, bookStatus, categories);
     }
 
-    public static BookModel of(Long id, String bookName, int year, String author, int amount, String description, String bookStatus, Set<BookCategory> categories) {
+    public static BookModel of(Long id, String bookName, int year, String author, int amount, String description,
+                               String bookStatus, Set<BookCategory> categories) {
         return new BookModel(id, bookName, year, author, amount, description, bookStatus, categories);
     }
 

@@ -72,7 +72,8 @@ public class Book {
         category.setBook(null);
     }
 
-    public static Book of(Long id, String bookName, int year, String author, int amount, String description, String bookStatus, Set<BookCategory> categories) {
+    public static Book of(Long id, String bookName, int year, String author, int amount, String description,
+                          String bookStatus, Set<BookCategory> categories) {
         return Book.builder()
                 .id(id)
                 .bookName(bookName)
