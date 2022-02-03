@@ -10,5 +10,5 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     volumes:
-      - /var/lib/docker/volumes/e24e69d7db152cea837b440ff02baa627d9d3e44ff9ad4c6ca3e6d1ac09f6a4e/_data
+      - ./dbdata:/var/lib/mysql
 
