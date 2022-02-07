@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -151,12 +152,13 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "category") String category) {
+    public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "category") String category,
+                             @RequestParam("image") MultipartFile multipartFile) {
         if (result.hasErrors()) {
             return "addBook";
         }
 
-        bookService.addNewBook(book, category);
+        bookService.addNewBook(book, category, multipartFile);
 
         return "redirect:/";
     }

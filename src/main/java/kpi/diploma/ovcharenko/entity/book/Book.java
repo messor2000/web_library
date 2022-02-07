@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -55,6 +56,9 @@ public class Book {
     @Column(name = "book_status")
     private String bookStatus;
 
+    @Column(name = "book_cover")
+    private String cover;
+
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
@@ -70,6 +74,15 @@ public class Book {
     public void removeCategory(BookCategory category) {
         categories.remove(category);
         category.setBook(null);
+    }
+
+    @Transient
+    public String getCoverImagePath() {
+        if (cover == null || id == null) {
+            return null;
+        }
+
+        return "/covers/" + id + "/" + cover;
     }
 
     public static Book of(Long id, String bookName, int year, String author, int amount, String description,

@@ -83,7 +83,7 @@
                  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form action="#" method="post" th:object="${bookModel}" enctype="multipart/form-data" >
+                        <form action="#" method="post" th:object="${bookModel}" enctype="multipart/form-data">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="bookName" th:text="#{book.name}">Book name</label>
@@ -105,8 +105,10 @@
                                         </datalist>
                                     </label>
 
-<!--                                    <label for="image" th:text="#{book.cover}">Book cover: </label>-->
-<!--                                    <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>-->
+                                    <label for="image" th:text="#{book.cover}">Book cover: </label>
+                                    <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
+
+                                    <img id="logoPreview" alt="Logo Preview">
 
                                     <label for="description" th:text="#{book.description}">Description</label>
                                     <input type="text" id="description" placeholder="Description">
@@ -144,5 +146,25 @@
 <script src="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/4.0.0/shuffle.min.js"></script>
 <script src="/js/main.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#image'.cange(function () {
+            showImagePreview(this);
+        }))
+    });
+
+    function showImagePreview(fileInput) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#showImagePreview').attributes('src', e.target.result);
+        };
+
+        reader.readAsDataURL(file);
+    }
+</script>
+
 </body>
 </html>

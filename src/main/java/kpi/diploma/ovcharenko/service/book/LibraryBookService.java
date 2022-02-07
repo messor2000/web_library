@@ -5,14 +5,18 @@ import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.BookModel;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
+import kpi.diploma.ovcharenko.util.FileUploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,15 +56,37 @@ public class LibraryBookService implements BookService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid retrievedBook Id:" + id));
     }
 
+//    @Override
+//    public void addNewBook(Book book, String category) {
+//        BookCategory bookCategory = new BookCategory(category);
+//
+//        book.addCategory(bookCategory);
+//        book.setAmount(1);
+//        book.setBookStatus("unused");
+//
+//        bookRepository.save(book);
+//    }
+
     @Override
-    public void addNewBook(Book book, String category) {
+    public void addNewBook(Book book, String category, MultipartFile file) {
         BookCategory bookCategory = new BookCategory(category);
 
         book.addCategory(bookCategory);
         book.setAmount(1);
         book.setBookStatus("unused");
 
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        book.setCover(fileName);
+
         bookRepository.save(book);
+
+        String uploadDir = "covers/" + book.getId();
+
+        try {
+            FileUploadUtil.saveFile(uploadDir, fileName, file);
+        } catch (IOException e) {
+            log.error("Error while saving file", e);
+        }
     }
 
     @Override
