@@ -3,8 +3,6 @@ package kpi.diploma.ovcharenko.controller;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
-import kpi.diploma.ovcharenko.service.book.BookService;
-import kpi.diploma.ovcharenko.service.book.LibraryBookService;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.LibraryUserService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
@@ -101,4 +99,3 @@ public class UserController {
 }
 
 
-// test2

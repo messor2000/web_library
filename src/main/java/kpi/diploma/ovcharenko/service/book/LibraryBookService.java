@@ -56,17 +56,6 @@ public class LibraryBookService implements BookService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid retrievedBook Id:" + id));
     }
 
-//    @Override
-//    public void addNewBook(Book book, String category) {
-//        BookCategory bookCategory = new BookCategory(category);
-//
-//        book.addCategory(bookCategory);
-//        book.setAmount(1);
-//        book.setBookStatus("unused");
-//
-//        bookRepository.save(book);
-//    }
-
     @Override
     public void addNewBook(Book book, String category, MultipartFile file) {
         BookCategory bookCategory = new BookCategory(category);

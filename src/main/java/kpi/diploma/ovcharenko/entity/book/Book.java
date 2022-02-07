@@ -85,27 +85,16 @@ public class Book {
         return "/covers/" + id + "/" + cover;
     }
 
-    public static Book of(Long id, String bookName, int year, String author, int amount, String description,
-                          String bookStatus, Set<BookCategory> categories) {
-        return Book.builder()
-                .id(id)
-                .bookName(bookName)
-                .year(year)
-                .author(author)
-                .amount(amount)
-                .description(description)
-                .bookStatus(bookStatus)
-                .categories(categories)
-                .build();
-    }
+    public Book(Long id, @NotBlank(message = "Book name is mandatory") String bookName, int year, String author,
+                int amount, String description, String bookStatus) {
+        this.id = id;
+        this.bookName = bookName;
+        this.year = year;
+        this.author = author;
+        this.amount = amount;
+        this.description = description;
+        this.bookStatus = bookStatus;
 
-    public static Book fromModel(BookModel bookModel) {
-        return Book.of(bookModel.getId(), bookModel.getBookName(), bookModel.getYear(), bookModel.getAuthor(),
-                bookModel.getAmount(), bookModel.getDescription(), bookModel.getBookStatus(), bookModel.getCategories());
-    }
-
-    public BookModel toDto() {
-        return BookModel.of(id, bookName, year, author, amount, description, bookStatus, categories);
     }
 
     @Override
@@ -115,17 +104,16 @@ public class Book {
         Book book = (Book) o;
         return year == book.year &&
                 amount == book.amount &&
-                Objects.equals(id, book.id) &&
                 Objects.equals(bookName, book.bookName) &&
                 Objects.equals(author, book.author) &&
                 Objects.equals(description, book.description) &&
                 Objects.equals(bookStatus, book.bookStatus) &&
-                Objects.equals(categories, book.categories) &&
-                Objects.equals(user, book.user);
+                Objects.equals(cover, book.cover) &&
+                Objects.equals(categories, book.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookName, year, author, amount, description, bookStatus, categories, user);
+        return Objects.hash(bookName, year, author, amount, description, bookStatus, cover, categories);
     }
 }

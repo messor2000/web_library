@@ -12,8 +12,6 @@ public interface BookService {
 
     Book findBookById(Long id);
 
-//    void addNewBook(Book book, String category);
-
     void addNewBook(Book book, String category, MultipartFile file);
 
     void updateBook(Book book, String category);
