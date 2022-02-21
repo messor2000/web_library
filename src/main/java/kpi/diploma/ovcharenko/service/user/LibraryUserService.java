@@ -60,8 +60,8 @@ public class LibraryUserService implements UserService {
 
     @Override
     @Transactional
-    public void takeBook(Long id, String username) {
-        AppUser user = findByEmail(username);
+    public void takeBook(Long id, String userEmail) {
+        AppUser user = findByEmail(userEmail);
         Book book = bookRepository.findById(id).get();
 
         book.setAmount(book.getAmount() - 1);
@@ -76,8 +76,8 @@ public class LibraryUserService implements UserService {
 
     @Override
     @Transactional
-    public void returnBook(Long id, String username) {
-        AppUser user = findByEmail(username);
+    public void returnBook(Long id, String userEmail) {
+        AppUser user = findByEmail(userEmail);
         Book book = bookRepository.findById(id).get();
 
         book.setAmount(book.getAmount() + 1);

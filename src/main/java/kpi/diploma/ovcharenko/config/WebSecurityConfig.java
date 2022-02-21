@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/{category}",
                             "/find/*",
                             "/table/*",
-                            "/cavers/**",
+                            "/covers/**",
                             "/js/**",
                             "/css/**",
                             "/img/**",

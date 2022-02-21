@@ -34,9 +34,9 @@ public class BookRepositoryTests {
     @DisplayName("Test save list of books")
     public void saveListOfBooks() {
         List<Book> books = Arrays.asList(
-                new Book(1L, "testBook1", 9999, "testAuthor1", 1, "test1",
+                new Book("testBook1", 9999, "testAuthor1", 1, "test1",
                         "unused"),
-                new Book(1L, "testBook2", 9999, "testAuthor2", 1, "test2",
+                new Book("testBook2", 9999, "testAuthor2", 1, "test2",
                         "unused")
         );
         Iterable<Book> allBooks = repository.saveAll(books);
@@ -53,17 +53,10 @@ public class BookRepositoryTests {
         assertThat(validIdFound.intValue()).isEqualTo(2);
     }
 
-//    @Test
-//    @DisplayName("Test find all books")
-//    public void findAllBooks() {
-//        Page<Book> bookList = bookService.getAllBooks(PageRequest.of(1, 20));
-//        assertThat(bookList.getTotalElements()).isPositive();
-//    }
-
     @Test
     @DisplayName("Test find book by name")
     public void findBookByName() {
-        Book book = new Book(1L, "testBookForFinding1", 9999, "testAuthor1", 1,
+        Book book = new Book("testBookForFinding1", 9999, "testAuthor1", 1,
                 "test1", "unused");
 
         repository.save(book);
@@ -79,15 +72,16 @@ public class BookRepositoryTests {
     @Test
     @DisplayName("Test find book with category")
     public void findBookCategoryContains() {
-        BookCategory category = new BookCategory("test1");
+        BookCategory category = new BookCategory();
         List<Book> books = Arrays.asList(
-                new Book(1L, "testBookForShowingCategory", 9999, "testAuthor1", 1,
+                new Book("testBookForShowingCategory", 9999, "testAuthor1", 1,
                         "test1", "unused"),
-                new Book(1L, "testBookForShowingCategory2", 9999, "testAuthor1", 1,
+                new Book("testBookForShowingCategory2", 9999, "testAuthor1", 1,
                         "test1", "unused")
         );
 
         for (Book book: books) {
+            category = new BookCategory("test1");
             book.addCategory(category);
             repository.save(book);
         }

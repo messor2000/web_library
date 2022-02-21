@@ -85,9 +85,8 @@ public class Book {
         return "/covers/" + id + "/" + cover;
     }
 
-    public Book(Long id, @NotBlank(message = "Book name is mandatory") String bookName, int year, String author,
+    public Book(@NotBlank(message = "Book name is mandatory") String bookName, int year, String author,
                 int amount, String description, String bookStatus) {
-        this.id = id;
         this.bookName = bookName;
         this.year = year;
         this.author = author;

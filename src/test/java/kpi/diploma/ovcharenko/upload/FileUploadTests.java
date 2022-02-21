@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.file.Paths;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@WithMockUser(roles = "ADMIN")
 class FileUploadTests {
 
     @Autowired
@@ -44,7 +46,7 @@ class FileUploadTests {
     void shouldSaveUploadedFile() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt",
                 "text/plain", "Spring Framework".getBytes());
-        this.mvc.perform(multipart("/files").file(multipartFile))
+        this.mvc.perform(multipart("/files/upload").file(multipartFile))
                 .andExpect(status().isFound())
                 .andExpect(header().string("Location", "/"));
 

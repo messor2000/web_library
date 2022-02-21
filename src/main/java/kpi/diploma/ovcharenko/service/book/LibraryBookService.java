@@ -2,7 +2,6 @@ package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
-import kpi.diploma.ovcharenko.entity.book.BookModel;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import kpi.diploma.ovcharenko.util.FileUploadUtil;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -43,11 +42,23 @@ public class LibraryBookService implements BookService {
 
     @Override
     @Transactional
-    public void updateBook(Book book, String category) {
+    public void updateBook(Book book, String category, MultipartFile file) {
         BookCategory bookCategory = new BookCategory(category);
 
         book.addCategory(bookCategory);
+
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        book.setCover(fileName);
+
         bookRepository.save(book);
+
+        String uploadDir = "covers/" + book.getId();
+
+        try {
+            FileUploadUtil.saveFile(uploadDir, fileName, file);
+        } catch (IOException e) {
+            log.error("Error while saving file", e);
+        }
     }
 
     @Override
@@ -64,7 +75,7 @@ public class LibraryBookService implements BookService {
         book.setAmount(1);
         book.setBookStatus("unused");
 
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         book.setCover(fileName);
 
         bookRepository.save(book);
@@ -88,20 +99,6 @@ public class LibraryBookService implements BookService {
     @Override
     public Page<Book> getAllBooks(Pageable pageable) {
         return bookRepository.findAll(pageable);
-    }
-
-    @Override
-    public Page<Book> getSortingBooksByYear(Pageable pageable) {
-        Pageable sortedByPriceDesc = PageRequest.of(1, 20, Sort.by("year").descending());
-
-        return bookRepository.findAll(sortedByPriceDesc);
-    }
-
-    @Override
-    public Page<Book> getSortingBooksAlphabetical(Pageable pageable) {
-        Pageable sortedByPriceDesc = PageRequest.of(1, 20, Sort.by("bookName").ascending());
-
-        return bookRepository.findAll(sortedByPriceDesc);
     }
 
     @Override

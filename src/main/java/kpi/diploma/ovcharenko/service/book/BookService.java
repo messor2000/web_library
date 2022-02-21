@@ -14,15 +14,11 @@ public interface BookService {
 
     void addNewBook(Book book, String category, MultipartFile file);
 
-    void updateBook(Book book, String category);
+    void updateBook(Book book, String category, MultipartFile file);
 
     Page<Book> findBookByName(String name);
 
     Page<Book> getAllBooks(Pageable pageable);
-
-    Page<Book> getSortingBooksByYear(Pageable pageable);
-
-    Page<Book> getSortingBooksAlphabetical(Pageable pageable);
 
     Page<Book> getBookByCategory(Pageable pageable, String subject);
 

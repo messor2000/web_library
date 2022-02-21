@@ -35,7 +35,6 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Builder(toBuilder = true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"), name = "library_user")
 public class AppUser {
@@ -89,14 +88,12 @@ public class AppUser {
                 Objects.equals(firstName, user.firstName) &&
                 Objects.equals(lastName, user.lastName) &&
                 Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(registrationDate, user.registrationDate) &&
-                Objects.equals(resetPasswordToken, user.resetPasswordToken);
+                Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, registrationDate, resetPasswordToken);
+        return Objects.hash(id, firstName, lastName, email, password);
     }
 
     public void addBook(Book book){

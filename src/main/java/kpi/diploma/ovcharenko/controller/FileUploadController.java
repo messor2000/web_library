@@ -64,8 +64,6 @@ public class FileUploadController {
 
         excelDataService.getExcelDataAsList(file, Integer.parseInt(pageNum), category);
 
-//        excelDataService.saveExcelData(excelDataAsList);
-
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
