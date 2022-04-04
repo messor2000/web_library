@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       lang="">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
@@ -72,59 +72,62 @@
 
 
         <!-- Main Section -->
-        <div class="page-container">
-            <div class="container">
+        <div class="main-box">
+            <div class="page-container">
+                <div class="container">
 
-                <div class="row">
-                    <div class="col-md-6 col-md-offset-3">
-                        <h1 th:text="#{log.title}">Login</h1>
-                        <form th:action="@{/login}" method="post">
-                            <div th:if="${param.error}">
-                                <div class="alert alert-danger" th:text="#{log.login.error}">
-                                    Invalid username or password.
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="username" th:text="#{log.email}">Email</label>
-                                <input type="email"
-                                       id="username"
-                                       name="username"
-                                       class="form-control"
-                                       autofocus="autofocus"
-                                       placeholder="Email"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="password" th:text="#{log.password}">Password</label>
-                                <input type="password"
-                                       id="password"
-                                       name="password"
-                                       class="form-control"
-                                       placeholder="Password"/>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit"
-                                               name="login-submit"
-                                               id="login-submit"
-                                               class="form-control btn btn-info"
-                                               value="Log In"/>
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3">
+                            <h1 th:text="#{log.title}">Login</h1>
+                            <form th:action="@{/login}" method="post">
+                                <div th:if="${param.error}">
+                                    <div class="alert alert-danger" th:text="#{log.login.error}">
+                                        Invalid username or password.
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <a th:href="@{/registration}" th:text="#{log.button.reg}">Register here</a>
-                            </div>
-                            <div class="form-group">
-                                <a th:href="@{/login/forgot_password}" th:text="#{log.forgot}">Forgot your
-                                    password?</a>
-                            </div>
-                        </form>
+
+                                <div class="form-group" style="width: 300px">
+                                    <label for="username" th:text="#{log.email}">Email</label>
+                                    <input type="email"
+                                           id="username"
+                                           name="username"
+                                           class="form-control"
+                                           autofocus="autofocus"
+                                           placeholder="Email"/>
+                                </div>
+                                <div class="form-group" style="width: 300px">
+                                    <label for="password" th:text="#{log.password}">Password</label>
+                                    <input type="password"
+                                           id="password"
+                                           name="password"
+                                           class="form-control"
+                                           placeholder="Password"/>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="submit"
+                                                   name="login-submit"
+                                                   id="login-submit"
+                                                   class="form-control btn btn-info"
+                                                   value="Log In"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <a th:href="@{/registration}" th:text="#{log.button.reg}">Register here</a>
+                                </div>
+                                <div class="form-group">
+                                    <a th:href="@{/login/forgot_password}" th:text="#{log.forgot}">Forgot your
+                                        password?</a>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <footer id="footer" class="page-footer">
             <div class="row footer-wrapper">
                 <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>

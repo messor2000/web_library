@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -69,54 +70,57 @@
             </div>
         </header>
 
-        <div class="page-container">
-            <div class="page-title category-title">
-                <h1 th:text="#{upload.page}">File Upload & Data Save Page</h1>
+        <div class="main-box">
+            <div class="page-container">
+                <div class="page-title category-title">
+                    <h1 th:text="#{upload.page}">File Upload & Data Save Page</h1>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" action="/files/upload">
+                    <table>
+                        <tr>
+                            <td th:text="#{upload.file}">File to upload</td>
+                            <td><input type="file" name="file" accept=".xls,.xlsx"/></td>
+                        </tr>
+
+                        <tr>
+                            <td th:text="#{upload.file.page}">Page for saved</td>
+                            <td><label>
+                                <input type="number" name="pageNum">
+                            </label></td>
+                        </tr>
+
+                        <tr>
+                            <td th:text="#{upload.file.category}">Select subject for book</td>
+                            <td>
+                                <label>
+                                    <input style="width:400px; height:40px;" list="select" name="category"
+                                           th:name="category" placeholder="Category">
+                                    <datalist class="form-control" id="select" name="category" th:name="category">
+                                        <option value="Без категории">Без категории</option>
+                                        <option value="Теория колебания и динамика">Теория колебания и динамика</option>
+                                        <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
+                                        <option value="САУ">САУ</option>
+                                        <option value="Методички">Методички</option>
+                                    </datalist>
+                                </label>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td><input type="submit" value="Upload"/></td>
+                        </tr>
+                    </table>
+
+                    <ul>
+                        <li th:each="file : ${files}">
+                            <a th:href="${file}" th:text="${file}"></a>
+                        </li>
+                    </ul>
+                </form>
+
             </div>
-
-            <form method="POST" enctype="multipart/form-data" action="/files/upload">
-                <table>
-                    <tr>
-                        <td th:text="#{upload.file}">File to upload</td>
-                        <td><input type="file" name="file"  accept=".xls,.xlsx"/></td>
-                    </tr>
-
-                    <tr>
-                        <td th:text="#{upload.file.page}">Page for saved</td>
-                        <td><label>
-                            <input type="number" name="pageNum">
-                        </label></td>
-                    </tr>
-
-                    <tr>
-                        <td th:text="#{upload.file.category}">Select subject for book</td>
-                        <td>
-                            <label>
-                                <input style = "width:400px; height:40px;" list="select" name="category" th:name="category" placeholder="Category">
-                                <datalist class="form-control" id="select" name="category" th:name="category">
-                                    <option value="Без категории">Без категории</option>
-                                    <option value="Теория колебания и динамика">Теория колебания и динамика</option>
-                                    <option value="Автоматика и телемеханика">Автоматика и телемеханика</option>
-                                    <option value="САУ">САУ</option>
-                                    <option value="Методички">Методички</option>
-                                </datalist>
-                            </label>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td></td>
-                        <td><input type="submit" value="Upload"/></td>
-                    </tr>
-                </table>
-
-                <ul>
-                    <li th:each="file : ${files}">
-                        <a th:href="${file}" th:text="${file}"></a>
-                    </li>
-                </ul>
-            </form>
-
         </div>
     </div>
 

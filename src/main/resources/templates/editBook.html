@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -74,95 +75,100 @@
         <!-- Main Section -->
         <div class="page-container">
 
-            <div class="page-title category-title">
-                <h1 th:text="#{edit.title}">Edit book</h1>
-            </div>
+            <div class="main-box">
+                <div class="page-title category-title">
+                    <h1 th:text="#{edit.title}">Edit book</h1>
+                </div>
 
-            <section id="book_list">
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form action="#" th:action="@{/update/{id}(id=${book.id})}"
-                                  th:object="${book}" method="post" enctype="multipart/form-data">
-                                <label for="bookName" th:text="#{book.name}">Book Name</label>
-                                <input type="text" th:field="${book.bookName}" id="bookName" placeholder="Book Name">
-                                <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
+                <section id="book_list">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="#" th:action="@{/update/{id}(id=${book.id})}"
+                                      th:object="${book}" method="post" enctype="multipart/form-data">
+                                    <label for="bookName" th:text="#{book.name}">Book Name</label>
+                                    <input type="text" th:field="${book.bookName}" id="bookName"
+                                           placeholder="Book Name">
+                                    <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
 
-                                <label for="author" th:text="#{book.author}">Author</label>
-                                <input type="text" th:field="${book.author}" id="author" placeholder="Author">
-                                <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
+                                    <label for="author" th:text="#{book.author}">Author</label>
+                                    <input type="text" th:field="${book.author}" id="author" placeholder="Author">
+                                    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
 
-                                <label for="year" th:text="#{book.year}">Year</label>
-                                <input type="number" th:field="${book.year}" id="year" placeholder="Year">
-                                <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
+                                    <label for="year" th:text="#{book.year}">Year</label>
+                                    <input type="number" th:field="${book.year}" id="year" placeholder="Year">
+                                    <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
 
-                                <label for="amount" th:text="#{book.amount}">Amount</label>
-                                <input type="number" th:field="${book.amount}" id="amount" placeholder="Amount">
-                                <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+                                    <label for="amount" th:text="#{book.amount}">Amount</label>
+                                    <input type="number" th:field="${book.amount}" id="amount" placeholder="Amount">
+                                    <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
 
-                                <label for="status" th:text="#{book.status}">Status</label>
-                                <select class="form-control" id="status" name="category" th:field="${book.bookStatus}">
-                                    <option value="" th:text="#{book.status}">Book Status</option>
-                                    <option value="unused">Unused</option>
-                                    <option value="used">Used</option>
-                                </select>
+                                    <label for="status" th:text="#{book.status}">Status</label>
+                                    <select class="form-control" id="status" name="category"
+                                            th:field="${book.bookStatus}">
+                                        <option value="" th:text="#{book.status}">Book Status</option>
+                                        <option value="unused">Unused</option>
+                                        <option value="used">Used</option>
+                                    </select>
 
-                                <label th:text="#{book.categories}">Book Categories</label>
-                                <tr th:each="category : ${bookCategories}">
-                                    <td th:text="${category}"></td>
-                                </tr>
+                                    <label th:text="#{book.categories}">Book Categories</label>
+                                    <tr th:each="category : ${bookCategories}">
+                                        <td th:text="${category}"></td>
+                                    </tr>
 
-                                <label>
-                                    <input style = "width:250px; height:20px;" list="select" name="category" th:name="category" id="category" placeholder="Category">
-                                    <datalist class="form-control" id="select" name="category" th:name="category">
-                                        <option th:each="category : ${categories}" th:value="${category}"
+                                    <label>
+                                        <input style="width:250px; height:20px;" list="select" name="category"
+                                               th:name="category" id="category" placeholder="Category">
+                                        <datalist class="form-control" id="select" name="category" th:name="category">
+                                            <option th:each="category : ${categories}" th:value="${category}"
+                                                    th:text="${category}">
+                                            </option>
+                                        </datalist>
+                                    </label>
+
+                                    <label for="image" th:text="#{book.cover}">Book cover: </label>
+                                    <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
+
+                                    <label for="description" th:text="#{book.description}">Description</label>
+                                    <input type="text" th:field="${book.description}" id="description"
+                                           placeholder="Description">
+
+                                    <input type="submit" class="btn btn-primary" value="Update Book">
+                                </form>
+
+                                <form th:action="@{/deleteCategory/{id}(id=${book.id})}" method="post">
+                                    <label for="category">Delete category</label>
+                                    <select class="form-control" id="categoryForDelete" name="category">
+                                        <option value="">Select category for delete</option>
+                                        <option th:each="category : ${bookCategories}"
+                                                th:value="${category}"
                                                 th:text="${category}">
                                         </option>
-                                    </datalist>
-                                </label>
-
-                                <label for="image" th:text="#{book.cover}">Book cover: </label>
-                                <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
-
-                                <label for="description" th:text="#{book.description}">Description</label>
-                                <input type="text" th:field="${book.description}" id="description"
-                                       placeholder="Description">
-
-                                <input type="submit" class="btn btn-primary" value="Update Book">
-                            </form>
-
-                            <form th:action="@{/deleteCategory/{id}(id=${book.id})}" method="post">
-                                <label for="category">Delete category</label>
-                                <select class="form-control" id="categoryForDelete" name="category">
-                                    <option value="">Select category for delete</option>
-                                    <option th:each="category : ${bookCategories}"
-                                            th:value="${category}"
-                                            th:text="${category}">
-                                    </option>
-                                </select>
-                                <input type="submit" class="btn btn-primary" value="Delete category">
-                            </form>
+                                    </select>
+                                    <input type="submit" class="btn btn-primary" value="Delete category">
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            <!-- Footer Content -->
-            <footer id="footer" class="page-footer">
-                <div class="row footer-wrapper">
-                    <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
-                </div>
-            </footer>
-
+                </section>
+            </div>
         </div>
-        <!-- /main -->
 
-        <div class="main-overlay">
-            <div class="overlay-full"></div>
-        </div>
+        <!-- Footer Content -->
+        <footer id="footer" class="page-footer">
+            <div class="row footer-wrapper">
+                <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
+            </div>
+        </footer>
 
     </div>
+    <!-- /main -->
+
+    <div class="main-overlay">
+        <div class="overlay-full"></div>
+    </div>
+
 </div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">

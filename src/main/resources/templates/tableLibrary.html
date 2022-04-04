@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -84,96 +85,103 @@
 
 
         <!-- Main Section -->
-        <div class="page-container">
+        <div class="main-box">
+            <div class="page-container">
 
-            <div class="page-title category-title">
-                <h1 th:text="#{table.title}">Books table</h1>
-            </div>
-
-            <div class="toolbar row">
-                <div class="filter-options small-12 medium-9 columns">
-                    <a th:href="@{/table/}" class="filter-item">Всі категорії</a>
-                    <tr th:each="category : ${categories}">
-                        <a th:href="@{/table/{category}(category = ${category})}" class="filter-item" th:text="${category}"></a>
-                    </tr>
+                <div class="page-title category-title">
+                    <h1 th:text="#{table.title}">Books table</h1>
                 </div>
-<!--                <div class="small-12 medium-3 columns">-->
-<!--                    <label>-->
-<!--                        <select class="sort-options">-->
-<!--                            <option value="" disabled selected>Sort by</option>-->
-<!--                            <option value="">Featured</option>-->
-<!--                            <option value="title">Alphabetical</option>-->
-<!--                            <option value="date-created">Published</option>-->
-<!--                        </select>-->
-<!--                    </label>-->
-<!--                </div>-->
-            </div>
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-10 mt-5 mb-5">
-                        <table id="books" class="table table-bordered table-responsive-sm">
-                            <thead>
-                            <tr>
-                                <th th:text="#{book.name}">Book Name</th>
-                                <th th:text="#{book.author}">Author</th>
-                                <th th:text="#{book.year}">Year</th>
-                                <td th:text="#{book.status}">Status</td>
-                                <th th:text="#{book.action}">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="book : ${books.content}">
-                                <td th:text="${book.bookName}">title</td>
-                                <td th:text="${book.author}">body</td>
-                                <td th:text="${book.year}">body</td>
-                                <td th:text="${book.bookStatus}">body</td>
-                                <td>
-                                    <a class="col-sm-6 col-sm-offset-3" th:href="@{/find/{id}(id=${book.id})}" th:text="#{book.details}">Details</a>
-                                    <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                                        <div th:if="${book.amount} >= 1">
-                                            <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
-                                                <div class="col-sm-6 col-sm-offset-3">
-                                                    <input type="submit"
-                                                           name="login-submit"
-                                                           id="book-take-submit"
-                                                           class="form-control btn btn-info"
-                                                           value="Take Book"/>
-                                                </div>
-                                            </form>
+                <div class="toolbar row">
+                    <div class="filter-options small-12 medium-9 columns">
+                        <a th:href="@{/table/}" class="filter-item">Всі категорії</a>
+                        <tr th:each="category : ${categories}">
+                            <a th:href="@{/table/{category}(category = ${category})}" class="filter-item"
+                               th:text="${category}"></a>
+                        </tr>
+                    </div>
+                    <!--                <div class="small-12 medium-3 columns">-->
+                    <!--                    <label>-->
+                    <!--                        <select class="sort-options">-->
+                    <!--                            <option value="" disabled selected>Sort by</option>-->
+                    <!--                            <option value="">Featured</option>-->
+                    <!--                            <option value="title">Alphabetical</option>-->
+                    <!--                            <option value="date-created">Published</option>-->
+                    <!--                        </select>-->
+                    <!--                    </label>-->
+                    <!--                </div>-->
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 mt-5 mb-5">
+                            <table id="books" class="table table-bordered table-responsive-sm">
+                                <thead>
+                                <tr>
+                                    <th th:text="#{book.name}">Book Name</th>
+                                    <th th:text="#{book.author}">Author</th>
+                                    <th th:text="#{book.year}">Year</th>
+                                    <td th:text="#{book.status}">Status</td>
+                                    <th th:text="#{book.action}">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="book : ${books.content}">
+                                    <td th:text="${book.bookName}">title</td>
+                                    <td th:text="${book.author}">body</td>
+                                    <td th:text="${book.year}">body</td>
+                                    <td th:text="${book.bookStatus}">body</td>
+                                    <td>
+                                        <a class="col-sm-6 col-sm-offset-3" th:href="@{/find/{id}(id=${book.id})}"
+                                           th:text="#{book.details}">Details</a>
+                                        <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+                                            <div th:if="${book.amount} >= 1">
+                                                <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
+                                                    <div class="col-sm-6 col-sm-offset-3">
+                                                        <input type="submit"
+                                                               name="login-submit"
+                                                               id="book-take-submit"
+                                                               class="form-control btn btn-info"
+                                                               value="Take Book"/>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                                        <a th:href="@{/edit/{id}(id=${book.id})}" type="button" class="btn btn-danger button btn btn-primary"
-                                           data-bs-toggle="modal" data-bs-target="#exampleModal" th:text="#{book.update}">Update</a>
-                                        <a th:href="@{/delete/{id}(id=${book.id})}"
-                                           class="btn btn-danger button btn btn-primary" th:text="#{book.delete}">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                        <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                                            <a th:href="@{/edit/{id}(id=${book.id})}" type="button"
+                                               class="btn btn-danger button btn btn-primary"
+                                               data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                               th:text="#{book.update}">Update</a>
+                                            <a th:href="@{/delete/{id}(id=${book.id})}"
+                                               class="btn btn-danger button btn btn-primary" th:text="#{book.delete}">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                        <nav aria-label="Page navigation example">
-                            <ul th:if="${books.totalPages > 0}" class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
-                                       th:href="@{/table/{category}(size=${books.size}, page=${1}, category=${category})}">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <th:block th:each="pageNumber : ${pageNumbers}">
-                                    <li class="page-item"><a th:href="@{/table/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
-                                                             th:text="${pageNumber}" class="page-link" href="#"></a></li>
-                                </th:block>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"
-                                       th:href="@{/table/{category}(size=${books.size}, page=${books.totalPages}, category=${category})}">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                            <nav aria-label="Page navigation example">
+                                <ul th:if="${books.totalPages > 0}" class="pagination">
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="First" th:if="${books.totalPages > 0}"
+                                           th:href="@{/table/{category}(size=${books.size}, page=${1}, category=${category})}">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <th:block th:each="pageNumber : ${pageNumbers}">
+                                        <li class="page-item"><a
+                                                th:href="@{/table/{category}(size=${books.size}, page=${pageNumber}, category=${category})}"
+                                                th:text="${pageNumber}" class="page-link" href="#"></a></li>
+                                    </th:block>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Last" th:if="${books.totalPages > 0}"
+                                           th:href="@{/table/{category}(size=${books.size}, page=${books.totalPages}, category=${category})}">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="">
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -70,80 +71,83 @@
         </header>
 
         <!-- Main Section -->
-        <div class="page-container">
+        <div class="main-box">
+            <div class="page-container">
 
-            <div class="page-title category-title">
-                <h1>User Profile</h1>
-            </div>
-
-            <section id="book_list">
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <label>First Name</label>
-                            <p th:text="${appUser.firstName}"></p>
-                            <label>Last Name</label>
-                            <p th:text="${appUser.lastName}"></p>
-                            <label>Email</label>
-                            <p th:text="${appUser.email}"></p>
-                            <label>Registration date</label>
-                            <p th:text="${appUser.registrationDate}"></p>
-
-                            <tr th:each="book : ${userBooks}">
-                                <li class="book-item small-12 medium-6 columns">
-                                    <div class="bk-img">
-                                        <div class="bk-wrapper">
-                                            <div class="bk-book bk-bookdefault">
-                                                <div class="bk-front">
-                                                    <div class="bk-cover"
-                                                         style="background-image: url('/img/bookCover.gif')"></div>
-                                                </div>
-                                                <div class="bk-back"></div>
-                                                <div class="bk-left"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item-details">
-                                        <h3 class="book-item_title" th:text="${book.bookName}"></h3>
-                                        <p class="author" th:text="${book.author}"></p>
-                                        <p class="published" th:text="${book.year}"></p>
-                                        <!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
-                                        <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
-
-<!--                                        <td th:switch="${#lists.size(book.amount)}">-->
-<!--                                            <span th:case="'0'">Book is taken</span>-->
-<!--                                            <span th:case="'1'"></span>-->
-<!--                                        </td>-->
-                                        <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
-                                            <div class="col-sm-6 col-sm-offset-3">
-                                                <input type="submit"
-                                                       name="login-submit"
-                                                       id="book-return-submit"
-                                                       class="form-control btn btn-info"
-                                                       value="Return Book"/>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </li>
-                            </tr>
-
-                            <table id="books" class="table table-bordered table-responsive-sm">
-                                <a th:href="@{/update/{email}(email=${appUser.email})}" type="button"
-                                   class="btn btn-danger button btn btn-primary"
-                                   data-bs-toggle="modal" data-bs-target="#exampleModal">Update password or email</a>
-                            </table>
-                        </div>
-                    </div>
+                <div class="page-title category-title">
+                    <h1>User Profile</h1>
                 </div>
 
-                <!-- Footer Content -->
-                <footer id="footer" class="page-footer">
-                    <div class="row footer-wrapper">
-                        <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
+                <section id="book_list">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <label>First Name</label>
+                                <p th:text="${appUser.firstName}"></p>
+                                <label>Last Name</label>
+                                <p th:text="${appUser.lastName}"></p>
+                                <label>Email</label>
+                                <p th:text="${appUser.email}"></p>
+                                <label>Registration date</label>
+                                <p th:text="${appUser.registrationDate}"></p>
+
+                                <tr th:each="book : ${userBooks}">
+                                    <li class="book-item small-12 medium-6 columns">
+                                        <div class="bk-img">
+                                            <div class="bk-wrapper">
+                                                <div class="bk-book bk-bookdefault">
+                                                    <div class="bk-front">
+                                                        <div class="bk-cover"
+                                                             style="background-image: url('/img/bookCover.gif')"></div>
+                                                    </div>
+                                                    <div class="bk-back"></div>
+                                                    <div class="bk-left"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item-details">
+                                            <h3 class="book-item_title" th:text="${book.bookName}"></h3>
+                                            <p class="author" th:text="${book.author}"></p>
+                                            <p class="published" th:text="${book.year}"></p>
+                                            <!--                                    <a th:href="@{/find/{id}(id=${book.id})}" class="button">Details</a>-->
+                                            <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
+
+                                            <!--                                        <td th:switch="${#lists.size(book.amount)}">-->
+                                            <!--                                            <span th:case="'0'">Book is taken</span>-->
+                                            <!--                                            <span th:case="'1'"></span>-->
+                                            <!--                                        </td>-->
+                                            <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
+                                                <div class="col-sm-6 col-sm-offset-3">
+                                                    <input type="submit"
+                                                           name="login-submit"
+                                                           id="book-return-submit"
+                                                           class="form-control btn btn-info"
+                                                           value="Return Book"/>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </li>
+                                </tr>
+
+                                <table id="books" class="table table-bordered table-responsive-sm">
+                                    <a th:href="@{/update/{email}(email=${appUser.email})}" type="button"
+                                       class="btn btn-danger button btn btn-primary"
+                                       data-bs-toggle="modal" data-bs-target="#exampleModal">Update password or
+                                        email</a>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </footer>
-            </section>
+
+                    <!-- Footer Content -->
+                    <footer id="footer" class="page-footer">
+                        <div class="row footer-wrapper">
+                            <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
+                        </div>
+                    </footer>
+                </section>
+            </div>
         </div>
     </div>
     <!-- /main -->
