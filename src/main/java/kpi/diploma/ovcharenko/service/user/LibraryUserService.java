@@ -2,9 +2,11 @@ package kpi.diploma.ovcharenko.service.user;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
+import kpi.diploma.ovcharenko.entity.user.PasswordResetToken;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.UserRole;
 import kpi.diploma.ovcharenko.repo.BookRepository;
+import kpi.diploma.ovcharenko.repo.PasswordResetTokenRepository;
 import kpi.diploma.ovcharenko.repo.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,12 +28,25 @@ public class LibraryUserService implements UserService {
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordResetTokenRepository resetTokenRepository;
 
     public LibraryUserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-                              BookRepository bookRepository) {
+                              BookRepository bookRepository, PasswordResetTokenRepository resetTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.bookRepository = bookRepository;
+        this.resetTokenRepository = resetTokenRepository;
+    }
+
+    @Override
+    public AppUser save(UserModel registration){
+        AppUser user = new AppUser();
+        user.setFirstName(registration.getFirstName());
+        user.setLastName(registration.getLastName());
+        user.setEmail(registration.getEmail());
+        user.setPassword(passwordEncoder.encode(registration.getPassword()));
+        user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
+        return userRepository.save(user);
     }
 
     @Override
@@ -44,18 +60,25 @@ public class LibraryUserService implements UserService {
                 mapRolesToAuthorities(user.getRoles()));
     }
 
+    @Override
     public AppUser findByEmail(String email){
         return userRepository.findByEmail(email);
     }
 
-    public AppUser save(UserModel registration){
-        AppUser user = new AppUser();
-        user.setFirstName(registration.getFirstName());
-        user.setLastName(registration.getLastName());
-        user.setEmail(registration.getEmail());
-        user.setPassword(passwordEncoder.encode(registration.getPassword()));
-        user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
-        return userRepository.save(user);
+    @Override
+    public void createPasswordResetTokenForUser(AppUser user, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        resetTokenRepository.save(myToken);
+    }
+
+    @Override
+    public void changeUserPassword(AppUser user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
+    public Optional<AppUser> getUserByPasswordResetToken(final String token) {
+        return Optional.ofNullable(resetTokenRepository.findByToken(token).getUser());
     }
 
     @Override
@@ -92,27 +115,5 @@ public class LibraryUserService implements UserService {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
-    }
-
-    public void updateResetPasswordToken(String token, String email) throws UsernameNotFoundException {
-        AppUser user = userRepository.findByEmail(email);
-        if (user != null) {
-            user.setResetPasswordToken(token);
-            userRepository.save(user);
-        } else {
-            throw new UsernameNotFoundException("Could not find any user with the email " + email);
-        }
-    }
-
-    public AppUser getByResetPasswordToken(String token) {
-        return userRepository.findByResetPasswordToken(token);
-    }
-
-    public void updatePassword(AppUser customer, String newPassword) {
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        customer.setPassword(encodedPassword);
-
-        customer.setResetPasswordToken(null);
-        userRepository.save(customer);
     }
 }

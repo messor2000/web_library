@@ -50,13 +50,13 @@
                     </a>
                 </div>
 
-                <div class="localization" th:if="${#locale.toString() == 'uk_UK'}">
-                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_US')}">
+                <div class="localization" th:if="${#locale.toString() == 'uk_UA'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_GB')}">
                         <i>EN</i>
                     </a>
                 </div>
-                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
-                    <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UK')}">
+                <div class="localization" th:if="${#locale.toString() == 'en_GB'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UA')}">
                         <i>UK</i>
                     </a>
                 </div>
@@ -124,8 +124,8 @@
                                         <div class="bk-wrapper">
                                             <div class="bk-book bk-bookdefault">
                                                 <div class="bk-front">
-                                                    <div class="bk-cover"
-                                                         style="background-image: url('/img/IMAGE 2022-01-23 16_01_21.jpg')">
+                                                    <div class="bk-cover">
+<!--                                                         style="background-image: url('/img/IMAGE 2022-01-23 16_01_21.jpg')">-->
                                                     </div>
                                                     <!--                                                <div class="bk-cover">-->
                                                     <!--                                                    <img th:src="@{${book.coverImagePath}}" alt="">-->
