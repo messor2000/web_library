@@ -562,7 +562,6 @@ a.button:hover, a.button:focus {
     float: left;
     padding-right: 30px;
     list-style: none;
-    /* Individual style & artwork */
 }
 
 .bk-img .bk-wrapper {
@@ -947,11 +946,11 @@ a.button:hover, a.button:focus {
     text-align: center;
 }
 
-/*.page-footer {*/
-/*    position: fixed;*/
-/*    bottom: 0;*/
-/*    width: 100%;*/
-/*}*/
+.page-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
 
 h1 {
     color: #78ab46;
@@ -964,3 +963,4 @@ h1 {
 .error-message:first-letter {
     text-transform: capitalize;
 }
+

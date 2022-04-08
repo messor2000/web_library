@@ -65,7 +65,6 @@ public class AppUser {
     @Column(name = "create_time")
     private Timestamp registrationDate;
 
-    @Column(name = "reset_password_token")
     private String resetPasswordToken;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
