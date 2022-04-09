@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/registration").not().fullyAuthenticated()
                     .antMatchers("/add", "/uploadPage", "/delete/*", "/edit/*", "/deleteCategory/*")
                     .hasRole("ADMIN")
-                    .antMatchers("/profile").hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/profile", "/user/changePassword", "/user/updatePassword").hasAnyRole("USER", "ADMIN")
                     .antMatchers("/",
                             "/{category}",
                             "/find/*",
@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/forgetPassword/*",
                             "/resetPassword",
                             "/user/savePassword/**",
-                            "/user/changePassword/**",
+                            "/user/resetOldPassword/**",
                             "/covers/**",
                             "/js/**",
                             "/css/**",

@@ -14,6 +14,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,8 +101,7 @@ public class UserController {
     }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(final HttpServletRequest request, final Model model, @RequestParam("email") final String userEmail,
-                                RedirectAttributes redirectAttributes) {
+    public String resetPassword(final HttpServletRequest request, final Model model, @RequestParam("email") final String userEmail) {
         final AppUser user = userService.findByEmail(userEmail);
         if (user == null) {
             model.addAttribute("message", messages.getMessage("message.userNotFound", null, request.getLocale()));
@@ -121,11 +122,11 @@ public class UserController {
             model.addAttribute("message", e.getLocalizedMessage());
             return "redirect:/login";
         }
-        redirectAttributes.addAttribute("message", messages.getMessage("message.resetPasswordEmail", null, request.getLocale()));
-        return "redirect:/login";
+//        redirectAttributes.addAttribute("message", messages.getMessage("message.resetPasswordEmail", null, request.getLocale()));
+        return "infoAboutEmail";
     }
 
-    @GetMapping("/user/changePassword")
+    @GetMapping("/user/resetOldPassword")
     public String showChangePasswordPage(Locale locale, @RequestParam("token") String token, RedirectAttributes redirectAttributes) {
         String result = securityService.validatePasswordResetToken(token);
         if (result != null) {
@@ -154,6 +155,22 @@ public class UserController {
         model.addAttribute("userBooks", books);
 
         return "userProfile";
+    }
+
+    @GetMapping("/user/changePassword")
+    public String showChangePasswordPage() {
+        return "changePassword";
+    }
+
+    @PostMapping("/user/updatePassword")
+    public String changeUserPassword(@RequestParam("password") String password, @RequestParam("oldpassword") String oldPassword) {
+        AppUser user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if (!userService.checkIfValidOldPassword(user, oldPassword)) {
+            throw new RuntimeException();
+        }
+        userService.changeUserPassword(user, password);
+        return "redirect:/login";
     }
 
     @PostMapping("/takeBook/{id}")
@@ -187,7 +204,7 @@ public class UserController {
     }
 
     private SimpleMailMessage constructResetTokenEmail(String contextPath, Locale locale, String token, AppUser user) {
-        String url = contextPath + "/user/changePassword?token=" + token;
+        String url = contextPath + "/user/resetOldPassword?token=" + token;
         String message = messages.getMessage("message.resetPassword",
                 null, locale);
         return constructEmail(message + " \r\n" + url, user);

@@ -65,8 +65,6 @@ public class AppUser {
     @Column(name = "create_time")
     private Timestamp registrationDate;
 
-    private String resetPasswordToken;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

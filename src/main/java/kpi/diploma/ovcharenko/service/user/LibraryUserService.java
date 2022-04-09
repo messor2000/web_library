@@ -77,8 +77,14 @@ public class LibraryUserService implements UserService {
         userRepository.save(user);
     }
 
+    @Override
     public Optional<AppUser> getUserByPasswordResetToken(final String token) {
         return Optional.ofNullable(resetTokenRepository.findByToken(token).getUser());
+    }
+
+    @Override
+    public boolean checkIfValidOldPassword(final AppUser user, final String oldPassword) {
+        return passwordEncoder.matches(oldPassword, user.getPassword());
     }
 
     @Override

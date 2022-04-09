@@ -7,17 +7,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
-    AppUser findByEmail(String email);
+    AppUser findByEmail(final String email);
 
-    AppUser save(UserModel registration);
+    AppUser save(final UserModel registration);
 
-    void takeBook(Long id, String userEmail);
+    void takeBook(final Long id, final String userEmail);
 
-    void returnBook(Long id, String userEmail);
+    void returnBook(final Long id, final String userEmail);
 
-    void createPasswordResetTokenForUser(AppUser user, String token);
+    void createPasswordResetTokenForUser(final AppUser user, final String token);
 
     Optional<AppUser> getUserByPasswordResetToken(final String token);
 
-    void changeUserPassword(AppUser user, String password);
+    void changeUserPassword(final AppUser user, final String password);
+
+    boolean checkIfValidOldPassword(final AppUser user, final String oldPassword);
 }
