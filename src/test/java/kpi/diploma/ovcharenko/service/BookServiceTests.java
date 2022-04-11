@@ -169,34 +169,34 @@ public class BookServiceTests {
         bookService.findBookById(book.getId());
     }
 
-    @Test
-    @SneakyThrows
-    @DisplayName("Test update books name")
-    public void updateBookByNameTest() {
-        Book book = new Book("testBookForCheckId", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("test1");
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.txt",
-                MediaType.IMAGE_JPEG_VALUE,
-                "Hello, World!".getBytes()
-        );
-
-        bookService.addNewBook(book, category.getCategory(), file);
-        String newBookName = "newBookNameForTest";
-        book.setBookName(newBookName);
-        bookService.updateBook(book, category.getCategory(), file);
-
-        Book foundBook = bookService.findBookById(book.getId());
-
-        FileUtils.deleteDirectory(new File("/covers/" + "/" + file.getOriginalFilename()));
-
-        bookService.deleteBookById(book.getId());
-
-        assertEquals(newBookName, foundBook.getBookName());
-    }
+//    @Test
+//    @SneakyThrows
+//    @DisplayName("Test update books name")
+//    public void updateBookByNameTest() {
+//        Book book = new Book("testBookForCheckId", 9999, "testAuthor", 1,
+//                "test1", "unused");
+//        BookCategory category = new BookCategory("test1");
+//        MockMultipartFile file
+//                = new MockMultipartFile(
+//                "file",
+//                "hello.txt",
+//                MediaType.IMAGE_JPEG_VALUE,
+//                "Hello, World!".getBytes()
+//        );
+//
+//        bookService.addNewBook(book, category.getCategory(), file);
+//        String newBookName = "newBookNameForTest";
+//        book.setBookName(newBookName);
+//        bookService.updateBook(book, category.getCategory(), file);
+//
+//        Book foundBook = bookService.findBookById(book.getId());
+//
+//        FileUtils.deleteDirectory(new File("/covers/" + "/" + file.getOriginalFilename()));
+//
+//        bookService.deleteBookById(book.getId());
+//
+//        assertEquals(newBookName, foundBook.getBookName());
+//    }
 
     private void deleteTestFile(File file) {
         try {

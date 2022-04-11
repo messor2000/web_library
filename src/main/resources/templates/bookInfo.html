@@ -119,12 +119,21 @@
 
                                 <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                     <table id="books" class="table table-bordered table-responsive-sm">
-                                        <a th:href="@{/edit/{id}(id=${book.id})}" type="button"
+                                        <a th:href="@{/book/edit/{id}(id=${book.id})}" type="button"
                                            class="btn btn-danger button btn btn-primary"
                                            data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
-                                        <a th:href="@{/delete/{id}(id=${book.id})}"
+                                        <a th:href="@{/book/delete/{id}(id=${book.id})}"
                                            class="btn btn-danger button btn btn-primary">Delete</a>
                                     </table>
+                                </div>
+
+                                <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                                    <form th:action="@{/book/addCover/{id}(id=${book.id})}" enctype="multipart/form-data" method="post">
+                                        <label for="image" th:text="#{book.cover}">Book cover: </label>
+                                        <input type="file" name="image" accept="image/png, image/jpeg, image/jpg" id="image"/>
+
+                                        <input type="submit" class="btn btn-primary" value="Add book image">
+                                    </form>
                                 </div>
                             </div>
                         </div>

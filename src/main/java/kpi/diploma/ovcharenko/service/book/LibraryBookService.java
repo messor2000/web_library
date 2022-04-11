@@ -14,7 +14,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -60,6 +64,39 @@ public class LibraryBookService implements BookService {
             log.error("Error while saving file", e);
         }
     }
+
+//    @Override
+//    @Transactional
+//    public void updateBook(Book book, String category, String uploadDirectory, MultipartFile file) {
+//        BookCategory bookCategory = new BookCategory(category);
+//
+//        book.addCategory(bookCategory);
+//
+//        try {
+//            String fileName = file.getOriginalFilename();
+//            String filePath = Paths.get(uploadDirectory, fileName).toString();
+//
+//            try(BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(filePath))) {
+//                File dir = new File(uploadDirectory);
+//                if (!dir.exists()) {
+//                    log.info("Folder Created");
+//                    dir.mkdirs();
+//                }
+////                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(filePath));
+//                stream.write(file.getBytes());
+//            }
+//
+//            byte[] imageData = file.getBytes();
+//
+//            book.setImage(imageData);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        bookRepository.save(book);
+//    }
 
     @Override
     public Book findBookById(Long id) {

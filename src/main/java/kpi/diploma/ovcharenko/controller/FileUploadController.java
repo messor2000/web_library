@@ -74,6 +74,4 @@ public class FileUploadController {
     public ResponseEntity<StorageFileNotFoundException> handleStorageFileNotFound(StorageFileNotFoundException e) {
         return ResponseEntity.notFound().build();
     }
-
-
 }

@@ -2,6 +2,7 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookModel;
+import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -28,13 +31,18 @@ import java.util.stream.IntStream;
 @Controller
 public class BookController {
 
+    @Value("${uploadDir}")
+    private String uploadFolder;
+
     private static final int FIRST_PAGE = 1;
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     private final BookService bookService;
+    private final AmazonClient amazonClient;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, AmazonClient amazonClient) {
         this.bookService = bookService;
+        this.amazonClient = amazonClient;
     }
 
     @GetMapping("/")
@@ -101,7 +109,7 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/delete/{id}")
+    @GetMapping(value = "/book/delete/{id}")
     public String deleteBookById(@PathVariable("id") Long id) {
         bookService.deleteBookById(id);
 
@@ -131,7 +139,7 @@ public class BookController {
         return "redirect:/";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/book/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Book book = bookService.findBookById(id);
         Set<String> categories = bookService.findAllCategories();
@@ -144,7 +152,7 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
+    @PostMapping(value = "/book/update/{id}", consumes = {"multipart/form-data"})
     public String updateBook(@PathVariable("id") long id, @Valid Book book,
                              @RequestParam(value = "category") String category, BindingResult result,
                              @RequestParam("image") MultipartFile multipartFile) {
@@ -165,6 +173,17 @@ public class BookController {
         bookService.deleteCategory(id, category);
 
         redirectAttributes.addAttribute("bookId", id);
+        return "redirect:/edit/{bookId}";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/book/addCover/{id}")
+    public String addBookCover(@PathVariable("id") long id, @RequestParam("image") MultipartFile multipartFile,
+                               RedirectAttributes redirectAttributes) {
+
+        redirectAttributes.addAttribute("bookId", id);
+        amazonClient.upload(multipartFile);
+
         return "redirect:/edit/{bookId}";
     }
 }

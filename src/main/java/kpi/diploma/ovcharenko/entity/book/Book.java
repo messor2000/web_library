@@ -7,7 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Transient;
+import javax.persistence.Transient;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -58,6 +60,13 @@ public class Book {
 
     @Column(name = "book_cover")
     private String cover;
+
+    @Lob
+    @Column(name = "image", length = Integer.MAX_VALUE)
+    private byte[] image;
+
+    @Transient
+    private MultipartFile userImage;
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
