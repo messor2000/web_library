@@ -16,11 +16,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -63,8 +64,8 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AppUser user;
+    @ManyToMany(mappedBy = "books")
+    List<AppUser> users;
 
     public void addCategory(BookCategory category){
         categories.add(category);

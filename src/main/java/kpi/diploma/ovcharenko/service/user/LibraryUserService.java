@@ -101,6 +101,7 @@ public class LibraryUserService implements UserService {
         user.addBook(book);
 
         userRepository.save(user);
+        bookRepository.save(book);
     }
 
     @Override
@@ -115,6 +116,7 @@ public class LibraryUserService implements UserService {
         user.removeBook(book);
 
         userRepository.save(user);
+        bookRepository.save(book);
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles){

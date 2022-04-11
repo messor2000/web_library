@@ -43,22 +43,24 @@ public class LibraryBookService implements BookService {
     @Override
     @Transactional
     public void updateBook(Book book, String category, MultipartFile file) {
-        BookCategory bookCategory = new BookCategory(category);
+//        BookCategory bookCategory = new BookCategory(category);
+//
+//        book.addCategory(bookCategory);
+//
+//        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+//        book.setCover(fileName);
+//
+//        bookRepository.save(book);
+//
+//        String uploadDir = "covers/" + book.getId();
+//
+//        try {
+//            FileUploadUtil.saveFile(uploadDir, fileName, file);
+//        } catch (IOException e) {
+//            log.error("Error while saving file", e);
+//        }
 
-        book.addCategory(bookCategory);
-
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        book.setCover(fileName);
-
-        bookRepository.save(book);
-
-        String uploadDir = "covers/" + book.getId();
-
-        try {
-            FileUploadUtil.saveFile(uploadDir, fileName, file);
-        } catch (IOException e) {
-            log.error("Error while saving file", e);
-        }
+        actionOnTheBook(book, category, file);
     }
 
     @Override
@@ -69,24 +71,25 @@ public class LibraryBookService implements BookService {
 
     @Override
     public void addNewBook(Book book, String category, MultipartFile file) {
-        BookCategory bookCategory = new BookCategory(category);
-
-        book.addCategory(bookCategory);
-        book.setAmount(1);
-        book.setBookStatus("unused");
-
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        book.setCover(fileName);
-
-        bookRepository.save(book);
-
-        String uploadDir = "covers/" + book.getId();
-
-        try {
-            FileUploadUtil.saveFile(uploadDir, fileName, file);
-        } catch (IOException e) {
-            log.error("Error while saving file", e);
-        }
+//        BookCategory bookCategory = new BookCategory(category);
+//
+//        book.addCategory(bookCategory);
+//        book.setAmount(1);
+//        book.setBookStatus("unused");
+//
+//        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+//        book.setCover(fileName);
+//
+//        bookRepository.save(book);
+//
+//        String uploadDir = "covers/" + book.getId();
+//
+//        try {
+//            FileUploadUtil.saveFile(uploadDir, fileName, file);
+//        } catch (IOException e) {
+//            log.error("Error while saving file", e);
+//        }
+        actionOnTheBook(book, category, file);
     }
 
     @Override
@@ -133,6 +136,27 @@ public class LibraryBookService implements BookService {
 
         categoryRepository.deleteById(bookCategory.getId());
         bookRepository.save(book);
+    }
+
+    private void actionOnTheBook(Book book, String category, MultipartFile file) {
+        BookCategory bookCategory = new BookCategory(category);
+
+        book.addCategory(bookCategory);
+        book.setAmount(1);
+        book.setBookStatus("unused");
+
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        book.setCover(fileName);
+
+        bookRepository.save(book);
+
+        String uploadDir = "covers/" + book.getId();
+
+        try {
+            FileUploadUtil.saveFile(uploadDir, fileName, file);
+        } catch (IOException e) {
+            log.error("Error while saving file", e);
+        }
     }
 }
 

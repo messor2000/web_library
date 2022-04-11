@@ -92,14 +92,14 @@
                                 <p th:text="${book.author}"></p>
                                 <label>Book Year</label>
                                 <p th:text="${book.year}"></p>
-                                <label>Book Categories</label>
-                                <tr th:each="category : ${bookCategories}">
-                                    <td th:text="${category}"></td>
-                                </tr>
                                 <label>Book Amount</label>
                                 <p th:text="${book.amount}"></p>
                                 <label>Book Description</label>
                                 <p th:text="${book.description}"></p>
+                                <label>Book Categories</label>
+                                <tr th:each="category : ${bookCategories}">
+                                    <td th:text="${category}"></td>
+                                </tr>
                                 <label>Book Status</label>
                                 <p th:text="${book.bookStatus}"></p>
 
