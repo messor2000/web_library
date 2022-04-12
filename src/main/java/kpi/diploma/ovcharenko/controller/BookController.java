@@ -4,6 +4,7 @@ import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookModel;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.service.book.BookService;
+import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,9 +34,11 @@ public class BookController {
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     private final BookService bookService;
+    private final UserService userService;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, UserService userService) {
         this.bookService = bookService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -172,9 +175,11 @@ public class BookController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/allUserBooks")
-    public String showAllTakenBooksForm(Model model, @RequestParam("email") String email) {
+    public String showAllTakenBooks(Model model, @RequestParam("email") String email) {
         List<Book> allTakenBooks = bookService.getAllBooksThatTaken(email);
+        AppUser user = userService.findByEmail(email);
 
+        model.addAttribute("user", user);
         model.addAttribute("allTakenBooks", allTakenBooks);
 
         return "takenBooks";

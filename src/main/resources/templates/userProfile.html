@@ -91,53 +91,62 @@
                                 <label>Registration date</label>
                                 <p th:text="${appUser.registrationDate}"></p>
                                 <p><a th:href="@{/user/changePassword}" type="button"
-                                       class="btn btn-danger button btn btn-primary"
-                                       data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                       th:text="#{message.updatePassword}">
+                                      class="btn btn-danger button btn btn-primary"
+                                      data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                      th:text="#{message.updatePassword}">
                                     Update password</a></p>
 
                                 <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                                    <form th:action="@{/user/allTakenBooks}" method="post">
-                                        <label for="email" >User email</label>
-                                        <input id="email" name="email" type="email">
+                                    <label th:text="#{takenBooks.email}">User email</label>
+                                    <form th:action="@{/admin/allUserBooks}" method="post">
+                                        <label for="email">User email</label>
+                                        <input style="width: 300px" id="email" name="email" type="email">
 
                                         <input type="submit" class="btn btn-primary" value="Find user books">
                                     </form>
                                 </div>
 
                                 <div>
-                                    <tr th:each="book : ${userBooks}">
-                                        <li class="book-item small-12 medium-6 columns">
-                                            <div class="bk-img">
-                                                <div class="bk-wrapper">
-                                                    <div class="bk-book bk-bookdefault">
-                                                        <div class="bk-front">
-                                                            <div class="bk-cover"
-                                                                 style="background-image: url('/img/bookCover.gif')"></div>
+                                    <div>
+                                        <div th:if="${userBooks.size()} >= 1">
+                                            <label th:text="#{user.books}">User books</label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <tr th:each="book : ${userBooks}">
+                                            <li class="book-item small-12 medium-6 columns">
+                                                <div class="bk-img">
+                                                    <div class="bk-wrapper">
+                                                        <div class="bk-book bk-bookdefault">
+                                                            <div class="bk-front">
+                                                                <div class="bk-cover"
+                                                                     style="background-image: url('/img/bookCover.gif')"></div>
+                                                            </div>
+                                                            <div class="bk-back"></div>
+                                                            <div class="bk-left"></div>
                                                         </div>
-                                                        <div class="bk-back"></div>
-                                                        <div class="bk-left"></div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="item-details">
-                                                <h3 class="book-item_title" th:text="${book.bookName}"></h3>
-                                                <p class="author" th:text="${book.author}"></p>
-                                                <p class="published" th:text="${book.year}"></p>
-                                                <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
+                                                <div class="item-details">
+                                                    <h3 class="book-item_title" th:text="${book.bookName}"></h3>
+                                                    <p class="author" th:text="${book.author}"></p>
+                                                    <p class="published" th:text="${book.year}"></p>
+                                                    <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
 
-                                                <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
-                                                    <div class="col-sm-6 col-sm-offset-3">
-                                                        <input type="submit"
-                                                               name="login-submit"
-                                                               id="book-return-submit"
-                                                               class="form-control btn btn-info"
-                                                               value="Return Book"/>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </li>
-                                    </tr>
+                                                    <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
+                                                        <div class="col-sm-6 col-sm-offset-3">
+                                                            <input type="submit"
+                                                                   name="login-submit"
+                                                                   id="book-return-submit"
+                                                                   class="form-control btn btn-info"
+                                                                   value="Return Book"/>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </li>
+                                        </tr>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

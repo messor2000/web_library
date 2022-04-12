@@ -73,36 +73,62 @@
 
         <!-- Main Section -->
         <div class="page-container">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-10 mt-5 mb-5">
-                        <div>
-                            <form th:action="@{/admin/allUserBooks}" method="post">
-                                <label for="email" >User email</label>
-                                <input id="email" name="email" type="email">
 
-                                <input type="submit" class="btn btn-primary" value="Find user books">
-                            </form>
-                        </div>
-                        <div>
-                            <table id="books" class="table table-bordered table-responsive-sm">
-                                <tr>
-                                    <th th:text="#{book.name}">Book Name</th>
-                                    <th th:text="#{book.author}">Author</th>
-                                    <th th:text="#{book.year}">Year</th>
-                                    <th th:text="#{book.amount}">Amount</th>
-                                    <td th:text="#{book.status}">Status</td>
-                                </tr>
-                                <tbody>
-                                <tr th:each="book : ${allTakenBooks.content}">
-                                    <td th:text="${book.bookName}">title</td>
-                                    <td th:text="${book.author}">body</td>
-                                    <td th:text="${book.year}">body</td>
-                                    <th th:text="${book.amount}">body</th>
-                                    <td th:text="${book.bookStatus}">body</td>
-                                </tr>
-                                </tbody>
-                            </table>
+            <div class="main-box">
+                <div class="container">
+                    <div class="page-title category-title">
+                        <h1 th:text="#{takenBooks.title}">All taken book by user</h1>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-10 mt-5 mb-5">
+                            <div>
+                                <form th:action="@{/admin/allUserBooks}" method="post">
+                                    <label for="email" th:text="#{takenBooks.email}">User email</label>
+                                    <input id="email" name="email" type="email" style="width: 300px">
+
+                                    <input type="submit" class="btn btn-primary" th:value="#{takenBook.find}">
+                                </form>
+                            </div>
+
+                            <div>
+                                <label th:text="#{takenBooks.user}">Found user</label>
+                                <table id="user" class="table table-bordered table-responsive-sm">
+                                    <tr>
+                                        <td th:text="#{reg.last.name}">Last name</td>
+                                        <td th:text="#{reg.first.name}">First name</td>
+                                        <td th:text="#{log.email}">Email</td>
+                                    </tr>
+                                    <tbody>
+                                    <tr>
+                                        <td th:text="${user.lastName}">title</td>
+                                        <td th:text="${user.firstName}">body</td>
+                                        <td th:text="${user.email}">body</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <label th:text="#{takenBooks.books}">Books</label>
+                                <table id="books" class="table table-bordered table-responsive-sm">
+                                    <tr>
+                                        <td th:text="#{book.name}">Book Name</td>
+                                        <td th:text="#{book.author}">Author</td>
+                                        <td th:text="#{book.year}">Year</td>
+                                        <td th:text="#{book.amount}">Amount</td>
+                                        <td th:text="#{book.status}">Status</td>
+                                    </tr>
+                                    <tbody>
+                                    <tr th:each="book : ${allTakenBooks}">
+                                        <td th:text="${book.bookName}">title</td>
+                                        <td th:text="${book.author}">body</td>
+                                        <td th:text="${book.year}">body</td>
+                                        <td th:text="${book.amount}">body</td>
+                                        <td th:text="${book.bookStatus}">body</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

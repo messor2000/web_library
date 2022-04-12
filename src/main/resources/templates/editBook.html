@@ -133,7 +133,7 @@
                                     <input type="text" th:field="${book.description}" id="description"
                                            placeholder="Description">
 
-                                    <input type="submit" class="btn btn-primary" value="Update Book">
+                                    <input type="submit" class="btn btn-primary" th:value="#{book.update}">
                                 </form>
 
                                 <form th:action="@{/book/deleteCategory/{id}(id=${book.id})}" method="post">

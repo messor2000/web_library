@@ -88,19 +88,19 @@
                                 <!--                                <img th:src="@{${book.coverImagePath}}" alt="">-->
                                 <!--                            </div>-->
 
-                                <label>Book Author</label>
+                                <label th:text="#{book.author}">Book Author</label>
                                 <p th:text="${book.author}"></p>
-                                <label>Book Year</label>
+                                <label th:text="#{book.year}">Book Year</label>
                                 <p th:text="${book.year}"></p>
-                                <label>Book Amount</label>
+                                <label th:text="#{book.amount}">Book Amount</label>
                                 <p th:text="${book.amount}"></p>
-                                <label>Book Description</label>
+                                <label th:text="#{book.description}">Book Description</label>
                                 <p th:text="${book.description}"></p>
-                                <label>Book Categories</label>
+                                <label th:text="#{book.categories}">Book Categories</label>
                                 <tr th:each="category : ${bookCategories}">
                                     <td th:text="${category}"></td>
                                 </tr>
-                                <label>Book Status</label>
+                                <label th:text="#{book.status}">Book Status</label>
                                 <p th:text="${book.bookStatus}"></p>
 
                                 <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
@@ -111,7 +111,7 @@
                                                        name="login-submit"
                                                        id="book-take-submit"
                                                        class="form-control btn btn-info"
-                                                       value="Take Book"/>
+                                                       th:value="#{book.take}"/>
                                             </div>
                                         </form>
                                     </div>
@@ -121,9 +121,9 @@
                                     <table id="books" class="table table-bordered table-responsive-sm">
                                         <a th:href="@{/edit/{id}(id=${book.id})}" type="button"
                                            class="btn btn-danger button btn btn-primary"
-                                           data-bs-toggle="modal" data-bs-target="#exampleModal">Update</a>
+                                           data-bs-toggle="modal" data-bs-target="#exampleModal" th:value="#{book.update}">Update</a>
                                         <a th:href="@{/delete/{id}(id=${book.id})}"
-                                           class="btn btn-danger button btn btn-primary">Delete</a>
+                                           class="btn btn-danger button btn btn-primary" th:value="#{book.delete}">Delete</a>
                                     </table>
                                 </div>
                             </div>
