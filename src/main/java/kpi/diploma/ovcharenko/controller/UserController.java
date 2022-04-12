@@ -3,19 +3,17 @@ package kpi.diploma.ovcharenko.controller;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
+import kpi.diploma.ovcharenko.exception.ValidPassportException;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.LibraryUserService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
 import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,10 +29,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Log4j2
@@ -43,16 +41,14 @@ public class UserController {
 
     private final UserService userService;
     private final SecurityService securityService;
-    private final ModelMapper modelMapper;
     private final Environment env;
     private final MessageSource messages;
     private final JavaMailSender mailSender;
 
-    public UserController(LibraryUserService userService, LibrarySecurityService securityService, ModelMapper modelMapper,
-                          Environment env, MessageSource messages, JavaMailSender mailSender) {
+    public UserController(LibraryUserService userService, LibrarySecurityService securityService, Environment env,
+                          MessageSource messages, JavaMailSender mailSender) {
         this.userService = userService;
         this.securityService = securityService;
-        this.modelMapper = modelMapper;
         this.env = env;
         this.messages = messages;
         this.mailSender = mailSender;
@@ -122,7 +118,6 @@ public class UserController {
             model.addAttribute("message", e.getLocalizedMessage());
             return "redirect:/login";
         }
-//        redirectAttributes.addAttribute("message", messages.getMessage("message.resetPasswordEmail", null, request.getLocale()));
         return "infoAboutEmail";
     }
 
@@ -149,7 +144,7 @@ public class UserController {
     public String viewUserProfile(Model model) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
-        Set<Book> books = user.getBooks();
+        List<Book> books = user.getBooks();
 
         model.addAttribute("appUser", user);
         model.addAttribute("userBooks", books);
@@ -167,7 +162,7 @@ public class UserController {
         AppUser user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (!userService.checkIfValidOldPassword(user, oldPassword)) {
-            throw new RuntimeException();
+            throw new ValidPassportException("Old password is invalid");
         }
         userService.changeUserPassword(user, password);
         return "redirect:/login";

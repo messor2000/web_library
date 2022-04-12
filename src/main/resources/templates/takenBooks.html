@@ -75,61 +75,63 @@
         <div class="page-container">
 
             <div class="main-box">
-                <div class="page-title category-title">
-                    <h1 th:text="${book.bookName}"></h1>
-                </div>
+                <div class="container">
+                    <div class="page-title category-title">
+                        <h1 th:text="#{takenBooks.title}">All taken book by user</h1>
+                    </div>
 
-                <section id="book_list">
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <!--                            <div class="bk-cover">-->
-                                <!--                                <img th:src="@{${book.coverImagePath}}" alt="">-->
-                                <!--                            </div>-->
+                    <div class="row">
+                        <div class="col-lg-10 mt-5 mb-5">
+                            <div>
+                                <form th:action="@{/admin/allUserBooks}" method="post">
+                                    <label for="email" th:text="#{takenBooks.email}">User email</label>
+                                    <input id="email" name="email" type="email" style="width: 300px">
 
-                                <label th:text="#{book.author}">Book Author</label>
-                                <p th:text="${book.author}"></p>
-                                <label th:text="#{book.year}">Book Year</label>
-                                <p th:text="${book.year}"></p>
-                                <label th:text="#{book.amount}">Book Amount</label>
-                                <p th:text="${book.amount}"></p>
-                                <label th:text="#{book.description}">Book Description</label>
-                                <p th:text="${book.description}"></p>
-                                <label th:text="#{book.categories}">Book Categories</label>
-                                <tr th:each="category : ${bookCategories}">
-                                    <td th:text="${category}"></td>
-                                </tr>
-                                <label th:text="#{book.status}">Book Status</label>
-                                <p th:text="${book.bookStatus}"></p>
+                                    <input type="submit" class="btn btn-primary" th:value="#{takenBook.find}">
+                                </form>
+                            </div>
 
-                                <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
-                                    <div th:if="${book.amount} >= 1">
-                                        <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
-                                            <div class="col-sm-6 col-sm-offset-3">
-                                                <input type="submit"
-                                                       name="login-submit"
-                                                       id="book-take-submit"
-                                                       class="form-control btn btn-info"
-                                                       th:value="#{book.take}"/>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                                    <table id="books" class="table table-bordered table-responsive-sm">
-                                        <a th:href="@{/edit/{id}(id=${book.id})}" type="button"
-                                           class="btn btn-danger button btn btn-primary"
-                                           data-bs-toggle="modal" data-bs-target="#exampleModal" th:value="#{book.update}">Update</a>
-                                        <a th:href="@{/delete/{id}(id=${book.id})}"
-                                           class="btn btn-danger button btn btn-primary" th:value="#{book.delete}">Delete</a>
-                                    </table>
-                                </div>
+                            <div>
+                                <label th:text="#{takenBooks.user}">Found user</label>
+                                <table id="user" class="table table-bordered table-responsive-sm">
+                                    <tr>
+                                        <td th:text="#{reg.last.name}">Last name</td>
+                                        <td th:text="#{reg.first.name}">First name</td>
+                                        <td th:text="#{log.email}">Email</td>
+                                    </tr>
+                                    <tbody>
+                                    <tr>
+                                        <td th:text="${user.lastName}">title</td>
+                                        <td th:text="${user.firstName}">body</td>
+                                        <td th:text="${user.email}">body</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <label th:text="#{takenBooks.books}">Books</label>
+                                <table id="books" class="table table-bordered table-responsive-sm">
+                                    <tr>
+                                        <td th:text="#{book.name}">Book Name</td>
+                                        <td th:text="#{book.author}">Author</td>
+                                        <td th:text="#{book.year}">Year</td>
+                                        <td th:text="#{book.amount}">Amount</td>
+                                        <td th:text="#{book.status}">Status</td>
+                                    </tr>
+                                    <tbody>
+                                    <tr th:each="book : ${allTakenBooks}">
+                                        <td th:text="${book.bookName}">title</td>
+                                        <td th:text="${book.author}">body</td>
+                                        <td th:text="${book.year}">body</td>
+                                        <td th:text="${book.amount}">body</td>
+                                        <td th:text="${book.bookStatus}">body</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
             </div>
         </div>
 

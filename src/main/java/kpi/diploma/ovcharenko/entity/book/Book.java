@@ -7,8 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.persistence.Transient;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,12 +16,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -61,19 +60,23 @@ public class Book {
     @Column(name = "book_cover")
     private String cover;
 
-    @Lob
-    @Column(name = "image", length = Integer.MAX_VALUE)
-    private byte[] image;
-
-    @Transient
-    private MultipartFile userImage;
-
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AppUser user;
+    @ManyToMany(mappedBy = "books")
+    List<AppUser> users;
+
+    public Book(Long id, String bookName, int year, String author, int amount, String description, String bookStatus, List<AppUser> users) {
+        this.id = id;
+        this.bookName = bookName;
+        this.year = year;
+        this.author = author;
+        this.amount = amount;
+        this.description = description;
+        this.bookStatus = bookStatus;
+        this.users = users;
+    }
 
     public void addCategory(BookCategory category){
         categories.add(category);

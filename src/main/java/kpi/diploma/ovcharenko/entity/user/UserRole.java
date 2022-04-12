@@ -1,7 +1,6 @@
 package kpi.diploma.ovcharenko.entity.user;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -28,13 +27,13 @@ public class UserRole {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         UserRole userRole = (UserRole) o;
-        return id != null && Objects.equals(id, userRole.id);
+        return Objects.equals(id, userRole.id) && Objects.equals(name, userRole.name);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, name);
     }
 }

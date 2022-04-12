@@ -19,16 +19,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -65,7 +65,7 @@ public class AppUser {
     @Column(name = "create_time")
     private Timestamp registrationDate;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -73,8 +73,13 @@ public class AppUser {
     )
     private Collection<UserRole> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private Set<Book> books = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_books",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<Book> books = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -93,13 +98,14 @@ public class AppUser {
         return Objects.hash(id, firstName, lastName, email, password);
     }
 
-    public void addBook(Book book){
+    public void addBook(Book book) {
         books.add(book);
-        book.setUser(this);
+        book.getUsers().add(this);
     }
-    public void removeBook(Book book){
+
+    public void removeBook(Book book) {
         books.remove(book);
-        book.setUser(null);
+        book.getUsers().remove(this);
     }
 
     public void setRoles(Collection<UserRole> roles) {
