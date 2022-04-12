@@ -1,6 +1,6 @@
 package kpi.diploma.ovcharenko.exception;
 
-public class ValidPassportException extends StorageException {
+public class ValidPassportException extends Exception {
 
     public ValidPassportException(String message) {
         super(message);

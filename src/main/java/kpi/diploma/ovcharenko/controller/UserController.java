@@ -145,9 +145,11 @@ public class UserController {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
         List<Book> books = user.getBooks();
+        List<AppUser> appUsers = userService.showAllUsers();
 
         model.addAttribute("appUser", user);
         model.addAttribute("userBooks", books);
+        model.addAttribute("appUsers", appUsers);
 
         return "userProfile";
     }
@@ -158,7 +160,8 @@ public class UserController {
     }
 
     @PostMapping("/user/updatePassword")
-    public String changeUserPassword(@RequestParam("password") String password, @RequestParam("oldpassword") String oldPassword) {
+    public String changeUserPassword(@RequestParam("password") String password,
+                                     @RequestParam("oldpassword") String oldPassword) throws ValidPassportException {
         AppUser user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (!userService.checkIfValidOldPassword(user, oldPassword)) {

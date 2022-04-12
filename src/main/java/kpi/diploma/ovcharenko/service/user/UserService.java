@@ -4,6 +4,7 @@ import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
@@ -22,4 +23,6 @@ public interface UserService extends UserDetailsService {
     void changeUserPassword(final AppUser user, final String password);
 
     boolean checkIfValidOldPassword(final AppUser user, final String oldPassword);
+
+    List<AppUser> showAllUsers();
 }

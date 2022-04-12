@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -85,6 +86,11 @@ public class LibraryUserService implements UserService {
     @Override
     public boolean checkIfValidOldPassword(final AppUser user, final String oldPassword) {
         return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+    @Override
+    public List<AppUser> showAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override

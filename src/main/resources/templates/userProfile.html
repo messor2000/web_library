@@ -97,13 +97,29 @@
                                     Update password</a></p>
 
                                 <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                                    <label th:text="#{takenBooks.email}">User email</label>
-                                    <form th:action="@{/admin/allUserBooks}" method="post">
-                                        <label for="email">User email</label>
-                                        <input style="width: 300px" id="email" name="email" type="email">
+                                    <div>
+                                        <label th:text="#{takenBooks.allUsers}">List user emails</label>
+                                        <table id="books" class="table table-bordered table-responsive-sm">
+                                            <tr>
+                                                <td th:text="#{log.email}">Email</td>
+                                            </tr>
+                                            <tbody>
+                                            <tr th:each="user : ${appUsers}">
+                                                <td th:text="${user.email}">title</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                        <input type="submit" class="btn btn-primary" value="Find user books">
-                                    </form>
+                                    <div>
+                                        <label th:text="#{takenBooks.email}">User email</label>
+                                        <form th:action="@{/admin/allUserBooks}" method="post">
+                                            <label for="email">User email</label>
+                                            <input style="width: 300px" id="email" name="email" type="email">
+
+                                            <input type="submit" class="btn btn-primary" value="Find user books">
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <div>
