@@ -2,8 +2,11 @@ package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
+import kpi.diploma.ovcharenko.repo.UserRepository;
+import kpi.diploma.ovcharenko.service.user.UserService;
 import kpi.diploma.ovcharenko.util.FileUploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,23 +47,6 @@ public class LibraryBookService implements BookService {
     @Override
     @Transactional
     public void updateBook(Book book, String category, MultipartFile file) {
-//        BookCategory bookCategory = new BookCategory(category);
-//
-//        book.addCategory(bookCategory);
-//
-//        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-//        book.setCover(fileName);
-//
-//        bookRepository.save(book);
-//
-//        String uploadDir = "covers/" + book.getId();
-//
-//        try {
-//            FileUploadUtil.saveFile(uploadDir, fileName, file);
-//        } catch (IOException e) {
-//            log.error("Error while saving file", e);
-//        }
-
         actionOnTheBook(book, category, file);
     }
 
@@ -71,24 +58,6 @@ public class LibraryBookService implements BookService {
 
     @Override
     public void addNewBook(Book book, String category, MultipartFile file) {
-//        BookCategory bookCategory = new BookCategory(category);
-//
-//        book.addCategory(bookCategory);
-//        book.setAmount(1);
-//        book.setBookStatus("unused");
-//
-//        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-//        book.setCover(fileName);
-//
-//        bookRepository.save(book);
-//
-//        String uploadDir = "covers/" + book.getId();
-//
-//        try {
-//            FileUploadUtil.saveFile(uploadDir, fileName, file);
-//        } catch (IOException e) {
-//            log.error("Error while saving file", e);
-//        }
         actionOnTheBook(book, category, file);
     }
 
@@ -136,6 +105,11 @@ public class LibraryBookService implements BookService {
 
         categoryRepository.deleteById(bookCategory.getId());
         bookRepository.save(book);
+    }
+
+    @Override
+    public List<Book> getAllBooksThatTaken(String email) {
+        return bookRepository.findBooksThatTakenByUser(email);
     }
 
     private void actionOnTheBook(Book book, String category, MultipartFile file) {

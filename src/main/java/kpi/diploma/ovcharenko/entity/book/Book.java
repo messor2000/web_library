@@ -67,6 +67,17 @@ public class Book {
     @ManyToMany(mappedBy = "books")
     List<AppUser> users;
 
+    public Book(Long id, String bookName, int year, String author, int amount, String description, String bookStatus, List<AppUser> users) {
+        this.id = id;
+        this.bookName = bookName;
+        this.year = year;
+        this.author = author;
+        this.amount = amount;
+        this.description = description;
+        this.bookStatus = bookStatus;
+        this.users = users;
+    }
+
     public void addCategory(BookCategory category){
         categories.add(category);
         category.setBook(this);

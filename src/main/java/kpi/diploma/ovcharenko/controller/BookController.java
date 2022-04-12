@@ -2,6 +2,7 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookModel;
+import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -119,7 +120,7 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/add")
+    @PostMapping("/book/add")
     public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "category") String category,
                              @RequestParam("image") MultipartFile multipartFile) {
         if (result.hasErrors()) {
@@ -131,6 +132,7 @@ public class BookController {
         return "redirect:/";
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Book book = bookService.findBookById(id);
@@ -144,7 +146,7 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
+    @PostMapping(value = "/book/update/{id}", consumes = {"multipart/form-data"})
     public String updateBook(@PathVariable("id") long id, @Valid Book book,
                              @RequestParam(value = "category") String category, BindingResult result,
                              @RequestParam("image") MultipartFile multipartFile) {
@@ -159,13 +161,23 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/deleteCategory/{id}")
+    @PostMapping("/book/deleteCategory/{id}")
     public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category,
                                      RedirectAttributes redirectAttributes) {
         bookService.deleteCategory(id, category);
 
         redirectAttributes.addAttribute("bookId", id);
         return "redirect:/edit/{bookId}";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/admin/allUserBooks")
+    public String showAllTakenBooksForm(Model model, @RequestParam("email") String email) {
+        List<Book> allTakenBooks = bookService.getAllBooksThatTaken(email);
+
+        model.addAttribute("allTakenBooks", allTakenBooks);
+
+        return "takenBooks";
     }
 }
 

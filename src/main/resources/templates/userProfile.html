@@ -96,6 +96,15 @@
                                        th:text="#{message.updatePassword}">
                                     Update password</a></p>
 
+                                <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                                    <form th:action="@{/user/allTakenBooks}" method="post">
+                                        <label for="email" >User email</label>
+                                        <input id="email" name="email" type="email">
+
+                                        <input type="submit" class="btn btn-primary" value="Find user books">
+                                    </form>
+                                </div>
+
                                 <div>
                                     <tr th:each="book : ${userBooks}">
                                         <li class="book-item small-12 medium-6 columns">

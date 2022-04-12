@@ -84,7 +84,7 @@
                          aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form action="#" th:action="@{/update/{id}(id=${book.id})}"
+                                <form action="#" th:action="@{/book/update/{id}(id=${book.id})}"
                                       th:object="${book}" method="post" enctype="multipart/form-data">
                                     <label for="bookName" th:text="#{book.name}">Book Name</label>
                                     <input type="text" th:field="${book.bookName}" id="bookName"
@@ -136,7 +136,7 @@
                                     <input type="submit" class="btn btn-primary" value="Update Book">
                                 </form>
 
-                                <form th:action="@{/deleteCategory/{id}(id=${book.id})}" method="post">
+                                <form th:action="@{/book/deleteCategory/{id}(id=${book.id})}" method="post">
                                     <label for="category">Delete category</label>
                                     <select class="form-control" id="categoryForDelete" name="category">
                                         <option value="">Select category for delete</option>

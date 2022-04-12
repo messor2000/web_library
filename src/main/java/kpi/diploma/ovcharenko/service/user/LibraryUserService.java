@@ -119,6 +119,8 @@ public class LibraryUserService implements UserService {
         bookRepository.save(book);
     }
 
+
+
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles){
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))

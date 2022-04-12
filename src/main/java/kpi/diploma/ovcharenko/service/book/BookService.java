@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Set;
 
 public interface BookService {
@@ -27,4 +28,6 @@ public interface BookService {
     Set<String> findBookCategories(Book book);
 
     void deleteCategory(Long id, String category);
+
+    List<Book> getAllBooksThatTaken(String email);
 }
