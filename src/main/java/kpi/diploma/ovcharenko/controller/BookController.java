@@ -125,12 +125,13 @@ public class BookController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/book/add")
     public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "category") String category,
-                             @RequestParam("image") MultipartFile multipartFile) {
+                             @RequestParam(value = "image", required = false) MultipartFile multipartFile) {
         if (result.hasErrors()) {
             return "addBook";
         }
 
-        bookService.addNewBook(book, category, multipartFile);
+        bookService.addNewBook(book, category);
+        bookService.addCoverToTheBook(multipartFile, book.getId());
 
         return "redirect:/";
     }
@@ -152,16 +153,19 @@ public class BookController {
     @PostMapping(value = "/book/update/{id}", consumes = {"multipart/form-data"})
     public String updateBook(@PathVariable("id") long id, @Valid Book book,
                              @RequestParam(value = "category") String category, BindingResult result,
-                             @RequestParam("image") MultipartFile multipartFile) {
+                             @RequestParam(value = "image", required = false) MultipartFile multipartFile) {
         if (result.hasErrors()) {
             book.setId(id);
             return "editBook";
         }
 
-        bookService.updateBook(book, category, multipartFile);
+        bookService.updateBook(book, category);
+        bookService.addCoverToTheBook(multipartFile, id);
 
         return "redirect:/";
     }
+
+
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/book/deleteCategory/{id}")

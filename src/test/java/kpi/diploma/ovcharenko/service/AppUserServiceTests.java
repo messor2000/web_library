@@ -37,21 +37,21 @@ public class AppUserServiceTests {
 
     private Book book = new Book();
 
-    @Before
-    public void setUpBook() {
-        book = new Book("testBookCategory", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("categoryForTest");
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.txt",
-                MediaType.IMAGE_JPEG_VALUE,
-                "Hello, World!".getBytes()
-        );
-
-        bookService.addNewBook(book, category.getCategory(), file);
-    }
+//    @Before
+//    public void setUpBook() {
+//        book = new Book("testBookCategory", 9999, "testAuthor", 1,
+//                "test1", "unused");
+//        BookCategory category = new BookCategory("categoryForTest");
+//        MockMultipartFile file
+//                = new MockMultipartFile(
+//                "file",
+//                "hello.txt",
+//                MediaType.IMAGE_JPEG_VALUE,
+//                "Hello, World!".getBytes()
+//        );
+//
+//        bookService.addNewBook(book, category.getCategory(), file);
+//    }
 
     @After
     public void deleteBook() {

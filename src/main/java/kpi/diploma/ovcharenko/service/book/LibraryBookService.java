@@ -2,29 +2,20 @@ package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
-import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
-import kpi.diploma.ovcharenko.repo.UserRepository;
-import kpi.diploma.ovcharenko.service.user.UserService;
-import kpi.diploma.ovcharenko.util.FileUploadUtil;
+import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
+import kpi.diploma.ovcharenko.service.amazon.AmazonLibraryClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -33,10 +24,12 @@ public class LibraryBookService implements BookService {
 
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
+    private final AmazonClient amazonClient;
 
-    public LibraryBookService(BookRepository bookRepository, CategoryRepository categoryRepository) {
+    public LibraryBookService(BookRepository bookRepository, CategoryRepository categoryRepository, AmazonClient amazonClient) {
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
+        this.amazonClient = amazonClient;
     }
 
     @Override
@@ -50,42 +43,14 @@ public class LibraryBookService implements BookService {
 
     @Override
     @Transactional
-    public void updateBook(Book book, String category, MultipartFile file) {
-        actionOnTheBook(book, category, file);
+    public void updateBook(Book book, String category) {
+        actionOnTheBook(book, category);
     }
 
-//    @Override
-//    @Transactional
-//    public void updateBook(Book book, String category, String uploadDirectory, MultipartFile file) {
-//        BookCategory bookCategory = new BookCategory(category);
-//
-//        book.addCategory(bookCategory);
-//
-//        try {
-//            String fileName = file.getOriginalFilename();
-//            String filePath = Paths.get(uploadDirectory, fileName).toString();
-//
-//            try(BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(filePath))) {
-//                File dir = new File(uploadDirectory);
-//                if (!dir.exists()) {
-//                    log.info("Folder Created");
-//                    dir.mkdirs();
-//                }
-////                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(filePath));
-//                stream.write(file.getBytes());
-//            }
-//
-//            byte[] imageData = file.getBytes();
-//
-//            book.setImage(imageData);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        bookRepository.save(book);
-//    }
+    @Override
+    public void addCoverToTheBook(MultipartFile file, Long bookId) {
+        amazonClient.upload(file, bookId);
+    }
 
     @Override
     public Book findBookById(Long id) {
@@ -94,8 +59,8 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public void addNewBook(Book book, String category, MultipartFile file) {
-        actionOnTheBook(book, category, file);
+    public void addNewBook(Book book, String category) {
+        actionOnTheBook(book, category);
     }
 
     @Override
@@ -149,25 +114,14 @@ public class LibraryBookService implements BookService {
         return bookRepository.findBooksThatTakenByUser(email);
     }
 
-    private void actionOnTheBook(Book book, String category, MultipartFile file) {
+    private void actionOnTheBook(Book book, String category) {
         BookCategory bookCategory = new BookCategory(category);
 
         book.addCategory(bookCategory);
         book.setAmount(1);
         book.setBookStatus("unused");
 
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        book.setCover(fileName);
-
         bookRepository.save(book);
-
-        String uploadDir = "covers/" + book.getId();
-
-        try {
-            FileUploadUtil.saveFile(uploadDir, fileName, file);
-        } catch (IOException e) {
-            log.error("Error while saving file", e);
-        }
     }
 }
 

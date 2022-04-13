@@ -597,8 +597,8 @@ a.button:hover, a.button:focus {
 .bk-img .bk-front {
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    -webkit-transform-origin: 0% 50%;
-    transform-origin: 0% 50%;
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
     -webkit-transition: -webkit-transform .5s;
     transition: transform .5s;
     -webkit-transform: translate3d(0, 0, 20px);

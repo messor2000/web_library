@@ -47,30 +47,30 @@ public class BookControllerTests {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("Test take book by id")
-    public void takeOneBookById() throws Exception {
-        Book book = new Book("testBookForFind", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("categoryForTest");
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.txt",
-                MediaType.IMAGE_JPEG_VALUE,
-                "Hello, World!".getBytes()
-        );
-
-        bookService.addNewBook(book, category.getCategory(), file);
-        long bookId = book.getId();
-
-        this.mockMvc.perform(get("/find/" + bookId))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        FileUtils.deleteDirectory(new File("/covers/" + "/" + file.getOriginalFilename()));
-        bookService.deleteBookById(book.getId());
-    }
+//    @Test
+//    @DisplayName("Test take book by id")
+//    public void takeOneBookById() throws Exception {
+//        Book book = new Book("testBookForFind", 9999, "testAuthor", 1,
+//                "test1", "unused");
+//        BookCategory category = new BookCategory("categoryForTest");
+//        MockMultipartFile file
+//                = new MockMultipartFile(
+//                "file",
+//                "hello.txt",
+//                MediaType.IMAGE_JPEG_VALUE,
+//                "Hello, World!".getBytes()
+//        );
+//
+//        bookService.addNewBook(book, category.getCategory(), file);
+//        long bookId = book.getId();
+//
+//        this.mockMvc.perform(get("/find/" + bookId))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//
+//        FileUtils.deleteDirectory(new File("/covers/" + "/" + file.getOriginalFilename()));
+//        bookService.deleteBookById(book.getId());
+//    }
 
     @Test
     @DisplayName("Test show add new book form without permission")
@@ -89,52 +89,52 @@ public class BookControllerTests {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("Test show update book form without permission")
-    public void showUpdateFormWithoutPermission() throws Exception {
-        Book book = new Book("testBookUpdate", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("categoryForTest");
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.txt",
-                MediaType.IMAGE_JPEG_VALUE,
-                "Hello, World!".getBytes()
-        );
-
-        bookService.addNewBook(book, category.getCategory(), file);
-        long bookId = book.getId();
-
-        this.mockMvc.perform(get("/edit/" + bookId))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection());
-
-        bookService.deleteBookById(bookId);
-    }
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    @DisplayName("Test show update book form with role admin")
-    public void showUpdateFormWithRoleAdmin() throws Exception {
-        Book book = new Book("testBookUpdate", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("categoryForTest");
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.txt",
-                MediaType.IMAGE_JPEG_VALUE,
-                "Hello, World!".getBytes()
-        );
-
-        bookService.addNewBook(book, category.getCategory(), file);
-        long bookId = book.getId();
-
-        this.mockMvc.perform(get("/edit/" + bookId))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        bookService.deleteBookById(bookId);
-    }
+//    @Test
+//    @DisplayName("Test show update book form without permission")
+//    public void showUpdateFormWithoutPermission() throws Exception {
+//        Book book = new Book("testBookUpdate", 9999, "testAuthor", 1,
+//                "test1", "unused");
+//        BookCategory category = new BookCategory("categoryForTest");
+//        MockMultipartFile file
+//                = new MockMultipartFile(
+//                "file",
+//                "hello.txt",
+//                MediaType.IMAGE_JPEG_VALUE,
+//                "Hello, World!".getBytes()
+//        );
+//
+//        bookService.addNewBook(book, category.getCategory(), file);
+//        long bookId = book.getId();
+//
+//        this.mockMvc.perform(get("/edit/" + bookId))
+//                .andDo(print())
+//                .andExpect(status().is3xxRedirection());
+//
+//        bookService.deleteBookById(bookId);
+//    }
+//
+//    @Test
+//    @WithMockUser(roles = "ADMIN")
+//    @DisplayName("Test show update book form with role admin")
+//    public void showUpdateFormWithRoleAdmin() throws Exception {
+//        Book book = new Book("testBookUpdate", 9999, "testAuthor", 1,
+//                "test1", "unused");
+//        BookCategory category = new BookCategory("categoryForTest");
+//        MockMultipartFile file
+//                = new MockMultipartFile(
+//                "file",
+//                "hello.txt",
+//                MediaType.IMAGE_JPEG_VALUE,
+//                "Hello, World!".getBytes()
+//        );
+//
+//        bookService.addNewBook(book, category.getCategory(), file);
+//        long bookId = book.getId();
+//
+//        this.mockMvc.perform(get("/edit/" + bookId))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//
+//        bookService.deleteBookById(bookId);
+//    }
 }

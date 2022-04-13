@@ -13,9 +13,11 @@ public interface BookService {
 
     Book findBookById(Long id);
 
-    void addNewBook(Book book, String category, MultipartFile file);
+    void addNewBook(Book book, String category);
 
-    void updateBook(Book book, String category, MultipartFile file);
+    void updateBook(Book book, String category);
+
+    void addCoverToTheBook(MultipartFile file, Long bookId);
 
     Page<Book> findBookByName(String name);
 
