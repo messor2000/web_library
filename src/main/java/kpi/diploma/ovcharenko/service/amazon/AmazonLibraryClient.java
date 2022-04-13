@@ -54,6 +54,24 @@ public class AmazonLibraryClient implements AmazonClient {
         return fileUrl;
     }
 
+    @Override
+    public String changeFile(MultipartFile multipartFile, Long bookId) {
+        String fileUrl = "";
+        try {
+            String fileName = generateFileName(multipartFile, bookId);
+            String objectKey = endpointUrl + "/" + bucketName + "/" + fileName;
+            s3client.deleteObject(bucketName, objectKey);
+
+            File file = convertMultiPartToFile(multipartFile);
+            fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
+            uploadFileTos3bucket(fileName, file);
+            file.delete();
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return fileUrl;
+    }
+
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
 

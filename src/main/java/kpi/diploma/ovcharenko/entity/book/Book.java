@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Transient;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -57,26 +56,12 @@ public class Book {
     @Column(name = "book_status")
     private String bookStatus;
 
-    @Column(name = "book_cover")
-    private String cover;
-
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
 
     @ManyToMany(mappedBy = "books")
     List<AppUser> users;
-
-    public Book(Long id, String bookName, int year, String author, int amount, String description, String bookStatus, List<AppUser> users) {
-        this.id = id;
-        this.bookName = bookName;
-        this.year = year;
-        this.author = author;
-        this.amount = amount;
-        this.description = description;
-        this.bookStatus = bookStatus;
-        this.users = users;
-    }
 
     public void addCategory(BookCategory category){
         categories.add(category);
@@ -86,15 +71,6 @@ public class Book {
     public void removeCategory(BookCategory category) {
         categories.remove(category);
         category.setBook(null);
-    }
-
-    @Transient
-    public String getCoverImagePath() {
-        if (cover == null || id == null) {
-            return null;
-        }
-
-        return "/covers/" + id + "/" + cover;
     }
 
     public Book(@NotBlank(message = "Book name is mandatory") String bookName, int year, String author,
@@ -113,18 +89,11 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return year == book.year &&
-                amount == book.amount &&
-                Objects.equals(bookName, book.bookName) &&
-                Objects.equals(author, book.author) &&
-                Objects.equals(description, book.description) &&
-                Objects.equals(bookStatus, book.bookStatus) &&
-                Objects.equals(cover, book.cover) &&
-                Objects.equals(categories, book.categories);
+        return year == book.year && amount == book.amount && Objects.equals(id, book.id) && Objects.equals(bookName, book.bookName) && Objects.equals(author, book.author) && Objects.equals(description, book.description) && Objects.equals(bookStatus, book.bookStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookName, year, author, amount, description, bookStatus, cover, categories);
+        return Objects.hash(id, bookName, year, author, amount, description, bookStatus);
     }
 }

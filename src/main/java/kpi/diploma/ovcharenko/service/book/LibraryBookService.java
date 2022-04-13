@@ -53,6 +53,11 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
+    public void changeBookCover(MultipartFile file, Long bookId) {
+        amazonClient.changeFile(file, bookId);
+    }
+
+    @Override
     public Book findBookById(Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid retrievedBook Id:" + id));

@@ -160,7 +160,7 @@ public class BookController {
         }
 
         bookService.updateBook(book, category);
-        bookService.addCoverToTheBook(multipartFile, id);
+        bookService.changeBookCover(multipartFile, id);
 
         return "redirect:/";
     }

@@ -4,4 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AmazonClient {
     String upload(MultipartFile multipartFile, Long id);
+
+    String changeFile(MultipartFile multipartFile, Long id);
 }

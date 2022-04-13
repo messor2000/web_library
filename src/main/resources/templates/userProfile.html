@@ -99,7 +99,7 @@
                                 <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                     <div>
                                         <label th:text="#{takenBooks.allUsers}">List user emails</label>
-                                        <table id="books" class="table table-bordered table-responsive-sm">
+                                        <table id="books" class="table table-bordered table-responsive-sm" style="width: 400px">
                                             <tr>
                                                 <td th:text="#{log.email}">Email</td>
                                             </tr>
@@ -135,8 +135,8 @@
                                                     <div class="bk-wrapper">
                                                         <div class="bk-book bk-bookdefault">
                                                             <div class="bk-front">
-                                                                <div class="bk-cover"
-                                                                     style="background-image: url('/img/bookCover.gif')"></div>
+                                                                <img th:src="@{'https://s3.us-east-1.amazonaws.com/psonlibraryimagesbucket/'+${book.id}}"
+                                                                     height="310px" width="215px" alt="" src=""/>
                                                             </div>
                                                             <div class="bk-back"></div>
                                                             <div class="bk-left"></div>
@@ -162,7 +162,6 @@
                                             </li>
                                         </tr>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -174,7 +173,7 @@
     <!-- /main -->
 
     <!-- Footer Content -->
-    <footer id="footer" class="page-footer">
+    <footer id="footer">
         <div class="row footer-wrapper">
             <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
         </div>

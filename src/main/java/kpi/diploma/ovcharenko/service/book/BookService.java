@@ -19,6 +19,8 @@ public interface BookService {
 
     void addCoverToTheBook(MultipartFile file, Long bookId);
 
+    void changeBookCover(MultipartFile file, Long bookId);
+
     Page<Book> findBookByName(String name);
 
     Page<Book> getAllBooks(Pageable pageable);
