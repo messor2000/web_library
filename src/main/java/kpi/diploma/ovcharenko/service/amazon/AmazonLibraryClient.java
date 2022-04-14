@@ -44,8 +44,7 @@ public class AmazonLibraryClient implements AmazonClient {
         String fileUrl = "";
         try {
             File file = convertMultiPartToFile(multipartFile);
-            String fileName = generateFileName(multipartFile, bookId);
-            fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
+            String fileName = bookId.toString();
             uploadFileTos3bucket(fileName, file);
             file.delete();
         } catch (Exception e) {
@@ -55,21 +54,18 @@ public class AmazonLibraryClient implements AmazonClient {
     }
 
     @Override
-    public String changeFile(MultipartFile multipartFile, Long bookId) {
-        String fileUrl = "";
+    public void changeFile(MultipartFile multipartFile, Long bookId) {
         try {
-            String fileName = generateFileName(multipartFile, bookId);
+            String fileName = bookId.toString();
             String objectKey = endpointUrl + "/" + bucketName + "/" + fileName;
             s3client.deleteObject(bucketName, objectKey);
 
             File file = convertMultiPartToFile(multipartFile);
-            fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
             uploadFileTos3bucket(fileName, file);
             file.delete();
         } catch (Exception e) {
             log.error(e);
         }
-        return fileUrl;
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
@@ -79,12 +75,6 @@ public class AmazonLibraryClient implements AmazonClient {
             fos.write(file.getBytes());
         }
         return convFile;
-    }
-
-    private String generateFileName(MultipartFile multiPart, Long id) {
-        String stringId = String.valueOf(id);
-
-        return multiPart.getName().replace(multiPart.getName(), "") + stringId;
     }
 
     private void uploadFileTos3bucket(String fileName, File file) {

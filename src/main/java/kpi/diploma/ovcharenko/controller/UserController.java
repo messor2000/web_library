@@ -4,6 +4,7 @@ import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.exception.ValidPassportException;
+import kpi.diploma.ovcharenko.service.book.BookService;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.LibraryUserService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
@@ -189,6 +190,19 @@ public class UserController {
         userService.returnBook(id, user.getEmail());
 
         return "redirect:/";
+    }
+
+    @PostMapping("/admin/deleteUser")
+    public String deleteUser(@RequestParam("email") String email, Model model) {
+        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        AppUser user = userService.findByEmail(currentUser);
+        List<AppUser> appUsers = userService.showAllUsers();
+
+        userService.deleteUserByEmail(email);
+
+        model.addAttribute("appUser", user);
+        model.addAttribute("appUsers", appUsers);
+        return "redirect:/profile";
     }
 
     @GetMapping("/emailError")

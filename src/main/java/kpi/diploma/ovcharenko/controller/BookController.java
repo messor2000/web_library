@@ -165,8 +165,6 @@ public class BookController {
         return "redirect:/";
     }
 
-
-
     @Secured("ROLE_ADMIN")
     @PostMapping("/book/deleteCategory/{id}")
     public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category,

@@ -83,7 +83,7 @@
                      aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form action="#" method="post" th:object="${bookModel}" enctype="multipart/form-data">
+                            <form th:action="@{/book/add}" method="post" th:object="${bookModel}" enctype="multipart/form-data">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="bookName" th:text="#{book.name}">Book name</label>
@@ -95,6 +95,9 @@
                                         <label for="year" th:text="#{book.year}">Year</label>
                                         <input type="number" class="form-control" id="year"
                                                placeholder="Year" th:field="*{year}"/>
+                                        <label for="amount" th:text="#{book.amount}">Amount</label>
+                                        <input type="number" class="form-control" id="amount"
+                                               placeholder="Amount" th:field="*{amount}"/>
 
                                         <label>
                                             <input style="width:250px; height:20px;" list="select" name="category"
@@ -109,8 +112,6 @@
 
                                         <label for="image" th:text="#{book.cover}">Book cover: </label>
                                         <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
-
-                                        <img id="logoPreview" alt="Logo Preview" src="">
 
                                         <label for="description" th:text="#{book.description}">Description</label>
                                         <input type="text" id="description" placeholder="Description">

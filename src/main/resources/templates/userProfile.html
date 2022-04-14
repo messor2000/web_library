@@ -114,10 +114,16 @@
                                     <div>
                                         <label th:text="#{takenBooks.email}">User email</label>
                                         <form th:action="@{/admin/allUserBooks}" method="post">
-                                            <label for="email">User email</label>
-                                            <input style="width: 300px" id="email" name="email" type="email">
+                                            <label for="emailForBooks">User email</label>
+                                            <input style="width: 300px" id="emailForBooks" name="email" type="email">
 
-                                            <input type="submit" class="btn btn-primary" value="Find user books">
+                                            <input type="submit" class="btn btn-primary" th:value="#{takenBook.find}">
+                                        </form>
+                                        <form th:action="@{/admin/deleteUser}" method="post">
+                                            <label for="emailForDelete">User email</label>
+                                            <input style="width: 300px" id="emailForDelete" name="email" type="email">
+
+                                            <input type="submit" class="btn btn-primary" th:value="#{delete.user}">
                                         </form>
                                     </div>
                                 </div>

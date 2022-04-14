@@ -5,7 +5,6 @@ import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
-import kpi.diploma.ovcharenko.service.amazon.AmazonLibraryClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +36,7 @@ public class LibraryBookService implements BookService {
     public void deleteBookById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
-
+        
         bookRepository.delete(book);
     }
 
@@ -123,7 +122,6 @@ public class LibraryBookService implements BookService {
         BookCategory bookCategory = new BookCategory(category);
 
         book.addCategory(bookCategory);
-        book.setAmount(1);
         book.setBookStatus("unused");
 
         bookRepository.save(book);

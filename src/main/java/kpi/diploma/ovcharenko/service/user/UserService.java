@@ -12,6 +12,8 @@ public interface UserService extends UserDetailsService {
 
     AppUser save(final UserModel registration);
 
+    void deleteUserByEmail(String email);
+
     void takeBook(final Long id, final String userEmail);
 
     void returnBook(final Long id, final String userEmail);

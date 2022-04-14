@@ -51,6 +51,11 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
+    public void deleteUserByEmail(String email) {
+        userRepository.deleteAppUserByEmail(email);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser user = userRepository.findByEmail(email);
         if (user == null){
