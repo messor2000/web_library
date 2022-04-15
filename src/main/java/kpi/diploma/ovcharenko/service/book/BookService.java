@@ -21,8 +21,6 @@ public interface BookService {
 
     void changeBookCover(MultipartFile file, Long bookId);
 
-    Page<Book> findBookByName(String name);
-
     Page<Book> getAllBooks(Pageable pageable);
 
     Page<Book> getBookByCategory(Pageable pageable, String subject);

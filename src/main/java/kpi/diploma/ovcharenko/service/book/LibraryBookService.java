@@ -36,7 +36,7 @@ public class LibraryBookService implements BookService {
     public void deleteBookById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
-        
+
         bookRepository.delete(book);
     }
 
@@ -65,13 +65,6 @@ public class LibraryBookService implements BookService {
     @Override
     public void addNewBook(Book book, String category) {
         actionOnTheBook(book, category);
-    }
-
-    @Override
-    public Page<Book> findBookByName(String name) {
-        Pageable findOneByName = PageRequest.of(0, 1);
-
-        return bookRepository.findByBookName(name, findOneByName);
     }
 
     @Override

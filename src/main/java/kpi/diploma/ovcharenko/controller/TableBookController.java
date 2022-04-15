@@ -76,13 +76,4 @@ public class TableBookController {
 
         return "tableLibrary";
     }
-
-    @GetMapping(value = "/find")
-    public String findBookByName(@RequestParam(value = "bookName", required = false) String name, Model model) {
-        Page<Book> book = bookService.findBookByName(name);
-
-        model.addAttribute("books", book);
-
-        return "tableLibrary";
-    }
 }

@@ -2,145 +2,182 @@ package kpi.diploma.ovcharenko.service;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.service.book.BookService;
+import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BookServiceTests {
+class BookServiceTests {
 
     @Autowired
     private BookService bookService;
+    @Autowired
+    private UserService userService;
+
+    private Book book;
+
+    @BeforeEach
+    void initTestUser() {
+        book = new Book().toBuilder()
+                .bookName("forTest")
+                .amount(1)
+                .build();
+        BookCategory bookCategory = new BookCategory("forTest");
+
+        bookService.addNewBook(book, bookCategory.getCategory());
+    }
+
+    @AfterEach
+    void deleteTestUser() {
+        bookService.deleteBookById(book.getId());
+    }
 
     @Test
     @DisplayName("Test get all pageable books")
-    public void getAllPageableBooksTest() {
+    void getAllPageableBooksTest() {
         Page<Book> bookList = bookService.getAllBooks(PageRequest.of(1, 20));
         assertThat(bookList.getTotalElements()).isPositive();
     }
 
     @Test
     @DisplayName("Test get all pageable books by category")
-    public void getAllPageableBooksWithOneCategoryTest() {
+    void getAllPageableBooksWithOneCategoryTest() {
         Page<Book> bookList = bookService.getBookByCategory(PageRequest.of(1, 20), "Без категории");
         assertThat(bookList.getTotalElements()).isPositive();
     }
 
     @Test
-    @DisplayName("Test get all book categories")
-    public void getBookCategoriesTest() {
-        Book book = new Book("testBookCategory", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("categoryForTest");
+    @DisplayName("Test add new book")
+    void addNewBookTest() {
+        String bookNameForTest = "forTest1";
+        Book book = new Book().toBuilder()
+                .bookName("forTest1")
+                .amount(1)
+                .build();
+        BookCategory bookCategory = new BookCategory("testCategory");
 
-        bookService.addNewBook(book, category.getCategory());
-
-        Set<String> categorySet = bookService.findBookCategories(book);
-
-        bookService.deleteBookById(book.getId());
-
-        assertTrue(categorySet.contains(category.getCategory()));
-    }
-
-    @Test
-    @DisplayName("Test get all categories")
-    public void getCategoriesTest() {
-        Book book = new Book("testBookCategory", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("categoryForTestAmountOfCategories");
-
-        Set<String> categoriesSetBefore = bookService.findAllCategories();
-
-        bookService.addNewBook(book, category.getCategory());
-
-        Set<String> categoriesSetAfter = bookService.findAllCategories();
-
-        bookService.deleteBookById(book.getId());
-
-        assertEquals(categoriesSetBefore.size() + 1, categoriesSetAfter.size());
-    }
-
-    @Test
-    @DisplayName("Test delete category from book and after that category deletes if no book with this category")
-    public void deleteCategoryFromBook() {
-        Book book = new Book("testBookCategory", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("categoryForTestThatShowDeleted");
-
-        bookService.addNewBook(book, category.getCategory());
-
-        bookService.deleteCategory(book.getId(), category.getCategory());
-
-        Book bookAfterDeletedCategory = bookService.findBookById(book.getId());
-
-        bookService.deleteBookById(book.getId());
-
-        assertThat(bookAfterDeletedCategory.getCategories().isEmpty());
-        assertFalse(bookService.findAllCategories().contains(category.getCategory()));
-    }
-
-    @Test
-    @DisplayName("Test adding new book")
-    public void addNewBookTest() {
-        Book book = new Book("testNewBook", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("test1");
-
-        bookService.addNewBook(book, category.getCategory());
+        bookService.addNewBook(book, bookCategory.getCategory());
 
         Book foundBook = bookService.findBookById(book.getId());
 
         bookService.deleteBookById(book.getId());
 
-        assertEquals(book, foundBook);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    @DisplayName("Test deleting added book")
-    public void deleteBookByIdTest() {
-        Book book = new Book("testBookForDeleting", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("test1");
-
-        bookService.addNewBook(book, category.getCategory());
-
-        bookService.deleteBookById(book.getId());
-
-        bookService.findBookById(book.getId());
+        assertEquals(bookNameForTest, foundBook.getBookName());
     }
 
     @Test
-    @DisplayName("Test update books name")
-    public void updateBookByNameTest() {
-        Book book = new Book("testBookForCheckId", 9999, "testAuthor", 1,
-                "test1", "unused");
-        BookCategory category = new BookCategory("test1");
+    @DisplayName("Test find book by name")
+    void findBookByName() {
+        Page<Book> pagedBook = bookService.findBookByName("forTest");
+        Book foundBook = pagedBook.get().findAny().get();
 
-        bookService.addNewBook(book, category.getCategory());
-        String newBookName = "newBookNameForTest";
-        book.setBookName(newBookName);
-        bookService.updateBook(book, category.getCategory());
+        assertEquals(book.getBookName(), foundBook.getBookName());
+    }
 
-        Book foundBook = bookService.findBookById(book.getId());
+    @Test
+    @DisplayName("Test find all books categories")
+    void findAllCategoriesTest() {
+        Set<String> categoriesBeforeAddingNewOne = bookService.findAllCategories();
+        bookService.updateBook(book, "newBookCategory");
+        Set<String> categoriesAfterAddingNewOne = bookService.findAllCategories();
 
-        bookService.deleteBookById(book.getId());
+        assertEquals(categoriesBeforeAddingNewOne.size() + 1, categoriesAfterAddingNewOne.size());
+    }
 
-        assertEquals(newBookName, foundBook.getBookName());
+    @Test
+    @DisplayName("Test find all book categories")
+    void findBookCategoriesTest() {
+        bookService.updateBook(book, "testCategory2");
+
+        Set<String> bookAllCategories = bookService.findBookCategories(book);
+
+        assertEquals(2, bookAllCategories.size());
+    }
+
+//    @Test
+//    @DisplayName("Test delete book category")
+//    void deleteBookCategory() {
+//        String testBookCategory = "testCategory2";
+//        bookService.updateBook(book, testBookCategory);
+//
+//        bookService.deleteCategory(book.getId(), testBookCategory);
+//        Set<String> bookAllCategories = bookService.findBookCategories(book);
+//
+//        assertEquals(1, bookAllCategories.size());
+//    }
+
+    @Test
+    @DisplayName("Test delete book category and found one is previous book category")
+    void deleteBookAndCheckTheRemainingCategory() {
+        String testBookCategory = "testCategory2";
+        bookService.updateBook(book, testBookCategory);
+
+        bookService.deleteCategory(book.getId(), testBookCategory);
+        Set<String> bookAllCategories = bookService.findBookCategories(book);
+
+        assertTrue(bookAllCategories.contains(testBookCategory));
+    }
+
+    @Test
+    @DisplayName("Test get one book that taken by user")
+    void getBookThatTakenByUserTest() {
+        UserModel userModel = new UserModel().toBuilder()
+                .firstName("forTest")
+                .lastName("forTest")
+                .email("forTest@gmail.com")
+                .password("forTest")
+                .build();
+
+        userService.save(userModel);
+
+        userService.takeBook(book.getId(), userModel.getEmail());
+
+        List<Book> allTakenBooks = bookService.getAllBooksThatTaken(userModel.getEmail());
+
+        userService.returnBook(book.getId(), userModel.getEmail());
+        userService.deleteUserByEmail(userModel.getEmail());
+
+        assertEquals(1, allTakenBooks.size());
+    }
+
+    @Test
+    @DisplayName("Test get null book that taken and returned by user")
+    void getBookThatTakenAndReturnedByUserTest() {
+        UserModel userModel = new UserModel().toBuilder()
+                .firstName("forTest")
+                .lastName("forTest")
+                .email("forTest@gmail.com")
+                .password("forTest")
+                .build();
+
+        userService.save(userModel);
+
+        userService.takeBook(book.getId(), userModel.getEmail());
+        userService.returnBook(book.getId(), userModel.getEmail());
+
+        List<Book> allTakenBooks = bookService.getAllBooksThatTaken(userModel.getEmail());
+
+        userService.deleteUserByEmail(userModel.getEmail());
+
+        assertEquals(allTakenBooks.size(), 0);
     }
 }

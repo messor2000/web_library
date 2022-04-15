@@ -145,12 +145,12 @@ a.button:hover, a.button:focus {
 */
 .catalog-search {
     position: relative;
-    margin: 0 20px;
     max-width: 275px;
     width: calc(100% - 2em);
     vertical-align: top;
     overflow: hidden;
     float: right;
+    margin: 15px 20px 0;
 }
 
 .input_field {
@@ -497,10 +497,10 @@ a.button:hover, a.button:focus {
     transition: all 250ms ease-out;
 }
 
-.book-item:hover:after {
-    box-shadow: 0 1px 1px 1px rgba(210, 214, 213, 0.5);
-    background-color: #fff;
-}
+/*.book-item:hover:after {*/
+/*    box-shadow: 0 1px 1px 1px rgba(210, 214, 213, 0.5);*/
+/*    background-color: #fff;*/
+/*}*/
 
 .book-item:hover .item-img img {
     box-shadow: 0 0 10px 0 rgba(49, 49, 49, 0.25);
@@ -510,10 +510,10 @@ a.button:hover, a.button:focus {
     background-color: #219e9a;
 }
 
-.book-item:hover .bk-bookdefault {
-    -webkit-transform: rotate3d(0, 1, 0, 25deg);
-    transform: rotate3d(0, 1, 0, 25deg);
-}
+/*.book-item:hover .bk-bookdefault {*/
+/*    -webkit-transform: rotate3d(0, 1, 0, 25deg);*/
+/*    transform: rotate3d(0, 1, 0, 25deg);*/
+/*}*/
 
 .book-item:hover .bk-back {
     opacity: 1;
@@ -586,6 +586,10 @@ a.button:hover, a.button:focus {
     transform-style: preserve-3d;
     -webkit-transition: -webkit-transform .5s;
     transition: transform .5s;
+}
+
+.bk-front {
+    background-color: #219e9a;
 }
 
 .bk-img .bk-book > div,
