@@ -33,5 +33,5 @@ public interface BookService {
 
     List<Book> getAllBooksThatTaken(String email);
 
-    List<Book> findByKeyWord(String search);
+    Page<Book> findByKeyWord(String search, Pageable pageable);
 }

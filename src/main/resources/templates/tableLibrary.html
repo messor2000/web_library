@@ -68,13 +68,14 @@
                     </div>
 
                     <!-- Search -->
-                    <form action="#" th:action="@{/table/find/{search}(search = ${search})}" th:object="${books}"
-                          method="get">
+                    <form action="#" th:action="@{/table/find/}" th:object="${books}" method="get">
                         <div class="catalog-search">
-                            <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
-                                   maxlength="128" id="input-search" name="search"/>
+                            <label for="input-search">
+                                <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
+                                       maxlength="128" id="input-search" name="search"/>
+                            </label>
                             <label class="input_label" for="books">
-                                <span class="input_label-content">Search Library</span>
+                                <span class="input_label-content" th:text="#{library.search}">Search Library</span>
                                 <span class="input_label-search"></span>
                             </label>
                         </div>

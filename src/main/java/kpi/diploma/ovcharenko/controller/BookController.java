@@ -104,6 +104,21 @@ public class BookController {
         return "bookInfo";
     }
 
+    @GetMapping(value = "/find")
+    public String findBookByKeyword(Model model, @RequestParam("search") String search,
+                                    @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(FIRST_PAGE);
+        int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
+
+        Page<Book> books = bookService.findByKeyWord(search, PageRequest.of(currentPage - 1, pageSize));
+        Set<String> categories = bookService.findAllCategories();
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("books", books);
+
+        return "library";
+    }
+
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/delete/{id}")
     public String deleteBookById(@PathVariable("id") Long id) {

@@ -111,8 +111,8 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public List<Book> findByKeyWord(String search) {
-        return bookRepository.findByBookNameOrAuthor(search);
+    public Page<Book> findByKeyWord(String search, Pageable pageable) {
+        return bookRepository.findByBookNameOrAuthorOrYear(search, pageable);
     }
 
     private void actionOnTheBook(Book book, String category) {

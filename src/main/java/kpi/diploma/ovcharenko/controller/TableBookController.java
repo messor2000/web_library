@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -83,12 +82,17 @@ public class TableBookController {
         return "tableLibrary";
     }
 
-    @GetMapping(value = "/find/{search}")
-    public String findBookByKeyword(Model model, @PathVariable("search") String search) {
-        List<Book> books = bookService.findByKeyWord(search);
-        log.info(books);
+    @GetMapping(value = "/find")
+    public String findBookByKeyword(Model model, @RequestParam("search") String search,
+                                    @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(FIRST_PAGE);
+        int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
+
+        Page<Book> books = bookService.findByKeyWord(search, PageRequest.of(currentPage - 1, pageSize));
+        Set<String> categories = bookService.findAllCategories();
 
         model.addAttribute("books", books);
+        model.addAttribute("categories", categories);
 
         return "tableLibrary";
     }
