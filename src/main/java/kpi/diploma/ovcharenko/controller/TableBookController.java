@@ -2,6 +2,7 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.service.book.BookService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Log4j2
 @Controller
 @RequestMapping(value = "/table")
 public class TableBookController {
@@ -54,8 +56,8 @@ public class TableBookController {
         return "tableLibrary";
     }
 
-    @GetMapping(value = "/{category}")
-    public String getBooksByCategory(Model model, @PathVariable("category") String category,
+    @GetMapping(value = "/category")
+    public String getBooksByCategory(Model model, @RequestParam("category") String category,
                                      @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
@@ -66,6 +68,10 @@ public class TableBookController {
         model.addAttribute("books", bookPage);
         model.addAttribute("categories", categories);
 
+        if (category.equals("Всі+категорії")) {
+            return "redirect:/table/";
+        }
+
         int totalPages = bookPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
@@ -73,6 +79,16 @@ public class TableBookController {
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
+
+        return "tableLibrary";
+    }
+
+    @GetMapping(value = "/find/{search}")
+    public String findBookByKeyword(Model model, @PathVariable("search") String search) {
+        List<Book> books = bookService.findByKeyWord(search);
+        log.info(books);
+
+        model.addAttribute("books", books);
 
         return "tableLibrary";
     }

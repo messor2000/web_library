@@ -968,3 +968,7 @@ h1 {
     text-transform: capitalize;
 }
 
+.nav-category{
+    display: inline-block;
+}
+

@@ -7,7 +7,6 @@ import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -109,6 +108,11 @@ public class LibraryBookService implements BookService {
     @Override
     public List<Book> getAllBooksThatTaken(String email) {
         return bookRepository.findBooksThatTakenByUser(email);
+    }
+
+    @Override
+    public List<Book> findByKeyWord(String search) {
+        return bookRepository.findByBookNameOrAuthor(search);
     }
 
     private void actionOnTheBook(Book book, String category) {

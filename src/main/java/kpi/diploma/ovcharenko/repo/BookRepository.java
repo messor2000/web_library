@@ -19,4 +19,10 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
 
     @Query("SELECT b FROM Book b JOIN b.users u WHERE u.email LIKE %?1%")
     List<Book> findBooksThatTakenByUser(String keyword);
+
+//    List<Book> findAllByBookNameContainingOrAuthorContaining();
+
+    @Query("select b from Book b where lower(b.bookName) like lower(concat('%', :search, '%')) " +
+            "or lower(b.author) like lower(concat('%', :search, '%'))")
+    List<Book> findByBookNameOrAuthor(@Param("search") String search);
 }

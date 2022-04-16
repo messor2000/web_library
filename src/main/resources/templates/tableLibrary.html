@@ -68,10 +68,11 @@
                     </div>
 
                     <!-- Search -->
-                    <form action="#" th:action="@{/table/find}" th:object="${books}">
+                    <form action="#" th:action="@{/table/find/{search}(search = ${search})}" th:object="${books}"
+                          method="get">
                         <div class="catalog-search">
                             <input class="shuffle-search input_field " type="search" autocomplete="off" value=""
-                                   maxlength="128" id="input-search" name="bookName"/>
+                                   maxlength="128" id="input-search" name="search"/>
                             <label class="input_label" for="books">
                                 <span class="input_label-content">Search Library</span>
                                 <span class="input_label-search"></span>
@@ -93,11 +94,36 @@
 
                 <div class="toolbar row">
                     <div class="filter-options small-12 medium-9 columns">
-                        <a th:href="@{/table/}" class="filter-item">Всі категорії</a>
-                        <tr th:each="category : ${categories}">
-                            <a th:href="@{/table/{category}(category = ${category})}" class="filter-item"
-                               th:text="${category}"></a>
-                        </tr>
+                        <!--                        <a th:href="@{/table/}" class="filter-item">Всі категорії</a>-->
+                        <!--                        <tr th:each="category : ${categories}">-->
+                        <!--                            <a th:href="@{/table/{category}(category = ${category})}" class="filter-item"-->
+                        <!--                               th:text="${category}"></a>-->
+                        <!--                        </tr>-->
+
+                        <!--                        <a th:href="@{/table/}" class="filter-item">Всі категорії</a>-->
+                        <div>
+                            <form th:action="@{/table/category}" method="get">
+                                <div class="nav-category">
+                                    <a th:href="@{/table/}" class="filter-item" th:text="#{category.all}">All categories</a>
+                                </div>
+                                <div class="nav-category">
+                                    <label>
+                                        <select th:name="category" style="width: 300px">
+                                            <option disabled selected th:text="#{category.find}">Find by category</option>
+                                            <option th:each="category : ${categories}"
+                                                    th:text="${category}">
+                                            </option>
+                                        </select>
+                                    </label>
+                                </div>
+
+                                <div class="nav-category">
+                                    <button type="submit" th:text="#{category.find}">Find by category</button>
+                                </div>
+                            </form>
+                        </div>
+
+
                     </div>
                     <!--                <div class="small-12 medium-3 columns">-->
                     <!--                    <label>-->
@@ -143,7 +169,7 @@
                                                                name="login-submit"
                                                                id="book-take-submit"
                                                                class="form-control btn btn-info"
-                                                               value="Take Book"/>
+                                                               th:value="#{book.take}"/>
                                                     </div>
                                                 </form>
                                             </div>

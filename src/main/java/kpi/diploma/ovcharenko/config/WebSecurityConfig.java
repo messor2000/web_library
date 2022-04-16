@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/",
                             "/{category}",
                             "/find/*",
-                            "/table/*",
+                            "/table/**",
                             "/forgetPassword/*",
                             "/resetPassword",
                             "/user/savePassword/**",
