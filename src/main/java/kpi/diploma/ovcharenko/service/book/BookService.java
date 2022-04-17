@@ -21,6 +21,10 @@ public interface BookService {
 
     void changeBookCover(MultipartFile file, Long bookId);
 
+    void addBookPdf(MultipartFile file, Long bookId);
+
+    void downloadPdf(Long bookId);
+
     Page<Book> getAllBooks(Pageable pageable);
 
     Page<Book> getBookByCategory(Pageable pageable, String subject);

@@ -97,7 +97,7 @@
                                                placeholder="Year" th:field="*{year}"/>
                                         <label for="amount" th:text="#{book.amount}">Amount</label>
                                         <input type="number" class="form-control" id="amount"
-                                               placeholder="Amount" th:field="*{amount}"/>
+                                               placeholder="Amount" th:field="*{amount}" th:value="1"/>
 
                                         <label>
                                             <input style="width:250px; height:20px;" list="select" name="category"
@@ -110,11 +110,14 @@
                                             </datalist>
                                         </label>
 
-                                        <label for="image" th:text="#{book.cover}">Book cover: </label>
-                                        <input type="file" name="image" accept="image/png, image/jpeg" id="image"/>
+                                        <label for="imageFile" th:text="#{book.cover}">Book cover: </label>
+                                        <input type="file" name="imageFile" accept="image/png, image/jpeg" id="imageFile"/>
 
                                         <label for="description" th:text="#{book.description}">Description</label>
                                         <input type="text" id="description" placeholder="Description">
+
+                                        <label for="pdfFile" >Pdf:</label>
+                                        <input type="file" name="pdfFile" accept="application/pdf" id="pdfFile"/>
 
                                     </div>
                                 </div>
@@ -151,25 +154,5 @@
 <script src="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/4.0.0/shuffle.min.js"></script>
 <script src="/js/main.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('#image'.cange(function () {
-            showImagePreview(this);
-        }))
-    });
-
-    function showImagePreview(fileInput) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-            $('#showImagePreview').attributes('src', e.target.result);
-        };
-
-        reader.readAsDataURL(file);
-    }
-</script>
-
 </body>
 </html>

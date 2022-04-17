@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,12 +48,23 @@ public class LibraryBookService implements BookService {
 
     @Override
     public void addCoverToTheBook(MultipartFile file, Long bookId) {
-        amazonClient.upload(file, bookId);
+        amazonClient.uploadImage(file, bookId);
     }
 
     @Override
     public void changeBookCover(MultipartFile file, Long bookId) {
         amazonClient.changeFile(file, bookId);
+    }
+
+    @Override
+    public void addBookPdf(MultipartFile file, Long bookId) {
+        amazonClient.uploadBookPdf(file, bookId);
+    }
+
+    @Override
+    public void downloadPdf(Long bookId) {
+        Book book = findBookById(bookId);
+        amazonClient.downloadPdfFile(book);
     }
 
     @Override

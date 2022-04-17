@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -119,6 +120,13 @@ public class BookController {
         return "library";
     }
 
+    @GetMapping(value = "/download/book/{id}")
+    public String downloadBook(@PathVariable("id") Long id) throws IOException {
+        bookService.downloadPdf(id);
+
+        return "redirect:/";
+    }
+
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/delete/{id}")
     public String deleteBookById(@PathVariable("id") Long id) {
@@ -140,13 +148,15 @@ public class BookController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/book/add")
     public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "category") String category,
-                             @RequestParam(value = "image", required = false) MultipartFile multipartFile) {
+                             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                             @RequestParam(value = "pdfFile", required = false) MultipartFile pdfFile) {
         if (result.hasErrors()) {
             return "addBook";
         }
 
         bookService.addNewBook(book, category);
-        bookService.addCoverToTheBook(multipartFile, book.getId());
+        bookService.addCoverToTheBook(imageFile, book.getId());
+        bookService.addBookPdf(pdfFile, book.getId());
 
         return "redirect:/";
     }
