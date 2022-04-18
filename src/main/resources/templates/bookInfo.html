@@ -97,7 +97,7 @@
                                 <p th:text="${book.description}"></p>
                                 <label th:text="#{book.categories}">Book Categories</label>
                                 <tr th:each="category : ${bookCategories}">
-                                    <td th:text="${category}"></td>
+                                    <a th:href="@{/{category}(category=${category})}" th:text="${category}"></a>
                                 </tr>
                                 <label th:text="#{book.status}">Book Status</label>
                                 <p th:text="${book.bookStatus}"></p>
@@ -123,11 +123,15 @@
 
                                 <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                     <table id="books" class="table table-bordered table-responsive-sm">
-                                        <a th:href="@{/edit/{id}(id=${book.id})}" type="button"
-                                           class="btn btn-danger button btn btn-primary"
-                                           data-bs-toggle="modal" data-bs-target="#exampleModal" th:value="#{book.update}">Update</a>
-                                        <a th:href="@{/delete/{id}(id=${book.id})}"
-                                           class="btn btn-danger button btn btn-primary" th:value="#{book.delete}">Delete</a>
+                                        <div>
+                                            <a th:href="@{/edit/{id}(id=${book.id})}" type="button"
+                                               class="btn btn-danger button btn btn-primary"
+                                               data-bs-toggle="modal" data-bs-target="#exampleModal" th:value="#{book.update}">Update</a>
+                                        </div>
+                                        <div>
+                                            <a th:href="@{/delete/{id}(id=${book.id})}"
+                                               class="btn btn-danger button btn btn-primary" th:value="#{book.delete}">Delete</a>
+                                        </div>
                                     </table>
                                 </div>
                             </div>

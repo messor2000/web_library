@@ -4,14 +4,12 @@ import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.exception.ValidPassportException;
-import kpi.diploma.ovcharenko.service.book.BookService;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.LibraryUserService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
 import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -32,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,15 +39,13 @@ public class UserController {
 
     private final UserService userService;
     private final SecurityService securityService;
-    private final Environment env;
     private final MessageSource messages;
     private final JavaMailSender mailSender;
 
-    public UserController(LibraryUserService userService, LibrarySecurityService securityService, Environment env,
+    public UserController(LibraryUserService userService, LibrarySecurityService securityService,
                           MessageSource messages, JavaMailSender mailSender) {
         this.userService = userService;
         this.securityService = securityService;
-        this.env = env;
         this.messages = messages;
         this.mailSender = mailSender;
     }

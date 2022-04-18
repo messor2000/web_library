@@ -40,10 +40,66 @@ class BookRepositoryTests {
 
         bookService.addNewBook(book, category);
 
-        Page<Book> books = bookRepository.findByCategoryContains(category ,PageRequest.of(1, 20));
+        Page<Book> books = bookRepository.findByCategoryContains(category ,PageRequest.of(0, 20));
 
         bookService.deleteBookById(book.getId());
 
-        assertEquals(1, books.stream().count());
+        assertEquals(1, books.get().count());
+    }
+
+    @Test
+    @DisplayName("Test find book by name")
+    void findBookByNameTest() {
+        String name = "forTest";
+        Book book = new Book().toBuilder()
+                .bookName(name)
+                .amount(1)
+                .build();
+
+        bookService.addNewBook(book, "forTestCategory");
+
+        Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(name ,PageRequest.of(0, 20));
+
+        bookService.deleteBookById(book.getId());
+
+        assertEquals(1, foundBook.get().count());
+    }
+
+    @Test
+    @DisplayName("Test find book by author")
+    void findBookByAuthorTest() {
+        String author = "forTest";
+        Book book = new Book().toBuilder()
+                .bookName("forTest")
+                .author(author)
+                .amount(1)
+                .build();
+
+        bookService.addNewBook(book, "forTestCategory");
+
+        Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(author ,PageRequest.of(0, 20));
+
+        bookService.deleteBookById(book.getId());
+
+        assertEquals(1, foundBook.get().count());
+    }
+
+    @Test
+    @DisplayName("Test find book by book year")
+    void findBookByYearTest() {
+        int year = 10000;
+        Book book = new Book().toBuilder()
+                .bookName("forTest")
+                .amount(1)
+                .year(year)
+                .build();
+
+        bookService.addNewBook(book, "forTestCategory");
+
+        Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(String.valueOf(year),PageRequest.of(0, 20));
+
+        bookService.deleteBookById(book.getId());
+
+        assertEquals(1, foundBook.get().count());
     }
 }

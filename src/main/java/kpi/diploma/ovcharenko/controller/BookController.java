@@ -121,7 +121,7 @@ public class BookController {
     }
 
     @GetMapping(value = "/download/book/{id}")
-    public String downloadBook(@PathVariable("id") Long id) throws IOException {
+    public String downloadBook(@PathVariable("id") Long id) {
         bookService.downloadPdf(id);
 
         return "redirect:/";
@@ -178,14 +178,16 @@ public class BookController {
     @PostMapping(value = "/book/update/{id}", consumes = {"multipart/form-data"})
     public String updateBook(@PathVariable("id") long id, @Valid Book book,
                              @RequestParam(value = "category") String category, BindingResult result,
-                             @RequestParam(value = "image", required = false) MultipartFile multipartFile) {
+                             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                             @RequestParam(value = "pdfFile", required = false) MultipartFile pdfFile) {
         if (result.hasErrors()) {
             book.setId(id);
             return "editBook";
         }
 
         bookService.updateBook(book, category);
-        bookService.changeBookCover(multipartFile, id);
+        bookService.changeBookCover(imageFile, id);
+        bookService.addBookPdf(pdfFile, book.getId());
 
         return "redirect:/";
     }

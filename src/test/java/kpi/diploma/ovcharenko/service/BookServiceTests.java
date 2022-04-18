@@ -39,6 +39,8 @@ class BookServiceTests {
     void initTestUser() {
         book = new Book().toBuilder()
                 .bookName("forTest")
+                .author("forTestAuthor")
+                .year(10000)
                 .amount(1)
                 .build();
         BookCategory bookCategory = new BookCategory("forTest");
@@ -84,14 +86,32 @@ class BookServiceTests {
         assertEquals(bookNameForTest, foundBook.getBookName());
     }
 
-//    @Test
-//    @DisplayName("Test find book by name")
-//    void findBookByName() {
-//        Page<Book> pagedBook = bookService.findBookByName("forTest");
-//        Book foundBook = pagedBook.get().findAny().get();
-//
-//        assertEquals(book.getBookName(), foundBook.getBookName());
-//    }
+    @Test
+    @DisplayName("Test find book by name")
+    void findBookByName() {
+        Page<Book> pagedBook = bookService.findByKeyWord("forTest", PageRequest.of(0, 20));
+        Book foundBook = pagedBook.toList().get(0);
+
+        assertEquals(book.getBookName(), foundBook.getBookName());
+    }
+
+    @Test
+    @DisplayName("Test find book by author")
+    void findBookByAuthorTest() {
+        Page<Book> pagedBook = bookService.findByKeyWord("forTestAuthor", PageRequest.of(0, 20));
+        Book foundBook = pagedBook.toList().get(0);
+
+        assertEquals(book.getBookName(), foundBook.getBookName());
+    }
+
+    @Test
+    @DisplayName("Test find book by year")
+    void findBookByYearTest() {
+        Page<Book> pagedBook = bookService.findByKeyWord(String.valueOf(10000), PageRequest.of(0, 20));
+        Book foundBook = pagedBook.toList().get(0);
+
+        assertEquals(book.getBookName(), foundBook.getBookName());
+    }
 
     @Test
     @DisplayName("Test find all books categories")
@@ -112,18 +132,6 @@ class BookServiceTests {
 
         assertEquals(2, bookAllCategories.size());
     }
-
-//    @Test
-//    @DisplayName("Test delete book category")
-//    void deleteBookCategory() {
-//        String testBookCategory = "testCategory2";
-//        bookService.updateBook(book, testBookCategory);
-//
-//        bookService.deleteCategory(book.getId(), testBookCategory);
-//        Set<String> bookAllCategories = bookService.findBookCategories(book);
-//
-//        assertEquals(1, bookAllCategories.size());
-//    }
 
     @Test
     @DisplayName("Test delete book category and found one is previous book category")
@@ -178,6 +186,6 @@ class BookServiceTests {
 
         userService.deleteUserByEmail(userModel.getEmail());
 
-        assertEquals(allTakenBooks.size(), 0);
+        assertEquals(0, allTakenBooks.size());
     }
 }
