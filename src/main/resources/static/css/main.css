@@ -239,7 +239,7 @@ a.button:hover, a.button:focus {
 .input_label-search:after {
     content: '\f002';
     position: absolute;
-    top: 7px;
+    top: -6px;
     right: 5px;
     font-family: 'fontawesome';
 }

@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/find/*",
                             "/table/**",
                             "/forgetPassword/*",
-                            "/resetPassword",
+                            "/resetPassword/*",
                             "/user/savePassword/**",
                             "/user/resetOldPassword/**",
                             "/download/book/*",

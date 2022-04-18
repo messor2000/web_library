@@ -228,7 +228,6 @@ public class UserController {
         email.setSubject("Reset Password");
         email.setText(body);
         email.setTo(user.getEmail());
-        email.setFrom(Objects.requireNonNull(env.getProperty("support.email")));
         return email;
     }
 }

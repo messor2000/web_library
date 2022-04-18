@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -130,7 +129,9 @@ public class LibraryBookService implements BookService {
     private void actionOnTheBook(Book book, String category) {
         BookCategory bookCategory = new BookCategory(category);
 
-        book.addCategory(bookCategory);
+        if (category != null) {
+            book.addCategory(bookCategory);
+        }
         book.setBookStatus("unused");
 
         bookRepository.save(book);
