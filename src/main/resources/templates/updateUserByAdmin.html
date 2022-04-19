@@ -6,7 +6,7 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Pson Library</title>
-    <link rel="shortcut icon" type="/image/png" th:href="@{favicon.ico}"/>
+    <link rel="shortcut icon" href="/public/logo.png"/>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
 
@@ -75,63 +75,36 @@
         <div class="page-container">
 
             <div class="main-box">
-                <div class="container">
-                    <div class="page-title category-title">
-                        <h1 th:text="#{takenBooks.title}">All taken book by user</h1>
-                    </div>
+                <div class="page-title category-title">
+                    <h1 th:text="#{user.update}">Update user</h1>
+                </div>
 
-                    <div class="row">
-                        <div class="col-lg-10 mt-5 mb-5">
-<!--                            <div>-->
-<!--                                <form th:action="@{/admin/allUserBooks}" method="post">-->
-<!--                                    <label for="email" th:text="#{takenBooks.email}">User email</label>-->
-<!--                                    <input id="email" name="email" type="email" style="width: 300px">-->
+                <section id="book_list">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="#" th:action="@{/admin/updateUser/{id}(id=${user.id})}"
+                                      th:object="${user}" method="post">
+                                    <label for="firstName" th:text="#{reg.first.name}"> first name</label>
+                                    <input type="text" th:field="${user.firstName}" id="firstName">
+                                    <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
 
-<!--                                    <input type="submit" class="btn btn-primary" th:value="#{takenBook.find}">-->
-<!--                                </form>-->
-<!--                            </div>-->
+                                    <label for="lastName" th:text="#{reg.last.name}">last name</label>
+                                    <input type="text" th:field="${user.lastName}" id="lastName">
+                                    <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
 
-<!--                            <div>-->
-<!--                                <label th:text="#{takenBooks.user}">Found user</label>-->
-<!--                                <table id="user" class="table table-bordered table-responsive-sm">-->
-<!--                                    <tr>-->
-<!--                                        <td th:text="#{reg.last.name}">Last name</td>-->
-<!--                                        <td th:text="#{reg.first.name}">First name</td>-->
-<!--                                        <td th:text="#{log.email}">Email</td>-->
-<!--                                    </tr>-->
-<!--                                    <tbody>-->
-<!--                                    <tr>-->
-<!--                                        <td th:text="${user.lastName}">title</td>-->
-<!--                                        <td th:text="${user.firstName}">body</td>-->
-<!--                                        <td th:text="${user.email}">body</td>-->
-<!--                                    </tr>-->
-<!--                                    </tbody>-->
-<!--                                </table>-->
-<!--                            </div>-->
-                            <div>
-                                <label th:text="#{takenBooks.books}">Books</label>
-                                <table id="books" class="table table-bordered table-responsive-sm">
-                                    <tr>
-                                        <td th:text="#{book.name}">Book Name</td>
-                                        <td th:text="#{book.author}">Author</td>
-                                        <td th:text="#{book.year}">Year</td>
-                                        <td th:text="#{book.amount}">Amount</td>
-                                        <td th:text="#{book.status}">Status</td>
-                                    </tr>
-                                    <tbody>
-                                    <tr th:each="book : ${allTakenBooks}">
-                                        <td th:text="${book.bookName}">title</td>
-                                        <td th:text="${book.author}">body</td>
-                                        <td th:text="${book.year}">body</td>
-                                        <td th:text="${book.amount}">body</td>
-                                        <td th:text="${book.bookStatus}">body</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+
+                                    <label for="email" th:text="#{reg.email}"> first name</label>
+                                    <input type="email" th:field="${user.email}" id="email">
+                                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+                                    <input type="submit" class="btn btn-primary" th:value="#{user.update.profile}">
+                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
         </div>
 
@@ -141,6 +114,7 @@
                 <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
             </div>
         </footer>
+
     </div>
     <!-- /main -->
 

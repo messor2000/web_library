@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -203,12 +202,12 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/admin/allUserBooks")
-    public String showAllTakenBooks(Model model, @RequestParam("email") String email) {
-        List<Book> allTakenBooks = bookService.getAllBooksThatTaken(email);
-        AppUser user = userService.findByEmail(email);
+    @GetMapping("/admin/allUserBooks/{id}")
+    public String showAllTakenBooks(Model model, @PathVariable("id") int id) {
+        List<Book> allTakenBooks = bookService.getAllBooksThatTaken((long) id);
+//        AppUser user = userService.findByEmail(email);
 
-        model.addAttribute("user", user);
+//        model.addAttribute("user", user);
         model.addAttribute("allTakenBooks", allTakenBooks);
 
         return "takenBooks";

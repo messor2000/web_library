@@ -40,19 +40,28 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public AppUser save(UserModel registration){
+    public AppUser save(UserModel userModel){
         AppUser user = new AppUser();
-        user.setFirstName(registration.getFirstName());
-        user.setLastName(registration.getLastName());
-        user.setEmail(registration.getEmail());
-        user.setPassword(passwordEncoder.encode(registration.getPassword()));
+        user.setFirstName(userModel.getFirstName());
+        user.setLastName(userModel.getLastName());
+        user.setEmail(userModel.getEmail());
+        user.setPassword(passwordEncoder.encode(userModel.getPassword()));
         user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
         return userRepository.save(user);
     }
 
     @Override
-    public void deleteUserByEmail(String email) {
-        userRepository.deleteAppUserByEmail(email);
+    public AppUser updateUser(Long userId, UserModel userModel) {
+        AppUser user = findById(userId);
+        user.setFirstName(userModel.getFirstName());
+        user.setLastName(userModel.getLastName());
+        user.setEmail(userModel.getEmail());
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -69,6 +78,12 @@ public class LibraryUserService implements UserService {
     @Override
     public AppUser findByEmail(String email){
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public AppUser findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
     }
 
     @Override

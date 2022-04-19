@@ -33,12 +33,13 @@ class AppUserServiceTests {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    UserModel userModel;
     private final String email = "forTest@gmail.com";
     private Book book;
 
     @BeforeEach
     void initTestUserAndTestBook() {
-        UserModel userModel = new UserModel().toBuilder()
+        userModel = new UserModel().toBuilder()
                 .firstName("forTest")
                 .lastName("forTest")
                 .email(email)
@@ -58,7 +59,8 @@ class AppUserServiceTests {
 
     @AfterEach
     void deleteTestUserAndTestBook() {
-        userService.deleteUserByEmail(email);
+        AppUser user = userService.findByEmail(email);
+        userService.deleteUser(user.getId());
         bookService.deleteBookById(book.getId());
     }
 
@@ -104,7 +106,8 @@ class AppUserServiceTests {
         userService.save(userModel);
         List<AppUser> appUserListAfterSavingNewOne = userService.showAllUsers();
 
-        userService.deleteUserByEmail("forTest2@gmail.com");
+        AppUser user = userService.findByEmail(email);
+        userService.deleteUser(user.getId());
 
         assertEquals(appUserList.size() + 1, appUserListAfterSavingNewOne.size());
     }

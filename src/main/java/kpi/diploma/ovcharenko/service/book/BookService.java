@@ -35,7 +35,7 @@ public interface BookService {
 
     void deleteCategory(Long id, String category);
 
-    List<Book> getAllBooksThatTaken(String email);
+    List<Book> getAllBooksThatTaken(Long id);
 
     Page<Book> findByKeyWord(String search, Pageable pageable);
 }

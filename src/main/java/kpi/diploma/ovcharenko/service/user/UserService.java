@@ -10,9 +10,11 @@ import java.util.Optional;
 public interface UserService extends UserDetailsService {
     AppUser findByEmail(final String email);
 
+    AppUser findById(final Long id);
+
     AppUser save(final UserModel registration);
 
-    void deleteUserByEmail(String email);
+    void deleteUser(Long id);
 
     void takeBook(final Long id, final String userEmail);
 
@@ -27,4 +29,6 @@ public interface UserService extends UserDetailsService {
     boolean checkIfValidOldPassword(final AppUser user, final String oldPassword);
 
     List<AppUser> showAllUsers();
+
+    AppUser updateUser(Long userId, final UserModel userModel);
 }

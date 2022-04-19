@@ -5,7 +5,6 @@ import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.exception.ValidPassportException;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
-import kpi.diploma.ovcharenko.service.user.LibraryUserService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
 import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +42,7 @@ public class UserController {
     private final MessageSource messages;
     private final JavaMailSender mailSender;
 
-    public UserController(LibraryUserService userService, LibrarySecurityService securityService,
+    public UserController(UserService userService, LibrarySecurityService securityService,
                           MessageSource messages, JavaMailSender mailSender) {
         this.userService = userService;
         this.securityService = securityService;
@@ -150,6 +150,29 @@ public class UserController {
         return "userProfile";
     }
 
+    @GetMapping("/user/update/profile")
+    public String showUpdateProfileForm(Model model) {
+        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        AppUser user = userService.findByEmail(currentUser);
+
+        model.addAttribute("user", user);
+        return "updateUserProfile";
+    }
+
+    @PostMapping("/user/update/profile")
+    public String updateUserProfile(Model model, @ModelAttribute("user") @Valid UserModel userModel) {
+        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        AppUser user = userService.findByEmail(currentUser);
+        userService.updateUser(user.getId(), userModel);
+        List<Book> books = user.getBooks();
+        List<AppUser> appUsers = userService.showAllUsers();
+
+        model.addAttribute("appUser", user);
+        model.addAttribute("userBooks", books);
+        model.addAttribute("appUsers", appUsers);
+        return "redirect:/profile";
+    }
+
     @GetMapping("/user/changePassword")
     public String showChangePasswordPage() {
         return "changePassword";
@@ -187,13 +210,43 @@ public class UserController {
         return "redirect:/";
     }
 
-    @PostMapping("/admin/deleteUser")
-    public String deleteUser(@RequestParam("email") String email, Model model) {
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/allUsers")
+    public String showAllUsers(Model model) {
+        List<AppUser> appUsers = userService.showAllUsers();
+
+        model.addAttribute("appUsers", appUsers);
+        return "tableUsers";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/updateUser/{id}")
+    public String showUserUpdatePage(@PathVariable("id") Long id, Model model) {
+        AppUser user = userService.findById(id);
+
+        model.addAttribute("user", user);
+        return "updateUserByAdmin";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/admin/updateUser/{id}")
+    public String updateUser(Model model, @PathVariable("id") Long id, @ModelAttribute("user") @Valid UserModel userModel) {
+        userService.updateUser(id, userModel);
+        List<AppUser> appUsers = userService.showAllUsers();
+
+        model.addAttribute("appUsers", appUsers);
+        return "redirect:/admin/allUsers";
+    }
+
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/admin/deleteUser/{id}")
+    public String deleteUser(@PathVariable("id") Long id, Model model) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
         List<AppUser> appUsers = userService.showAllUsers();
 
-        userService.deleteUserByEmail(email);
+        userService.deleteUser(id);
 
         model.addAttribute("appUser", user);
         model.addAttribute("appUsers", appUsers);

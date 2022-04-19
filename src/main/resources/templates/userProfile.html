@@ -90,43 +90,49 @@
                                 <p th:text="${appUser.email}"></p>
                                 <label>Registration date</label>
                                 <p th:text="${appUser.registrationDate}"></p>
-                                <p><a th:href="@{/user/changePassword}" type="button"
+                                <!--                                <p><a th:href="@{/user/changePassword}" type="button"-->
+                                <!--                                      class="btn btn-danger button btn btn-primary"-->
+                                <!--                                      data-bs-toggle="modal" data-bs-target="#exampleModal"-->
+                                <!--                                      th:text="#{message.updatePassword}">-->
+                                <!--                                    Update password</a></p>-->
+
+                                <p><a th:href="@{/user/update/profile}" th:method="get" type="button"
                                       class="btn btn-danger button btn btn-primary"
                                       data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                      th:text="#{message.updatePassword}">
-                                    Update password</a></p>
+                                      th:text="#{user.update.profile}">
+                                    Update profile</a></p>
 
-                                <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                                    <div>
-                                        <label th:text="#{takenBooks.allUsers}">List user emails</label>
-                                        <table id="books" class="table table-bordered table-responsive-sm" style="width: 400px">
-                                            <tr>
-                                                <td th:text="#{log.email}">Email</td>
-                                            </tr>
-                                            <tbody>
-                                            <tr th:each="user : ${appUsers}">
-                                                <td th:text="${user.email}">title</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <!--                                <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">-->
+                                <!--                                    <div>-->
+                                <!--                                        <label th:text="#{takenBooks.allUsers}">List user emails</label>-->
+                                <!--                                        <table id="books" class="table table-bordered table-responsive-sm" style="width: 400px">-->
+                                <!--                                            <tr>-->
+                                <!--                                                <td th:text="#{log.email}">Email</td>-->
+                                <!--                                            </tr>-->
+                                <!--                                            <tbody>-->
+                                <!--                                            <tr th:each="user : ${appUsers}">-->
+                                <!--                                                <td th:text="${user.email}">title</td>-->
+                                <!--                                            </tr>-->
+                                <!--                                            </tbody>-->
+                                <!--                                        </table>-->
+                                <!--                                    </div>-->
 
-                                    <div>
-                                        <label th:text="#{takenBooks.email}">User email</label>
-                                        <form th:action="@{/admin/allUserBooks}" method="post">
-                                            <label for="emailForBooks">User email</label>
-                                            <input style="width: 300px" id="emailForBooks" name="email" type="email">
+                                <!--                                    <div>-->
+                                <!--                                        <label th:text="#{takenBooks.email}">User email</label>-->
+                                <!--                                        <form th:action="@{/admin/allUserBooks}" method="post">-->
+                                <!--                                            <label for="emailForBooks">User email</label>-->
+                                <!--                                            <input style="width: 300px" id="emailForBooks" name="email" type="email">-->
 
-                                            <input type="submit" class="btn btn-primary" th:value="#{takenBook.find}">
-                                        </form>
-                                        <form th:action="@{/admin/deleteUser}" method="post">
-                                            <label for="emailForDelete">User email</label>
-                                            <input style="width: 300px" id="emailForDelete" name="email" type="email">
+                                <!--                                            <input type="submit" class="btn btn-primary" th:value="#{takenBook.find}">-->
+                                <!--                                        </form>-->
+                                <!--                                        <form th:action="@{/admin/deleteUser}" method="post">-->
+                                <!--                                            <label for="emailForDelete">User email</label>-->
+                                <!--                                            <input style="width: 300px" id="emailForDelete" name="email" type="email">-->
 
-                                            <input type="submit" class="btn btn-primary" th:value="#{delete.user}">
-                                        </form>
-                                    </div>
-                                </div>
+                                <!--                                            <input type="submit" class="btn btn-primary" th:value="#{delete.user}">-->
+                                <!--                                        </form>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
 
                                 <div>
                                     <div>

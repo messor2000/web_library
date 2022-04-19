@@ -17,8 +17,8 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
     @Query(value = "SELECT distinct b from Book b inner join BookCategory bc on bc.book.id = b.id where bc.category = :category")
     Page<Book> findByCategoryContains(@Param("category") String category, Pageable pageable);
 
-    @Query("SELECT b FROM Book b JOIN b.users u WHERE u.email LIKE %?1%")
-    List<Book> findBooksThatTakenByUser(String keyword);
+    @Query("SELECT b FROM Book b JOIN b.users u WHERE u.id = :id")
+    List<Book> findBooksThatTakenByUser(@Param("id") Long id);
 
     @Query("select b from Book b where lower(b.bookName) like lower(concat('%', :search, '%')) " +
             "or lower(b.author) like lower(concat('%', :search, '%')) or lower(b.year) like lower(concat('%', :search, '%'))")

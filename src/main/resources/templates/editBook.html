@@ -146,13 +146,15 @@
 
                                 <form th:action="@{/book/deleteCategory/{id}(id=${book.id})}" method="post">
                                     <label for="category">Delete category</label>
-                                    <select class="form-control" id="categoryForDelete" name="category">
-                                        <option value="">Select category for delete</option>
-                                        <option th:each="category : ${bookCategories}"
-                                                th:value="${category}"
-                                                th:text="${category}">
-                                        </option>
-                                    </select>
+                                    <label for="categoryForDelete">
+                                        <select class="form-control" id="categoryForDelete" name="category">
+                                            <option value="">Select category for delete</option>
+                                            <option th:each="category : ${bookCategories}"
+                                                    th:value="${category}"
+                                                    th:text="${category}">
+                                            </option>
+                                        </select>
+                                    </label>
                                     <input type="submit" class="btn btn-primary" value="Delete category">
                                 </form>
                             </div>

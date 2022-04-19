@@ -117,8 +117,8 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooksThatTaken(String email) {
-        return bookRepository.findBooksThatTakenByUser(email);
+    public List<Book> getAllBooksThatTaken(Long id) {
+        return bookRepository.findBooksThatTakenByUser(id);
     }
 
     @Override
