@@ -195,7 +195,7 @@ public class UserController {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
 
-        userService.takeBook(id, user.getEmail());
+        userService.takeBook(id, currentUser);
 
         return "redirect:/";
     }

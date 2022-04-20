@@ -111,12 +111,16 @@
                                                         th:text="#{user.delete}">Delete
                                                 </button>
                                             </form>
-                                            <!--                                            <a class="btn btn-danger button btn btn-primary" th:text="#{user.delete}">Delete</a>-->
                                         </div>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
+
+                            <a th:href="@{/admin/addNewUser}" type="button"
+                               class="btn btn-danger button btn btn-primary"
+                               data-bs-toggle="modal" data-bs-target="#exampleModal"
+                               th:text="#{admin.add.user}">Add user</a>
                         </div>
                     </div>
                 </div>

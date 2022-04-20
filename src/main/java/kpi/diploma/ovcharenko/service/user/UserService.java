@@ -30,5 +30,5 @@ public interface UserService extends UserDetailsService {
 
     List<AppUser> showAllUsers();
 
-    AppUser updateUser(Long userId, final UserModel userModel);
+    void updateUser(Long userId, final UserModel userModel);
 }

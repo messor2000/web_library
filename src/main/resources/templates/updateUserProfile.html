@@ -99,7 +99,7 @@
                                     <input type="email" th:field="${user.email}" id="email">
                                     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
 
-                                    <input type="submit" class="btn btn-primary" th:value="#{user.update}">
+                                    <input type="submit" class="btn btn-danger button btn btn-primary" th:value="#{user.update}">
                                 </form>
 
                                 <a th:href="@{/user/changePassword}" type="button"

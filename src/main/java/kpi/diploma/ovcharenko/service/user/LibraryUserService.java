@@ -51,12 +51,12 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public AppUser updateUser(Long userId, UserModel userModel) {
+    public void updateUser(Long userId, UserModel userModel) {
         AppUser user = findById(userId);
         user.setFirstName(userModel.getFirstName());
         user.setLastName(userModel.getLastName());
         user.setEmail(userModel.getEmail());
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override
