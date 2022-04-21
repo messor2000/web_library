@@ -39,7 +39,6 @@ public class FileUploadController {
 
     @GetMapping("/upload")
     public String listUploadedFiles(Model model) {
-
         model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toUri().toString())
@@ -59,7 +58,6 @@ public class FileUploadController {
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("pageNum") String pageNum,
                                    @RequestParam("category") String category ,RedirectAttributes redirectAttributes) {
-
         storageService.store(file);
 
         excelDataService.getExcelDataAsList(file, Integer.parseInt(pageNum), category);

@@ -2,7 +2,10 @@ package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
+import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.repo.BookRepository;
+import kpi.diploma.ovcharenko.repo.BookStatusRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,11 +26,14 @@ public class LibraryBookService implements BookService {
 
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
+    private final BookStatusRepository bookStatusRepository;
     private final AmazonClient amazonClient;
 
-    public LibraryBookService(BookRepository bookRepository, CategoryRepository categoryRepository, AmazonClient amazonClient) {
+    public LibraryBookService(BookRepository bookRepository, CategoryRepository categoryRepository, AmazonClient amazonClient,
+                              BookStatusRepository bookStatusRepository) {
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
+        this.bookStatusRepository = bookStatusRepository;
         this.amazonClient = amazonClient;
     }
 
@@ -42,7 +49,13 @@ public class LibraryBookService implements BookService {
     @Override
     @Transactional
     public void updateBook(Book book, String category) {
-        actionOnTheBook(book, category);
+        BookCategory bookCategory = new BookCategory(category);
+
+        if (category != null) {
+            book.addCategory(bookCategory);
+        }
+
+        bookRepository.save(book);
     }
 
     @Override
@@ -74,7 +87,21 @@ public class LibraryBookService implements BookService {
 
     @Override
     public void addNewBook(Book book, String category) {
-        actionOnTheBook(book, category);
+        BookCategory bookCategory = new BookCategory(category);
+        Set<BookStatus> statuses = new HashSet<>();
+
+        for (int i = 0; i < book.getAmount(); i++) {
+            BookStatus status = new BookStatus(Status.FREE);
+            statuses.add(status);
+        }
+
+        if (category != null) {
+            book.addCategory(bookCategory);
+        }
+        book.setStatuses(statuses);
+
+        bookRepository.save(book);
+        bookStatusRepository.saveAll(statuses);
     }
 
     @Override
@@ -126,15 +153,9 @@ public class LibraryBookService implements BookService {
         return bookRepository.findByBookNameOrAuthorOrYear(search, pageable);
     }
 
-    private void actionOnTheBook(Book book, String category) {
-        BookCategory bookCategory = new BookCategory(category);
-
-        if (category != null) {
-            book.addCategory(bookCategory);
-        }
-        book.setBookStatus("unused");
-
-        bookRepository.save(book);
+    @Override
+    public List<BookStatus> getAllBooksStatus(Long bookId) {
+        return bookStatusRepository.findAllByBookId(bookId);
     }
 }
 

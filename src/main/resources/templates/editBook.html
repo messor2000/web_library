@@ -103,13 +103,13 @@
                                     <input type="number" th:field="${book.amount}" id="amount" placeholder="Amount">
                                     <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
 
-                                    <label for="status" th:text="#{book.status}">Status</label>
-                                    <select class="form-control" id="status" name="category"
-                                            th:field="${book.bookStatus}">
-                                        <option value="" th:text="#{book.status}">Book Status</option>
-                                        <option value="unused">Unused</option>
-                                        <option value="used">Used</option>
-                                    </select>
+<!--                                    <label for="status" th:text="#{book.status}">Status</label>-->
+<!--                                    <select class="form-control" id="status" name="category"-->
+<!--                                            th:field="${book.bookStatus}">-->
+<!--                                        <option value="" th:text="#{book.status}">Book Status</option>-->
+<!--                                        <option value="unused">Unused</option>-->
+<!--                                        <option value="used">Used</option>-->
+<!--                                    </select>-->
 
                                     <label th:text="#{book.categories}">Book Categories</label>
                                     <tr th:each="category : ${bookCategories}">

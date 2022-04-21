@@ -1,6 +1,8 @@
 package kpi.diploma.ovcharenko.entity.user;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.card.BookingCard;
+import kpi.diploma.ovcharenko.entity.card.TakenBookCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -19,6 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -80,6 +83,12 @@ public class AppUser {
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     private List<Book> books = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user")
+    private BookingCard bookingCard;
+
+    @OneToOne(mappedBy = "user")
+    private TakenBookCard takenBookCard;
 
     @Override
     public boolean equals(Object o) {

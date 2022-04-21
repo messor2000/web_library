@@ -2,6 +2,8 @@ package kpi.diploma.ovcharenko.service.data;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
+import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -67,8 +69,9 @@ public class LibraryExcelDataService implements ExcelDataService {
                 book.addCategory(bookCategory);
                 book.setAmount(1);
                 book.setDescription("---");
-                book.setBookStatus("unused");
 
+                BookStatus status = new BookStatus(Status.FREE);
+                book.setStatus(status);
                 books.add(book);
             }
         }

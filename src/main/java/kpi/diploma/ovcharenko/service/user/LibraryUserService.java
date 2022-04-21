@@ -116,33 +116,33 @@ public class LibraryUserService implements UserService {
     @Override
     @Transactional
     public void takeBook(Long id, String userEmail) {
-        AppUser user = findByEmail(userEmail);
-        Book book = bookRepository.findById(id).get();
-
-        book.setAmount(book.getAmount() - 1);
-        if (book.getAmount() == 0) {
-            book.setBookStatus("used");
-        }
-
-        user.addBook(book);
-
-        userRepository.save(user);
-        bookRepository.save(book);
+//        AppUser user = findByEmail(userEmail);
+//        Book book = bookRepository.findById(id).get();
+//
+//        book.setAmount(book.getAmount() - 1);
+//        if (book.getAmount() == 0) {
+//            book.setBookStatus("used");
+//        }
+//
+//        user.addBook(book);
+//
+//        userRepository.save(user);
+//        bookRepository.save(book);
     }
 
     @Override
     @Transactional
     public void returnBook(Long id, String userEmail) {
-        AppUser user = findByEmail(userEmail);
-        Book book = bookRepository.findById(id).get();
-
-        book.setAmount(book.getAmount() + 1);
-        book.setBookStatus("unused");
-
-        user.removeBook(book);
-
-        userRepository.save(user);
-        bookRepository.save(book);
+//        AppUser user = findByEmail(userEmail);
+//        Book book = bookRepository.findById(id).get();
+//
+//        book.setAmount(book.getAmount() + 1);
+//        book.setBookStatus("unused");
+//
+//        user.removeBook(book);
+//
+//        userRepository.save(user);
+//        bookRepository.save(book);
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles){

@@ -1,6 +1,7 @@
 package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,4 +39,6 @@ public interface BookService {
     List<Book> getAllBooksThatTaken(Long id);
 
     Page<Book> findByKeyWord(String search, Pageable pageable);
+
+    List<BookStatus> getAllBooksStatus(Long bookId);
 }

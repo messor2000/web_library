@@ -141,9 +141,9 @@
                                             <p th:text="${book.amount}"></p>
                                         </div>
 
-                                        <div th:if="${book.amount} < 1">
-                                            <p class="status" th:text="${book.bookStatus}"></p>
-                                        </div>
+<!--                                        <div th:if="${book.amount} < 1">-->
+<!--                                            <p class="status" th:text="${book.bookStatus}"></p>-->
+<!--                                        </div>-->
                                         <a class="col-sm-6 col-sm-offset-3" th:href="@{/find/{id}(id=${book.id})}"
                                            th:text="#{book.details}">Details</a>
                                     </div>

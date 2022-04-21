@@ -2,7 +2,7 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookModel;
-import kpi.diploma.ovcharenko.entity.user.AppUser;
+import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -97,9 +97,11 @@ public class BookController {
     public String findBookById(@PathVariable(value = "id", required = false) Long id, Model model) {
         Book book = bookService.findBookById(id);
         Set<String> bookCategories = bookService.findBookCategories(book);
+        List<BookStatus> statuses = bookService.getAllBooksStatus(id);
 
         model.addAttribute("bookCategories", bookCategories);
         model.addAttribute("book", book);
+        model.addAttribute("statuses", statuses);
 
         return "bookInfo";
     }
