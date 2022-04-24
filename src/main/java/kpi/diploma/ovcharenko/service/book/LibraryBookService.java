@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -88,20 +87,17 @@ public class LibraryBookService implements BookService {
     @Override
     public void addNewBook(Book book, String category) {
         BookCategory bookCategory = new BookCategory(category);
-        Set<BookStatus> statuses = new HashSet<>();
 
         for (int i = 0; i < book.getAmount(); i++) {
             BookStatus status = new BookStatus(Status.FREE);
-            statuses.add(status);
+            book.setStatus(status);
         }
 
         if (category != null) {
             book.addCategory(bookCategory);
         }
-        book.setStatuses(statuses);
 
         bookRepository.save(book);
-        bookStatusRepository.saveAll(statuses);
     }
 
     @Override
@@ -141,11 +137,6 @@ public class LibraryBookService implements BookService {
 
         categoryRepository.deleteById(bookCategory.getId());
         bookRepository.save(book);
-    }
-
-    @Override
-    public List<Book> getAllBooksThatTaken(Long id) {
-        return bookRepository.findBooksThatTakenByUser(id);
     }
 
     @Override

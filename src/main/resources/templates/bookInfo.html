@@ -102,11 +102,11 @@
                                 <!--                                <label th:text="#{book.status}">Book Status</label>-->
                                 <!--                                <p th:text="${book.bookStatus}"></p>-->
 
-                                <div th:if="${book.amount} == 1">
-                                    <label th:text="#{book.status}">Book Status</label>
-                                    <p th:text="${statuses.get(0).getStatus().name()}"></p>
-                                </div>
-                                <div th:if="${book.amount} > 1">
+<!--                                <div th:if="${book.amount} == 1">-->
+<!--                                    <label th:text="#{book.status}">Book Status</label>-->
+<!--                                    <p th:text="${statuses.get(0).getStatus().name()}"></p>-->
+<!--                                </div>-->
+                                <div>
                                     <label th:text="#{books.status}">Status</label>
                                     <table id="status" class="table table-bordered table-responsive-sm"
                                            style="width: 300px">

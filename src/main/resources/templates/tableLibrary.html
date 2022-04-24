@@ -141,7 +141,6 @@
                                     <th th:text="#{book.author}">Author</th>
                                     <th th:text="#{book.year}">Year</th>
                                     <th th:text="#{book.amount}">Amount</th>
-                                    <td th:text="#{book.status}">Status</td>
                                     <th th:text="#{book.action}">Action</th>
                                 </tr>
                                 </thead>
@@ -151,7 +150,6 @@
                                     <td th:text="${book.author}">body</td>
                                     <td th:text="${book.year}">body</td>
                                     <th th:text="${book.amount}">body</th>
-                                    <td th:text="${book.bookStatus}">body</td>
                                     <td>
                                         <a class="col-sm-6 col-sm-offset-3" th:href="@{/find/{id}(id=${book.id})}"
                                            th:text="#{book.details}">Details</a>

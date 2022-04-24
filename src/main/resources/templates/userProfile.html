@@ -95,47 +95,47 @@
                                       data-bs-toggle="modal" data-bs-target="#exampleModal"
                                       th:text="#{user.update.profile}">
                                     Update profile</a></p>
-                                <div>
-                                    <div>
-                                        <div th:if="${userBooks.size()} >= 1">
-                                            <label th:text="#{user.books}">User books</label>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <tr th:each="book : ${userBooks}">
-                                            <li class="book-item small-12 medium-6 columns">
-                                                <div class="bk-img">
-                                                    <div class="bk-wrapper">
-                                                        <div class="bk-book bk-bookdefault">
-                                                            <div class="bk-front">
-                                                                <img th:src="@{'https://s3.us-east-1.amazonaws.com/psonlibraryimagesbucket/'+${book.id}}"
-                                                                     height="310px" width="215px" alt="" src=""/>
-                                                            </div>
-                                                            <div class="bk-back"></div>
-                                                            <div class="bk-left"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="item-details">
-                                                    <h3 class="book-item_title" th:text="${book.bookName}"></h3>
-                                                    <p class="author" th:text="${book.author}"></p>
-                                                    <p class="published" th:text="${book.year}"></p>
-                                                    <a th:href="@{/find/{id}(id=${book.id})}">Details</a>
+<!--                                <div>-->
+<!--                                    <div>-->
+<!--                                        <div th:if="${userBooks.size()} >= 1">-->
+<!--                                            <label th:text="#{user.books}">User books</label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div>-->
+<!--                                        <tr th:each="book : ${userBooks}">-->
+<!--                                            <li class="book-item small-12 medium-6 columns">-->
+<!--                                                <div class="bk-img">-->
+<!--                                                    <div class="bk-wrapper">-->
+<!--                                                        <div class="bk-book bk-bookdefault">-->
+<!--                                                            <div class="bk-front">-->
+<!--                                                                <img th:src="@{'https://s3.us-east-1.amazonaws.com/psonlibraryimagesbucket/'+${book.id}}"-->
+<!--                                                                     height="310px" width="215px" alt="" src=""/>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="bk-back"></div>-->
+<!--                                                            <div class="bk-left"></div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                                <div class="item-details">-->
+<!--                                                    <h3 class="book-item_title" th:text="${book.bookName}"></h3>-->
+<!--                                                    <p class="author" th:text="${book.author}"></p>-->
+<!--                                                    <p class="published" th:text="${book.year}"></p>-->
+<!--                                                    <a th:href="@{/find/{id}(id=${book.id})}">Details</a>-->
 
-                                                    <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">
-                                                        <div class="col-sm-6 col-sm-offset-3">
-                                                            <input type="submit"
-                                                                   name="login-submit"
-                                                                   id="book-return-submit"
-                                                                   class="form-control btn btn-info"
-                                                                   value="Return Book"/>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </li>
-                                        </tr>
-                                    </div>
-                                </div>
+<!--                                                    <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">-->
+<!--                                                        <div class="col-sm-6 col-sm-offset-3">-->
+<!--                                                            <input type="submit"-->
+<!--                                                                   name="login-submit"-->
+<!--                                                                   id="book-return-submit"-->
+<!--                                                                   class="form-control btn btn-info"-->
+<!--                                                                   value="Return Book"/>-->
+<!--                                                        </div>-->
+<!--                                                    </form>-->
+<!--                                                </div>-->
+<!--                                            </li>-->
+<!--                                        </tr>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                         </div>
                     </div>

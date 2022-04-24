@@ -1,9 +1,11 @@
 package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.exception.ValidPassportException;
+import kpi.diploma.ovcharenko.service.book.BookCardService;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
 import kpi.diploma.ovcharenko.service.user.UserService;
@@ -38,16 +40,18 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final BookCardService bookCardService;
     private final SecurityService securityService;
     private final MessageSource messages;
     private final JavaMailSender mailSender;
 
     public UserController(UserService userService, LibrarySecurityService securityService,
-                          MessageSource messages, JavaMailSender mailSender) {
+                          MessageSource messages, JavaMailSender mailSender, BookCardService bookCardService) {
         this.userService = userService;
         this.securityService = securityService;
         this.messages = messages;
         this.mailSender = mailSender;
+        this.bookCardService = bookCardService;
     }
 
     @GetMapping("/login")
@@ -140,11 +144,11 @@ public class UserController {
     public String viewUserProfile(Model model) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
-        List<Book> books = user.getBooks();
+//        List<BookCard> books = user.getBooks();
         List<AppUser> appUsers = userService.showAllUsers();
 
         model.addAttribute("appUser", user);
-        model.addAttribute("userBooks", books);
+//        model.addAttribute("userBooks", books);
         model.addAttribute("appUsers", appUsers);
 
         return "userProfile";
@@ -164,11 +168,11 @@ public class UserController {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
         userService.updateUser(user.getId(), userModel);
-        List<Book> books = user.getBooks();
+//        List<Book> books = user.getBooks();
         List<AppUser> appUsers = userService.showAllUsers();
 
         model.addAttribute("appUser", user);
-        model.addAttribute("userBooks", books);
+//        model.addAttribute("userBooks", books);
         model.addAttribute("appUsers", appUsers);
         return "redirect:/profile";
     }
@@ -193,19 +197,8 @@ public class UserController {
     @PostMapping("/takeBook/{id}")
     public String takeBook(@PathVariable(name = "id") Long id) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        AppUser user = userService.findByEmail(currentUser);
 
-        userService.takeBook(id, currentUser);
-
-        return "redirect:/";
-    }
-
-    @PostMapping("/returnBook/{id}")
-    public String returnBook(@PathVariable(name = "id") Long id) {
-        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        AppUser user = userService.findByEmail(currentUser);
-
-        userService.returnBook(id, user.getEmail());
+        userService.bookedBook(id, currentUser);
 
         return "redirect:/";
     }
@@ -217,6 +210,32 @@ public class UserController {
 
         model.addAttribute("appUsers", appUsers);
         return "tableUsers";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/checkUserBookCards/{id}")
+    public String showAllTakenBooks(Model model, @PathVariable("id") Long id) {
+        List<BookCard> bookCards = bookCardService.findAllUserBookCards(id);
+
+        model.addAttribute("bookCards", bookCards);
+
+        return "takenBooks";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/admin/approveBook/{bookId}/user/{userId}")
+    public String approveBook(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "userId") Long userId) {
+        userService.approveBookForUser(bookId, userId);
+
+        return "redirect:/admin/allUsers";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/admin/putBackIntoTheLibrary/{bookId}/user/{userId}")
+    public String returnedBook(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "userId") Long userId) {
+        userService.returnedTheBook(bookId, userId);
+
+        return "redirect:/admin/allUsers";
     }
 
     @Secured("ROLE_ADMIN")

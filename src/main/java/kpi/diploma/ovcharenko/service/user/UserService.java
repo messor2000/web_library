@@ -16,9 +16,11 @@ public interface UserService extends UserDetailsService {
 
     void deleteUser(Long id);
 
-    void takeBook(final Long id, final String userEmail);
+    void bookedBook(final Long id, final String userEmail);
 
-    void returnBook(final Long id, final String userEmail);
+    void approveBookForUser(final Long bookId, final Long userId);
+
+    void returnedTheBook(final Long bookId, final Long userId);
 
     void createPasswordResetTokenForUser(final AppUser user, final String token);
 

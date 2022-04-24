@@ -11,12 +11,14 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
@@ -27,30 +29,34 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "booking_card")
-public class TakenBookCard {
+public class BookCard {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "id", insertable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
 
-    @ManyToOne
-    @JoinColumn(name="book_id", nullable=false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name="book_id")
     private Book book;
+
+    @Column(name = "status", columnDefinition = "ENUM('WAIT_FOR_APPROVE', 'APPROVED', 'BOOKED_RETURNED')")
+    @Enumerated(EnumType.STRING)
+    private CardStatus cardStatus;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TakenBookCard that = (TakenBookCard) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(book, that.book);
+        BookCard that = (BookCard) o;
+        return Objects.equals(id, that.id) && Objects.equals(user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, book);
+        return Objects.hash(id, user);
     }
 }

@@ -1,8 +1,8 @@
 package kpi.diploma.ovcharenko.entity.user;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
-import kpi.diploma.ovcharenko.entity.card.BookingCard;
-import kpi.diploma.ovcharenko.entity.card.TakenBookCard;
+import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.card.BookCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -21,17 +21,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -76,19 +76,14 @@ public class AppUser {
     )
     private Collection<UserRole> roles = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_books",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
-    private List<Book> books = new ArrayList<>();
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<BookCard> bookCards = new HashSet<>();
 
-    @OneToOne(mappedBy = "user")
-    private BookingCard bookingCard;
-
-    @OneToOne(mappedBy = "user")
-    private TakenBookCard takenBookCard;
+    public void addBookCard(BookCard bookCard) {
+        bookCards.add(bookCard);
+        bookCard.setUser(this);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -105,16 +100,6 @@ public class AppUser {
     @Override
     public int hashCode() {
         return Objects.hash(id, firstName, lastName, email, password);
-    }
-
-    public void addBook(Book book) {
-        books.add(book);
-        book.getUsers().add(this);
-    }
-
-    public void removeBook(Book book) {
-        books.remove(book);
-        book.getUsers().remove(this);
     }
 
     public void setRoles(Collection<UserRole> roles) {

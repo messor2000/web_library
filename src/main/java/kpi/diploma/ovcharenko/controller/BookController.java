@@ -103,6 +103,8 @@ public class BookController {
         model.addAttribute("book", book);
         model.addAttribute("statuses", statuses);
 
+        log.info(String.valueOf(statuses));
+
         return "bookInfo";
     }
 
@@ -201,18 +203,6 @@ public class BookController {
 
         redirectAttributes.addAttribute("bookId", id);
         return "redirect:/edit/{bookId}";
-    }
-
-    @Secured("ROLE_ADMIN")
-    @GetMapping("/admin/allUserBooks/{id}")
-    public String showAllTakenBooks(Model model, @PathVariable("id") int id) {
-        List<Book> allTakenBooks = bookService.getAllBooksThatTaken((long) id);
-//        AppUser user = userService.findByEmail(email);
-
-//        model.addAttribute("user", user);
-        model.addAttribute("allTakenBooks", allTakenBooks);
-
-        return "takenBooks";
     }
 }
 

@@ -1,11 +1,17 @@
 package kpi.diploma.ovcharenko.service.user;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
+import kpi.diploma.ovcharenko.entity.book.status.Status;
+import kpi.diploma.ovcharenko.entity.card.CardStatus;
+import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.PasswordResetToken;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.UserRole;
+import kpi.diploma.ovcharenko.repo.BookCardRepository;
 import kpi.diploma.ovcharenko.repo.BookRepository;
+import kpi.diploma.ovcharenko.repo.BookStatusRepository;
 import kpi.diploma.ovcharenko.repo.PasswordResetTokenRepository;
 import kpi.diploma.ovcharenko.repo.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,15 +34,20 @@ public class LibraryUserService implements UserService {
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
+    private final BookCardRepository bookCardRepository;
+    private final BookStatusRepository bookStatusRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final PasswordResetTokenRepository resetTokenRepository;
 
     public LibraryUserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-                              BookRepository bookRepository, PasswordResetTokenRepository resetTokenRepository) {
+                              BookRepository bookRepository, PasswordResetTokenRepository resetTokenRepository,
+                              BookCardRepository bookCardRepository, BookStatusRepository bookStatusRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.bookRepository = bookRepository;
         this.resetTokenRepository = resetTokenRepository;
+        this.bookStatusRepository = bookStatusRepository;
+        this.bookCardRepository = bookCardRepository;
     }
 
     @Override
@@ -47,6 +58,7 @@ public class LibraryUserService implements UserService {
         user.setEmail(userModel.getEmail());
         user.setPassword(passwordEncoder.encode(userModel.getPassword()));
         user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
+
         return userRepository.save(user);
     }
 
@@ -113,36 +125,72 @@ public class LibraryUserService implements UserService {
         return userRepository.findAll();
     }
 
-    @Override
     @Transactional
-    public void takeBook(Long id, String userEmail) {
-//        AppUser user = findByEmail(userEmail);
-//        Book book = bookRepository.findById(id).get();
-//
-//        book.setAmount(book.getAmount() - 1);
-//        if (book.getAmount() == 0) {
-//            book.setBookStatus("used");
-//        }
-//
-//        user.addBook(book);
-//
-//        userRepository.save(user);
-//        bookRepository.save(book);
+    public void bookedBook(Long id, String userEmail) {
+        AppUser user = findByEmail(userEmail);
+        Book book = bookRepository.findById(id).get();
+
+        BookCard bookCard = new BookCard();
+        bookCard.setBook(book);
+        bookCard.setCardStatus(CardStatus.WAIT_FOR_APPROVE);
+
+        user.addBookCard(bookCard);
+
+        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(id);
+
+        for (BookStatus bookStatus: bookStatuses) {
+            if (bookStatus.getStatus().equals(Status.FREE)) {
+                bookStatus.setStatus(Status.BOOKED);
+                book.setStatus(bookStatus);
+                break;
+            }
+        }
+
+        book.setAmount(book.getAmount() - 1);
+
+        userRepository.save(user);
+        bookCardRepository.save(bookCard);
     }
 
     @Override
-    @Transactional
-    public void returnBook(Long id, String userEmail) {
-//        AppUser user = findByEmail(userEmail);
-//        Book book = bookRepository.findById(id).get();
-//
-//        book.setAmount(book.getAmount() + 1);
-//        book.setBookStatus("unused");
-//
-//        user.removeBook(book);
-//
-//        userRepository.save(user);
-//        bookRepository.save(book);
+    public void approveBookForUser(Long bookId, Long userId) {
+        Book book = bookRepository.findById(bookId).get();
+        BookCard bookCard = bookCardRepository.findBookCardByBookIdAndUserId(bookId, userId);
+
+        bookCard.setCardStatus(CardStatus.APPROVED);
+
+        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(bookId);
+        for (BookStatus bookStatus: bookStatuses) {
+            if (bookStatus.getStatus().equals(Status.BOOKED)) {
+                bookStatus.setStatus(Status.TAKEN);
+                book.setStatus(bookStatus);
+                break;
+            }
+        }
+
+        bookCardRepository.save(bookCard);
+        bookRepository.save(book);
+    }
+
+    @Override
+    public void returnedTheBook(Long bookId, Long userId) {
+        Book book = bookRepository.findById(bookId).get();
+        BookCard bookCard = bookCardRepository.findBookCardByBookIdAndUserId(bookId, userId);
+
+        bookCard.setCardStatus(CardStatus.BOOK_RETURNED);
+
+        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(bookId);
+        for (BookStatus bookStatus: bookStatuses) {
+            if (bookStatus.getStatus().equals(Status.TAKEN)) {
+                bookStatus.setStatus(Status.FREE);
+                book.setStatus(bookStatus);
+                break;
+            }
+        }
+        book.setAmount(book.getAmount() + 1);
+
+        bookCardRepository.save(bookCard);
+        bookRepository.save(book);
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles){

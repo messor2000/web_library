@@ -98,10 +98,10 @@
                                     <td th:text="${user.email}">title</td>
                                     <td>
                                         <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                                            <a th:href="@{/admin/allUserBooks/{id}(id=${user.id})}" type="button"
+                                            <a th:href="@{/admin/checkUserBookCards/{id}(id=${user.id})}" type="button"
                                                class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                               th:text="#{takenBook.find}">Show books</a>
+                                               >User book card</a>
                                             <a th:href="@{/admin/updateUser/{id}(id=${user.id})}" type="button"
                                                class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal"

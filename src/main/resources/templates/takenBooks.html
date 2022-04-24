@@ -83,22 +83,48 @@
                     <div class="row">
                         <div class="col-lg-10 mt-5 mb-5">
                             <div>
-                                <label th:text="#{takenBooks.books}">Books</label>
+                                <!--                                <label th:text="#{takenBooks.books}">Books</label>-->
+                                <label>Book cards</label>
                                 <table id="books" class="table table-bordered table-responsive-sm">
                                     <tr>
                                         <td th:text="#{book.name}">Book Name</td>
                                         <td th:text="#{book.author}">Author</td>
                                         <td th:text="#{book.year}">Year</td>
-                                        <td th:text="#{book.amount}">Amount</td>
                                         <td th:text="#{book.status}">Status</td>
+                                        <th th:text="#{book.action}">Action</th>
                                     </tr>
                                     <tbody>
-                                    <tr th:each="book : ${allTakenBooks}">
-                                        <td th:text="${book.bookName}">title</td>
-                                        <td th:text="${book.author}">body</td>
-                                        <td th:text="${book.year}">body</td>
-                                        <td th:text="${book.amount}">body</td>
-                                        <td th:text="${book.bookStatus}">body</td>
+                                    <tr th:each="bookCard : ${bookCards}">
+                                        <td th:text="${bookCard.book.bookName}">title</td>
+                                        <td th:text="${bookCard.book.author}">body</td>
+                                        <td th:text="${bookCard.book.year}">body</td>
+                                        <td th:text="${bookCard.cardStatus}">body</td>
+                                        <td>
+                                            <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                                                <!--                                                <a th:href="@{/admin/approveBook/{id}(id=${bookCard.user.id})}"-->
+                                                <!--                                                   type="button"-->
+                                                <!--                                                   class="btn btn-danger button btn btn-primary"-->
+                                                <!--                                                   data-bs-toggle="modal" data-bs-target="#exampleModal">Approve</a>-->
+                                                <div th:if="${bookCard.cardStatus.equals(bookCard.cardStatus.WAIT_FOR_APPROVE)}">
+                                                    <form th:action="@{/admin/approveBook/{bookId}/user/{userId}(bookId=${bookCard.book.id}, userId=${bookCard.user.id})}"
+                                                          method="post">
+                                                        <button class="btn btn-danger button btn btn-primary"
+                                                                type="submit">
+                                                            Approve
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                <div th:if="${bookCard.cardStatus.equals(bookCard.cardStatus.APPROVED)}">
+                                                    <form th:action="@{/admin/putBackIntoTheLibrary/{bookId}/user/{userId}(bookId=${bookCard.book.id}, userId=${bookCard.user.id})}"
+                                                          method="post">
+                                                        <button class="btn btn-danger button btn btn-primary"
+                                                                type="submit">
+                                                            Put back into the library
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>

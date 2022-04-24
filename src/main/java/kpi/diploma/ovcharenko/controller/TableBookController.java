@@ -67,10 +67,6 @@ public class TableBookController {
         model.addAttribute("books", bookPage);
         model.addAttribute("categories", categories);
 
-        if (category.equals("Всі+категорії")) {
-            return "redirect:/table/";
-        }
-
         int totalPages = bookPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)

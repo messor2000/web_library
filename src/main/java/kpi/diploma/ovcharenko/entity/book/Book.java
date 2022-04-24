@@ -1,10 +1,7 @@
 package kpi.diploma.ovcharenko.entity.book;
 
-import com.amazonaws.services.dynamodbv2.xspec.B;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
-import kpi.diploma.ovcharenko.entity.card.BookingCard;
-import kpi.diploma.ovcharenko.entity.card.TakenBookCard;
-import kpi.diploma.ovcharenko.entity.user.AppUser;
+import kpi.diploma.ovcharenko.entity.card.BookCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -19,13 +16,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -58,9 +52,6 @@ public class Book {
     @Column(name = "description")
     private String description;
 
-//    @Column(name = "book_status")
-//    private String bookStatus;
-
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private Set<BookStatus> statuses = new HashSet<>();
@@ -69,14 +60,9 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
 
-    @ManyToMany(mappedBy = "books")
-    List<AppUser> users;
-
-    @OneToMany(mappedBy = "book")
-    private Set<BookingCard> bookingCards;
-
-    @OneToMany(mappedBy = "book")
-    private Set<TakenBookCard> takenBookCards;
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<BookCard> bookCards = new HashSet<>();
 
     public void addCategory(BookCategory category) {
         categories.add(category);
@@ -91,13 +77,6 @@ public class Book {
     public void setStatus(BookStatus status) {
         statuses.add(status);
         status.setBook(this);
-    }
-
-    public void setStatuses(Set<BookStatus> statuses) {
-        for (BookStatus bookStatus: statuses) {
-            statuses.add(bookStatus);
-            bookStatus.setBook(this);
-        }
     }
 
     public Book(@NotBlank(message = "Book name is mandatory") String bookName, int year, String author,
