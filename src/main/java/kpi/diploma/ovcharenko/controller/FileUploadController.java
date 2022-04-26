@@ -57,10 +57,11 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("pageNum") String pageNum,
-                                   @RequestParam("category") String category ,RedirectAttributes redirectAttributes) {
+                                   @RequestParam("category") String category, @RequestParam("section") String section,
+                                   RedirectAttributes redirectAttributes) {
         storageService.store(file);
 
-        excelDataService.getExcelDataAsList(file, Integer.parseInt(pageNum), category);
+        excelDataService.getExcelDataAsList(file, Integer.parseInt(pageNum), category, section);
 
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");

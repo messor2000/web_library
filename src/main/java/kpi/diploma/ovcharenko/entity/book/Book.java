@@ -52,6 +52,9 @@ public class Book {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "section")
+    private String section;
+
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     private Set<BookStatus> statuses = new HashSet<>();

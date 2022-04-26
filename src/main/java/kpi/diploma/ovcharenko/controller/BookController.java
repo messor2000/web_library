@@ -34,11 +34,9 @@ public class BookController {
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     private final BookService bookService;
-    private final UserService userService;
 
-    public BookController(BookService bookService, UserService userService) {
+    public BookController(BookService bookService) {
         this.bookService = bookService;
-        this.userService = userService;
     }
 
     @GetMapping("/")

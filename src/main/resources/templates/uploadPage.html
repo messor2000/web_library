@@ -90,11 +90,18 @@
                         </tr>
 
                         <tr>
+                            <td th:text="#{book.section}">Section</td>
+                            <td><label>
+                                <input type="text" name="section">
+                            </label></td>
+                        </tr>
+
+                        <tr>
                             <td th:text="#{upload.file.category}">Select subject for book</td>
                             <td>
                                 <label>
                                     <input style="width:400px; height:40px;" list="select" name="category"
-                                           th:name="category" placeholder="Category">
+                                           th:name="category" th:placeholder="#{book.categories}">
                                     <datalist class="form-control" id="select" name="category" th:name="category">
                                         <option value="Без категории">Без категории</option>
                                         <option value="Теория колебания и динамика">Теория колебания и динамика</option>

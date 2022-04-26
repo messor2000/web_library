@@ -2,6 +2,7 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
+import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.exception.ValidPassportException;
@@ -16,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -30,9 +32,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Log4j2
@@ -144,12 +148,38 @@ public class UserController {
     public String viewUserProfile(Model model) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
-//        List<BookCard> books = user.getBooks();
-        List<AppUser> appUsers = userService.showAllUsers();
+        List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
+
+        Set<CardStatus> cardStatuses = new HashSet<>();
+
+        for (BookCard bookCard : bookCards) {
+            cardStatuses.add(bookCard.getCardStatus());
+        }
+
+        log.info(cardStatuses);
 
         model.addAttribute("appUser", user);
-//        model.addAttribute("userBooks", books);
-        model.addAttribute("appUsers", appUsers);
+        model.addAttribute("bookCards", bookCards);
+        model.addAttribute("bookCardsWithStatus", bookCards);
+
+        return "userProfile";
+    }
+
+    @GetMapping("/profile/{bookStatus}")
+    public String viewUserProfileWithBooks(Model model, @PathVariable("bookStatus") CardStatus status) {
+        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        AppUser user = userService.findByEmail(currentUser);
+        List<BookCard> bookCardsWithStatus = bookCardService.findAllUserBookCardsAndStatus(user.getId(), status);
+        Set<CardStatus> cardStatuses = new HashSet<>();
+
+        for (BookCard bookCard : bookCardsWithStatus) {
+            cardStatuses.add(bookCard.getCardStatus());
+        }
+
+        log.info(cardStatuses);
+        model.addAttribute("appUser", user);
+        model.addAttribute("cardStatuses", cardStatuses);
+        model.addAttribute("bookCardsWithStatus", bookCardsWithStatus);
 
         return "userProfile";
     }
@@ -168,21 +198,21 @@ public class UserController {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
         userService.updateUser(user.getId(), userModel);
-//        List<Book> books = user.getBooks();
+        List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
         List<AppUser> appUsers = userService.showAllUsers();
 
         model.addAttribute("appUser", user);
-//        model.addAttribute("userBooks", books);
+        model.addAttribute("bookCards", bookCards);
         model.addAttribute("appUsers", appUsers);
         return "redirect:/profile";
     }
 
-    @GetMapping("/user/changePassword")
+    @GetMapping("/user/change/password")
     public String showChangePasswordPage() {
         return "changePassword";
     }
 
-    @PostMapping("/user/updatePassword")
+    @PostMapping("/user/update/password")
     public String changeUserPassword(@RequestParam("password") String password,
                                      @RequestParam("oldpassword") String oldPassword) throws ValidPassportException {
         AppUser user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -223,23 +253,63 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/admin/approveBook/{bookId}/user/{userId}")
-    public String approveBook(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "userId") Long userId) {
+    @PostMapping("/admin/approve/book/{bookId}/user/{userId}")
+    public String approveBook(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "userId") Long userId,
+                              HttpServletRequest request) {
         userService.approveBookForUser(bookId, userId);
 
-        return "redirect:/admin/allUsers";
+        return getPreviousPageByRequest(request).orElse("/");
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/putBackIntoTheLibrary/{bookId}/user/{userId}")
-    public String returnedBook(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "userId") Long userId) {
+    public String returnedBook(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "userId") Long userId,
+                               HttpServletRequest request) {
         userService.returnedTheBook(bookId, userId);
 
-        return "redirect:/admin/allUsers";
+        return getPreviousPageByRequest(request).orElse("/");
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping("/admin/updateUser/{id}")
+    @PostMapping("/admin/delete/bookCard/{id}")
+    public String deleteBookCard(@PathVariable(name = "id") Long bookCardId, HttpServletRequest request) {
+        bookCardService.deleteBookCard(bookCardId);
+
+        return getPreviousPageByRequest(request).orElse("/");
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/showBookingCards")
+    public String showAllBookingCards(Model model) {
+        List<BookCard> bookCards = bookCardService.findAllBookCards();
+
+        model.addAttribute("bookCards", bookCards);
+
+        return "bookingCards";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/showBookingCards/shouldApprove")
+    public String showAllBookingCardsThatShouldBeApproved(Model model, HttpServletRequest request) {
+        List<BookCard> bookCards = bookCardService.findAllBookCardsWithStatus(CardStatus.WAIT_FOR_APPROVE);
+
+        model.addAttribute("bookCards", bookCards);
+
+        return "bookingCards";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/showBookingCards/shouldPutBack")
+    public String showAllBookingCardsThatShouldBeBackedToTheLiibtary(Model model, HttpServletRequest request) {
+        List<BookCard> bookCards = bookCardService.findAllBookCardsWithStatus(CardStatus.APPROVED);
+
+        model.addAttribute("bookCards", bookCards);
+
+        return "bookingCards";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/update/user/{id}")
     public String showUserUpdatePage(@PathVariable("id") Long id, Model model) {
         AppUser user = userService.findById(id);
 
@@ -248,7 +318,7 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/admin/updateUser/{id}")
+    @PostMapping("/admin/update/user/{id}")
     public String updateUser(Model model, @PathVariable("id") Long id, @ModelAttribute("user") @Valid UserModel userModel) {
         userService.updateUser(id, userModel);
         List<AppUser> appUsers = userService.showAllUsers();
@@ -259,7 +329,7 @@ public class UserController {
 
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/admin/deleteUser/{id}")
+    @PostMapping("/admin/delete/user/{id}")
     public String deleteUser(@PathVariable("id") Long id, Model model) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
@@ -277,9 +347,13 @@ public class UserController {
         return "emailError";
     }
 
-    @GetMapping("/updatePassword")
+    @GetMapping("/update/password")
     public String redirectToUpdatePasswordPage() {
         return "updatePassword";
+    }
+
+    private Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
     }
 
     private SimpleMailMessage constructResetTokenEmail(String contextPath, Locale locale, String token, AppUser user) {

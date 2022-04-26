@@ -155,7 +155,7 @@ public class LibraryUserService implements UserService {
     @Override
     public void approveBookForUser(Long bookId, Long userId) {
         Book book = bookRepository.findById(bookId).get();
-        BookCard bookCard = bookCardRepository.findBookCardByBookIdAndUserId(bookId, userId);
+        BookCard bookCard = bookCardRepository.findBookCardByBookIdAndUserIdAndCardStatus(bookId, userId, CardStatus.WAIT_FOR_APPROVE);
 
         bookCard.setCardStatus(CardStatus.APPROVED);
 
@@ -175,7 +175,7 @@ public class LibraryUserService implements UserService {
     @Override
     public void returnedTheBook(Long bookId, Long userId) {
         Book book = bookRepository.findById(bookId).get();
-        BookCard bookCard = bookCardRepository.findBookCardByBookIdAndUserId(bookId, userId);
+        BookCard bookCard = bookCardRepository.findBookCardByBookIdAndUserIdAndCardStatus(bookId, userId, CardStatus.APPROVED);
 
         bookCard.setCardStatus(CardStatus.BOOK_RETURNED);
 

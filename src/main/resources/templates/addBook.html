@@ -88,16 +88,19 @@
                                     <div class="form-group col-md-6">
                                         <label for="bookName" th:text="#{book.name}">Book name</label>
                                         <input type="text" class="form-control" id="bookName" th:field="*{bookName}"
-                                               placeholder="Book name"/>
+                                               th:placeholder="#{book.name}"/>
                                         <label for="author" th:text="#{book.author}">Author</label>
                                         <input type="text" class="form-control" id="author" th:field="*{author}"
-                                               placeholder="Author"/>
+                                               th:placeholder="#{book.author}"/>
                                         <label for="year" th:text="#{book.year}">Year</label>
                                         <input type="number" class="form-control" id="year"
-                                               placeholder="Year" th:field="*{year}"/>
+                                               th:placeholder="#{book.year}" th:field="*{year}"/>
                                         <label for="amount" th:text="#{book.amount}">Amount</label>
                                         <input type="number" class="form-control" id="amount"
-                                               placeholder="Amount" th:field="*{amount}" th:value="1"/>
+                                               th:placeholder="#{book.amount}" th:field="*{amount}" th:value="1"/>
+                                        <label for="section" th:text="#{book.section}">Section</label>
+                                        <input type="text" class="form-control" id="section"
+                                               th:placeholder="#{book.section}" th:field="*{section}"/>
 
                                         <label>
                                             <input style="width:250px; height:20px;" list="select" name="category"
@@ -114,7 +117,7 @@
                                         <input type="file" name="imageFile" accept="image/png, image/jpeg" id="imageFile"/>
 
                                         <label for="description" th:text="#{book.description}">Description</label>
-                                        <input type="text" id="description" placeholder="Description">
+                                        <input type="text" id="description" th:placeholder="#{book.description}">
 
                                         <label for="pdfFile" >Pdf:</label>
                                         <input type="file" name="pdfFile" accept="application/pdf" id="pdfFile"/>

@@ -38,7 +38,7 @@ public class LibraryExcelDataService implements ExcelDataService {
     }
 
     @Override
-    public void getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String category) {
+    public void getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String category, String section) {
         List<Book> books = new ArrayList<>();
 
         XSSFWorkbook workbook = null;
@@ -70,6 +70,7 @@ public class LibraryExcelDataService implements ExcelDataService {
                 book.addCategory(bookCategory);
                 book.setAmount(1);
                 book.setDescription("---");
+                book.setSection(section);
 
                 BookStatus bookStatus = new BookStatus(Status.FREE);
                 book.setStatus(bookStatus);
@@ -81,6 +82,8 @@ public class LibraryExcelDataService implements ExcelDataService {
 
         bookRepository.saveAll(books);
     }
+
+
 
     private int convertStringToInt(String str) {
         int result = 0;
@@ -117,6 +120,8 @@ public class LibraryExcelDataService implements ExcelDataService {
             if (!filteredBooks.add(book)) {
                 Book updatedBook = filteredBooks.stream().filter(data -> Objects.equals(data, book)).findFirst().get();
                 updatedBook.setAmount(updatedBook.getAmount() + 1);
+                BookStatus bookStatus = new BookStatus(Status.FREE);
+                updatedBook.setStatus(bookStatus);
             }
         }
 
