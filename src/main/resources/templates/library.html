@@ -29,8 +29,8 @@
             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                 <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
                 <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
-                <li><a href="/admin/allUsers">Library users</a></li>
-                <li><a href="/admin/showBookingCards">Booking card</a></li>
+                <li><a href="/admin/allUsers" th:text="#{nav.library.users}">Library users</a></li>
+                <li><a href="/admin/showBookingCards" th:text="#{nav.library.bookCards}">Booking card</a></li>
             </div>
             <div sec:authorize="hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')">
                 <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>

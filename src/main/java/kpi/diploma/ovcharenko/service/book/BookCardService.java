@@ -8,6 +8,8 @@ import java.util.List;
 public interface BookCardService {
     List<BookCard> findAllBookCards();
 
+    List<BookCard> findAllExceptReturned();
+
     List<BookCard> findAllUserBookCards(Long userId);
 
     List<BookCard> findAllUserBookCardsAndStatus(Long userId, CardStatus status);

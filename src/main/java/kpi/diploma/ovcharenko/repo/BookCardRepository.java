@@ -17,7 +17,7 @@ public interface BookCardRepository extends CrudRepository<BookCard, Long> {
 
     List<BookCard> findAllByCardStatus(CardStatus status);
 
-    BookCard findBookCardByBookIdAndUserIdAndCardStatus(Long bookId, Long userId, CardStatus status);
+    BookCard findBookCardById(Long bookCardId);
 
     void deleteBookCardById(Long id);
 }

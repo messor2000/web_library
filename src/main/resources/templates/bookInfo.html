@@ -29,7 +29,10 @@
             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                 <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
                 <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
+                <li><a href="/admin/allUsers" th:text="#{nav.library.users}">Library users</a></li>
+                <li><a href="/admin/showBookingCards" th:text="#{nav.library.bookCards}">Booking card</a></li>
             </div>
+
             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
                 <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>
                 <li><a href="/logout" th:text="#{nav.logout}">Logout</a></li>
@@ -93,19 +96,15 @@
                                 <p th:text="${book.year}"></p>
                                 <label th:text="#{book.amount}">Book Amount</label>
                                 <p th:text="${book.amount}"></p>
+                                <label th:text="#{book.section}">Book Section</label>
+                                <p th:text="${book.section}"></p>
                                 <label th:text="#{book.description}">Book Description</label>
                                 <p th:text="${book.description}"></p>
                                 <label th:text="#{book.categories}">Book Categories</label>
                                 <tr th:each="category : ${bookCategories}">
                                     <a th:href="@{/{category}(category=${category})}" th:text="${category}"></a>
                                 </tr>
-                                <!--                                <label th:text="#{book.status}">Book Status</label>-->
-                                <!--                                <p th:text="${book.bookStatus}"></p>-->
 
-<!--                                <div th:if="${book.amount} == 1">-->
-<!--                                    <label th:text="#{book.status}">Book Status</label>-->
-<!--                                    <p th:text="${statuses.get(0).getStatus().name()}"></p>-->
-<!--                                </div>-->
                                 <div>
                                     <label th:text="#{books.status}">Status</label>
                                     <table id="status" class="table table-bordered table-responsive-sm"

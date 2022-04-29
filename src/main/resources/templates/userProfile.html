@@ -29,7 +29,10 @@
             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                 <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
                 <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
+                <li><a href="/admin/allUsers" th:text="#{nav.library.users}">Library users</a></li>
+                <li><a href="/admin/showBookingCards" th:text="#{nav.library.bookCards}">Booking card</a></li>
             </div>
+
             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
                 <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>
                 <li><a href="/logout" th:text="#{nav.logout}">Logout</a></li>
@@ -102,36 +105,6 @@
                                         </div>
                                     </div>
 
-
-                                    <div class="nav-category">
-<!--                                        <form th:action="@{/profile/{bookStatus}(bookStatus=${s})}">-->
-                                            <div class="form-group">
-                                                <div th:each="status : ${bookStatus}">
-                                                    <div class="custom-control custom-radio custom-control-inline">
-                                                        <label>
-                                                            <input type="radio" name="option1" class="custom-control-input" value="1" th:field="*{status}">
-                                                        </label>
-                                                        <label class="custom-control-label" th:text="${status}"></label>
-                                                    </div>
-                                                </div>
-<!--                                                <div class="custom-control custom-radio custom-control-inline">-->
-<!--                                                    <input type="radio" id="option1" name="option1" class="custom-control-input" value="1" th:field="*{bookCards.get(0).cardStatus.WAIT_FOR_APPROVE}">-->
-<!--                                                    <label class="custom-control-label" for="option1">Books that waiting for approve</label>-->
-<!--                                                </div>-->
-<!--                                                <div class="custom-control custom-radio custom-control-inline">-->
-<!--                                                    <input type="radio" id="option2" name="option2" class="custom-control-input" value="2" th:field="*{bookCards.get(0).cardStatus.APPROVED}">-->
-<!--                                                    <label class="custom-control-label" for="option2">Books that taken by you</label>-->
-<!--                                                </div>-->
-<!--                                                <div class="custom-control custom-radio custom-control-inline">-->
-<!--                                                    <input type="radio" id="option3" name="option3" class="custom-control-input" value="3" th:field="*{bookCards.get(0).cardStatus.BOOK_RETURNED}">-->
-<!--                                                    <label class="custom-control-label" for="option3">Books that taken by you and returned</label>-->
-<!--                                                </div>-->
-                                            </div>
-                                            <button class="btn btn-primary" type="submit">Submit form</button>
-                                        </form>
-                                    </div>
-
-
                                     <div>
                                         <table id="books" class="table table-bordered table-responsive-sm">
                                             <tr>
@@ -146,6 +119,7 @@
                                                 <td th:text="${bookCard.book.bookName}">title</td>
                                                 <td th:text="${bookCard.book.author}">body</td>
                                                 <td th:text="${bookCard.book.year}">body</td>
+                                                <td th:text="${bookCard.book.section}">body</td>
                                                 <td th:text="${bookCard.cardStatus}">body</td>
                                                 <td>
                                                     <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
@@ -167,52 +141,11 @@
                                                                 </button>
                                                             </form>
                                                         </div>
-                                                        <div th:if="${bookCard.cardStatus.equals(bookCard.cardStatus.BOOK_RETURNED)}">
-                                                            <form th:action="@{/admin/delete/bookCard/{bookCardId}(bookCardId=${bookCard.id})}"
-                                                                  method="post">
-                                                                <button class="btn btn-danger button btn btn-primary"
-                                                                        type="submit" th:text="#{book.delete}">
-                                                                    Delete book card
-                                                                </button>
-                                                            </form>
-                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
-<!--                                        <tr th:each="bookCard : ${bookCards}">-->
-<!--                                            <li class="book-item small-12 medium-6 columns">-->
-<!--                                                <div class="bk-img">-->
-<!--                                                    <div class="bk-wrapper">-->
-<!--                                                        <div class="bk-book bk-bookdefault">-->
-<!--                                                            <div class="bk-front">-->
-<!--                                                                <img th:src="@{'https://s3.us-east-1.amazonaws.com/psonlibraryimagesbucket/'+${bookCard.book.id}}"-->
-<!--                                                                     height="310px" width="215px" alt="" src=""/>-->
-<!--                                                            </div>-->
-<!--                                                            <div class="bk-back"></div>-->
-<!--                                                            <div class="bk-left"></div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                <div class="item-details">-->
-<!--                                                    <h3 class="book-item_title" th:text="${bookCard.book.bookName}"></h3>-->
-<!--                                                    <p class="author" th:text="${bookCard.book.author}"></p>-->
-<!--                                                    <p class="published" th:text="${bookCard.book.year}"></p>-->
-<!--                                                    <a th:href="@{/find/{id}(id=${bookCard.book.id})}">Details</a>-->
-
-<!--&lt;!&ndash;                                                    <form th:action="@{/returnBook/{id}(id=${book.id})}" method="post">&ndash;&gt;-->
-<!--&lt;!&ndash;                                                        <div class="col-sm-6 col-sm-offset-3">&ndash;&gt;-->
-<!--&lt;!&ndash;                                                            <input type="submit"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                   name="login-submit"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                   id="book-return-submit"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                   class="form-control btn btn-info"&ndash;&gt;-->
-<!--&lt;!&ndash;                                                                   value="Return Book"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                                                        </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                                                    </form>&ndash;&gt;-->
-<!--                                                </div>-->
-<!--                                            </li>-->
-<!--                                        </tr>-->
                                     </div>
                                 </div>
                             </div>

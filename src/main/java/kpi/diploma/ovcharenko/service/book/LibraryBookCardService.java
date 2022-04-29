@@ -6,6 +6,7 @@ import kpi.diploma.ovcharenko.repo.BookCardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,6 +21,16 @@ public class LibraryBookCardService implements BookCardService {
     @Override
     public List<BookCard> findAllBookCards() {
         return bookCardRepository.findAll();
+    }
+
+    @Override
+    public List<BookCard> findAllExceptReturned() {
+        List<BookCard> bookCards = new ArrayList<>();
+
+        bookCards.addAll(bookCardRepository.findAllByCardStatus(CardStatus.WAIT_FOR_APPROVE));
+        bookCards.addAll(bookCardRepository.findAllByCardStatus(CardStatus.APPROVED));
+
+        return bookCards;
     }
 
     @Override

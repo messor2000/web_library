@@ -1,6 +1,5 @@
 package kpi.diploma.ovcharenko.controller;
 
-import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
@@ -17,7 +16,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -253,19 +251,37 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/admin/approve/book/{bookId}/user/{userId}")
-    public String approveBook(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "userId") Long userId,
-                              HttpServletRequest request) {
-        userService.approveBookForUser(bookId, userId);
+    @GetMapping("/admin/showBookingCards")
+    public String showAllBookingCardsExceptOld(Model model) {
+        List<BookCard> bookCards = bookCardService.findAllExceptReturned();
+
+        model.addAttribute("bookCards", bookCards);
+
+        return "bookCards";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/showBookingCards/old")
+    public String showBookingCardsWithAllStatuses(Model model) {
+        List<BookCard> bookCards = bookCardService.findAllBookCards();
+
+        model.addAttribute("bookCards", bookCards);
+
+        return "bookCards";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/admin/approve/bookCard/{id}")
+    public String approveBook(@PathVariable(name = "id") Long bookCardId, HttpServletRequest request) {
+        userService.approveBookForUser(bookCardId);
 
         return getPreviousPageByRequest(request).orElse("/");
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/admin/putBackIntoTheLibrary/{bookId}/user/{userId}")
-    public String returnedBook(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "userId") Long userId,
-                               HttpServletRequest request) {
-        userService.returnedTheBook(bookId, userId);
+    @PostMapping("/admin/putBackIntoTheLibrary/{id}")
+    public String returnedBook(@PathVariable(name = "id") Long bookCardId, HttpServletRequest request) {
+        userService.returnedTheBook(bookCardId);
 
         return getPreviousPageByRequest(request).orElse("/");
     }
@@ -279,33 +295,23 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping("/admin/showBookingCards")
-    public String showAllBookingCards(Model model) {
-        List<BookCard> bookCards = bookCardService.findAllBookCards();
-
-        model.addAttribute("bookCards", bookCards);
-
-        return "bookingCards";
-    }
-
-    @Secured("ROLE_ADMIN")
     @GetMapping("/admin/showBookingCards/shouldApprove")
-    public String showAllBookingCardsThatShouldBeApproved(Model model, HttpServletRequest request) {
+    public String showAllBookingCardsThatShouldBeApproved(Model model) {
         List<BookCard> bookCards = bookCardService.findAllBookCardsWithStatus(CardStatus.WAIT_FOR_APPROVE);
 
         model.addAttribute("bookCards", bookCards);
 
-        return "bookingCards";
+        return "bookCards";
     }
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/admin/showBookingCards/shouldPutBack")
-    public String showAllBookingCardsThatShouldBeBackedToTheLiibtary(Model model, HttpServletRequest request) {
+    public String showAllBookingCardsThatShouldBeBackedToTheLibrary(Model model) {
         List<BookCard> bookCards = bookCardService.findAllBookCardsWithStatus(CardStatus.APPROVED);
 
         model.addAttribute("bookCards", bookCards);
 
-        return "bookingCards";
+        return "bookCards";
     }
 
     @Secured("ROLE_ADMIN")

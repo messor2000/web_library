@@ -153,13 +153,13 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public void approveBookForUser(Long bookId, Long userId) {
-        Book book = bookRepository.findById(bookId).get();
-        BookCard bookCard = bookCardRepository.findBookCardByBookIdAndUserIdAndCardStatus(bookId, userId, CardStatus.WAIT_FOR_APPROVE);
+    public void approveBookForUser(Long bookCardId) {
+        BookCard bookCard = bookCardRepository.findBookCardById(bookCardId);
+        Book book = bookRepository.findById(bookCard.getBook().getId()).get();
 
         bookCard.setCardStatus(CardStatus.APPROVED);
 
-        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(bookId);
+        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
         for (BookStatus bookStatus: bookStatuses) {
             if (bookStatus.getStatus().equals(Status.BOOKED)) {
                 bookStatus.setStatus(Status.TAKEN);
@@ -173,13 +173,13 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public void returnedTheBook(Long bookId, Long userId) {
-        Book book = bookRepository.findById(bookId).get();
-        BookCard bookCard = bookCardRepository.findBookCardByBookIdAndUserIdAndCardStatus(bookId, userId, CardStatus.APPROVED);
+    public void returnedTheBook(Long bookCardId) {
+        BookCard bookCard = bookCardRepository.findBookCardById(bookCardId);
+        Book book = bookRepository.findById(bookCard.getBook().getId()).get();
 
         bookCard.setCardStatus(CardStatus.BOOK_RETURNED);
 
-        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(bookId);
+        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
         for (BookStatus bookStatus: bookStatuses) {
             if (bookStatus.getStatus().equals(Status.TAKEN)) {
                 bookStatus.setStatus(Status.FREE);
