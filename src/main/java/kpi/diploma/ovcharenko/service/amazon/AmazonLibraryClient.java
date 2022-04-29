@@ -6,11 +6,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -19,14 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.Objects;
 
@@ -46,9 +37,13 @@ public class AmazonLibraryClient implements AmazonClient {
     private String secretKey;
 
     @PostConstruct
-    private void initializeAmazon() {
-        BasicAWSCredentials creds = new BasicAWSCredentials(this.accessKey, this.secretKey);
-        s3client = AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_1).withCredentials(new AWSStaticCredentialsProvider(creds)).build();
+    private void init() {
+        BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+
+        this.s3client = AmazonS3ClientBuilder.standard()
+                .withRegion(Regions.US_EAST_1)
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .build();
     }
 
     @Override
@@ -94,7 +89,7 @@ public class AmazonLibraryClient implements AmazonClient {
     public void downloadPdfFile(Book book) {
         try {
             FileUtils.copyURLToFile(
-                    new URL("https://psonlibraryimagesbucket.s3.amazonaws.com/" + book.getId() + ".pdf"),
+                    new URL("https://pson-library-bucket.s3.amazonaws.com/" + book.getId() + ".pdf"),
                     new File("/Users/messor/Downloads/" + book.getBookName() + ".pdf"));
         } catch (IOException e) {
             log.error(e);

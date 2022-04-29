@@ -74,6 +74,11 @@
                 <div class="page-title category-title">
                     <h1 th:text="#{upload.page}">File Upload & Data Save Page</h1>
                 </div>
+                
+                <div>
+                    <p th:text="#{file.example}"></p>
+                    <img src="/img/example.png" alt="">
+                </div>
 
                 <form method="POST" enctype="multipart/form-data" action="/files/upload">
                     <table>
