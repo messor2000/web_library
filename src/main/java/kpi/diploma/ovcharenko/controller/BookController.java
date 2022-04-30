@@ -3,6 +3,7 @@ package kpi.diploma.ovcharenko.controller;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookModel;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
+import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -125,10 +126,28 @@ public class BookController {
         Book book = bookService.findBookById(id);
         Set<String> bookCategories = bookService.findBookCategories(book);
         List<BookStatus> statuses = bookService.getAllBooksStatus(id);
+        int statusFree = 0;
+        int statusBooked = 0;
+        int statusTaken = 0;
+
+        for (BookStatus status: statuses) {
+            if (status.getStatus().equals(Status.FREE)) {
+                statusFree++;
+            }
+            if (status.getStatus().equals(Status.BOOKED)) {
+                statusBooked++;
+            }
+            if (status.getStatus().equals(Status.TAKEN)) {
+                statusTaken++;
+            }
+        }
 
         model.addAttribute("bookCategories", bookCategories);
         model.addAttribute("book", book);
         model.addAttribute("statuses", statuses);
+        model.addAttribute("statusFree", statusFree);
+        model.addAttribute("statusBooked", statusBooked);
+        model.addAttribute("statusTaken", statusTaken);
 
         log.info(String.valueOf(statuses));
 

@@ -105,16 +105,20 @@
                                     <a th:href="@{/{category}(category=${category})}" th:text="${category}"></a>
                                 </tr>
 
-                                <div>
+                                <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                     <label th:text="#{books.status}">Status</label>
                                     <table id="status" class="table table-bordered table-responsive-sm"
                                            style="width: 300px">
                                         <tr>
-                                            <td th:text="#{book.status}">Status</td>
+                                            <td >Free</td>
+                                            <td >Booked</td>
+                                            <td >Taken</td>
                                         </tr>
                                         <tbody>
-                                        <tr th:each="status : ${statuses}">
-                                            <td th:text="${status.getStatus().name()}">title</td>
+                                        <tr>
+                                            <td th:text="${statusFree}">title</td>
+                                            <td th:text="${statusBooked}">title</td>
+                                            <td th:text="${statusTaken}">title</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -125,7 +129,6 @@
                                 <a th:href="@{/download/book/{id}(id=${book.id})}" th:text="#{download.book}">download
                                     book</a>
                             </div>
-
 
                             <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
                                 <div th:if="${book.amount} >= 1">

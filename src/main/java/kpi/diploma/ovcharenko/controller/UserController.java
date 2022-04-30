@@ -223,12 +223,12 @@ public class UserController {
     }
 
     @PostMapping("/takeBook/{id}")
-    public String takeBook(@PathVariable(name = "id") Long id) {
+    public String takeBook(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
         userService.bookedBook(id, currentUser);
 
-        return "redirect:/";
+        return getPreviousPageByRequest(request).orElse("/");
     }
 
     @Secured("ROLE_ADMIN")
