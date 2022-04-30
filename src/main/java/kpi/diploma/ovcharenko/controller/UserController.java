@@ -279,6 +279,14 @@ public class UserController {
     }
 
     @Secured("ROLE_ADMIN")
+    @PostMapping("/admin/reject/bookCard/{id}")
+    public String rejectBook(@PathVariable(name = "id") Long bookCardId, HttpServletRequest request) {
+        userService.rejectTheBook(bookCardId);
+
+        return getPreviousPageByRequest(request).orElse("/");
+    }
+
+    @Secured("ROLE_ADMIN")
     @PostMapping("/admin/putBackIntoTheLibrary/{id}")
     public String returnedBook(@PathVariable(name = "id") Long bookCardId, HttpServletRequest request) {
         userService.returnedTheBook(bookCardId);

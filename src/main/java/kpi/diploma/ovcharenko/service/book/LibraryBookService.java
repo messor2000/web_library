@@ -4,6 +4,7 @@ import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
+import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -49,9 +51,30 @@ public class LibraryBookService implements BookService {
     @Transactional
     public void updateBook(Book book, String category) {
         BookCategory bookCategory = new BookCategory(category);
+        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
 
-        if (category != null) {
+        if (category != null && !category.equals("")) {
             book.addCategory(bookCategory);
+        }
+
+        if (book.getAmount() > bookStatuses.size()) {
+            int difference = book.getAmount() - bookStatuses.size();
+            for (int i = 0; i < difference; i++) {
+                BookStatus status = new BookStatus(Status.FREE);
+                book.setStatus(status);
+            }
+        }
+
+        if (book.getAmount() < bookStatuses.size()) {
+            int difference = bookStatuses.size() - book.getAmount();
+            for (int i = 0; i < difference; i++) {
+                BookStatus status = bookStatuses.get(i);
+                if (status.getStatus().equals(Status.FREE)) {
+                    bookStatusRepository.delete(status);
+                } else {
+                    throw new RuntimeException("All books is used, can't delete");
+                }
+            }
         }
 
         bookRepository.save(book);

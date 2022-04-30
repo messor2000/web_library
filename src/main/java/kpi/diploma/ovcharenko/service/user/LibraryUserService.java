@@ -173,6 +173,27 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
+    public void rejectTheBook(Long bookCardId) {
+        BookCard bookCard = bookCardRepository.findBookCardById(bookCardId);
+        Book book = bookRepository.findById(bookCard.getBook().getId()).get();
+
+        bookCard.setCardStatus(CardStatus.BOOK_RETURNED);
+
+        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
+        for (BookStatus bookStatus: bookStatuses) {
+            if (bookStatus.getStatus().equals(Status.BOOKED)) {
+                bookStatus.setStatus(Status.FREE);
+                book.setStatus(bookStatus);
+                break;
+            }
+        }
+        book.setAmount(book.getAmount() + 1);
+
+        bookCardRepository.save(bookCard);
+        bookRepository.save(book);
+    }
+
+    @Override
     public void returnedTheBook(Long bookCardId) {
         BookCard bookCard = bookCardRepository.findBookCardById(bookCardId);
         Book book = bookRepository.findById(bookCard.getBook().getId()).get();

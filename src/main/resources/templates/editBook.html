@@ -105,6 +105,9 @@
                                     <label for="amount" th:text="#{book.amount}">Amount</label>
                                     <input type="number" th:field="${book.amount}" id="amount" placeholder="Amount">
                                     <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+                                    <p data-tooltip="Якщо треба зменшити кількість книжок, то треба видалити цю і створити
+                                    нову. Якщо треба додати, то просто вписується нова кількість" th:text="#{information}">
+                                        Наведи сюда курсор.</p>
 
                                     <label for="section" th:text="#{book.section}">Section</label>
                                     <input type="text" class="form-control" id="section"

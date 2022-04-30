@@ -97,12 +97,26 @@
 
                 <section id="book_list">
                     <div class="toolbar row">
-                        <div class="filter-options small-12 medium-9 columns">
-                            <a th:href="@{/}" class="filter-item">Все категории</a>
-                            <tr th:each="category : ${categories}">
-                                <a th:href="@{/{category}(category = ${category})}" class="filter-item"
-                                   th:text="${category}"></a>
-                            </tr>
+                        <div>
+                            <form th:action="@{/category}" method="get">
+                                <div class="nav-category">
+                                    <a th:href="@{/}" class="filter-item" th:text="#{category.all}">All categories</a>
+                                </div>
+                                <div class="nav-category">
+                                    <label>
+                                        <select th:name="category" style="width: 300px">
+                                            <option disabled selected th:text="#{category.find}">Find by category</option>
+                                            <option th:each="category : ${categories}"
+                                                    th:text="${category}">
+                                            </option>
+                                        </select>
+                                    </label>
+                                </div>
+
+                                <div class="nav-category">
+                                    <button type="submit" th:text="#{category.find}">Find by category</button>
+                                </div>
+                            </form>
                         </div>
 
                         <!--                    <div class="small-12 medium-3 columns">-->

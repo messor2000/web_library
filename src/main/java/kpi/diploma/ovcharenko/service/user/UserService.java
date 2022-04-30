@@ -20,6 +20,8 @@ public interface UserService extends UserDetailsService {
 
     void approveBookForUser(final Long bookCardId);
 
+    void rejectTheBook(Long bookCardId);
+
     void returnedTheBook(final Long bookCardId);
 
     void createPasswordResetTokenForUser(final AppUser user, final String token);

@@ -62,10 +62,39 @@ public class BookController {
         return "library";
     }
 
-    @GetMapping(value = "/{category}")
-    public String getBooksByCategory(Model model, @PathVariable("category") String category,
+//    @GetMapping(value = "/{category}")
+//    public String getBooksByCategory(Model model, @PathVariable("category") String category,
+//                                     @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size,
+//                                     RedirectAttributes redirectAttributes) {
+//        int currentPage = page.orElse(FIRST_PAGE);
+//        int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
+//
+//        Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
+//        Set<String> categories = bookService.findAllCategories();
+//
+//        if (!categories.contains(category)) {
+//            redirectAttributes.addFlashAttribute("message",
+//                    "Such category doesn't exist" + category + "!");
+//        }
+//
+//        model.addAttribute("books", bookPage);
+//        model.addAttribute("categories", categories);
+//
+//        int totalPages = bookPage.getTotalPages();
+//        if (totalPages > 0) {
+//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+//            model.addAttribute("pageNumbers", pageNumbers);
+//        }
+//
+//        return "library";
+//    }
+
+    @GetMapping(value = "/category")
+    public String getBooksByCategory(Model model, @RequestParam("category") String category,
                                      @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size,
-                                        RedirectAttributes redirectAttributes) {
+                                     RedirectAttributes redirectAttributes) {
         int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
