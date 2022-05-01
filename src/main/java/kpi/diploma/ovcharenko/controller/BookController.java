@@ -2,6 +2,7 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookModel;
+import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.service.book.BookService;
@@ -188,9 +189,11 @@ public class BookController {
     @GetMapping("/add")
     public String showAddForm(BookModel bookModel, Model model) {
         Set<String> categories = bookService.findAllCategories();
+        Set<BookTag> bookTags = bookService.getAllBookTags();
 
         model.addAttribute("categories", categories);
         model.addAttribute("bookModel", bookModel);
+        model.addAttribute("bookTags", bookTags);
         return "addBook";
     }
 

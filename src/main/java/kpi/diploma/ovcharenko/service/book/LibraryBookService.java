@@ -2,11 +2,12 @@ package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
-import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
+import kpi.diploma.ovcharenko.repo.BookTagRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -28,13 +28,15 @@ public class LibraryBookService implements BookService {
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
     private final BookStatusRepository bookStatusRepository;
+    private final BookTagRepository bookTagRepository;
     private final AmazonClient amazonClient;
 
     public LibraryBookService(BookRepository bookRepository, CategoryRepository categoryRepository, AmazonClient amazonClient,
-                              BookStatusRepository bookStatusRepository) {
+                              BookStatusRepository bookStatusRepository, BookTagRepository bookTagRepository) {
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
         this.bookStatusRepository = bookStatusRepository;
+        this.bookTagRepository = bookTagRepository;
         this.amazonClient = amazonClient;
     }
 
@@ -170,6 +172,11 @@ public class LibraryBookService implements BookService {
     @Override
     public List<BookStatus> getAllBooksStatus(Long bookId) {
         return bookStatusRepository.findAllByBookId(bookId);
+    }
+
+    @Override
+    public Set<BookTag> getAllBookTags() {
+        return bookTagRepository.findAll();
     }
 }
 

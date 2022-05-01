@@ -86,7 +86,8 @@
                      aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form th:action="@{/book/add}" method="post" th:object="${bookModel}" enctype="multipart/form-data">
+                            <form th:action="@{/book/add}" method="post" th:object="${bookModel}"
+                                  enctype="multipart/form-data">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="bookName" th:text="#{book.name}">Book name</label>
@@ -116,13 +117,14 @@
                                             </datalist>
                                         </label>
 
-                                        <label for="imageFile" th:text="#{book.cover}">Book cover: </label>
-                                        <input type="file" name="imageFile" accept="image/png, image/jpeg" id="imageFile"/>
-
                                         <label for="description" th:text="#{book.description}">Description</label>
                                         <input type="text" id="description" th:placeholder="#{book.description}">
 
-                                        <label for="pdfFile" >Pdf:</label>
+                                        <label for="imageFile" th:text="#{book.cover}">Book cover: </label>
+                                        <input type="file" name="imageFile" accept="image/png, image/jpeg"
+                                               id="imageFile"/>
+
+                                        <label for="pdfFile">Pdf:</label>
                                         <input type="file" name="pdfFile" accept="application/pdf" id="pdfFile"/>
 
                                     </div>
