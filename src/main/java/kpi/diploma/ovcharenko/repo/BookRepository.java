@@ -17,6 +17,6 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
 
     @Query("select b from Book b where lower(b.bookName) like lower(concat('%', :search, '%')) " +
             "or lower(b.author) like lower(concat('%', :search, '%')) or lower(b.year) like lower(concat('%', :search, '%')) " +
-            "or lower(b.section) like lower(concat('%', :search, '%'))")
+            "or lower(b.section) like lower(concat('%', :search, '%')) or lower(b.tags.size) like lower(concat('%', :search, '%'))")
     Page<Book> findByBookNameOrAuthorOrYear(@Param("search") String search, Pageable pageable);
 }

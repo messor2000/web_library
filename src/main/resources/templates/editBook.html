@@ -120,10 +120,25 @@
 
                                     <label>
                                         <input style="width:250px; height:20px;" list="select" name="category"
-                                               th:name="category" id="category" placeholder="Category">
-                                        <datalist class="form-control" id="select" name="category" th:name="category">
+                                               th:name="category" id="category" th:placeholder="#{book.categories}">
+                                        <datalist class="form-control" id="select" th:name="category">
                                             <option th:each="category : ${categories}" th:value="${category}"
                                                     th:text="${category}">
+                                            </option>
+                                        </datalist>
+                                    </label>
+
+                                    <label th:text="#{book.tag}">Book tag</label>
+                                    <tr th:each="tag : ${bookTags}">
+                                        <td th:text="${tag}"></td>
+                                    </tr>
+
+                                    <label>
+                                        <input style="width:250px; height:20px;" list="tag" name="bookTag"
+                                               th:name="bookTag" th:placeholder="#{book.tag}">
+                                        <datalist class="form-control" id="tag" th:name="bookTag">
+                                            <option th:each="bookTag : ${bookTags}" th:value="${bookTag}"
+                                                    th:text="${bookTag}">
                                             </option>
                                         </datalist>
                                     </label>

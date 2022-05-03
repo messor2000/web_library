@@ -8,9 +8,11 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
@@ -30,16 +32,23 @@ public class BookTag {
     @Column(name = "tag_name")
     private String tagName;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    private Book book;
+
+    public BookTag(String tagName) {
+        this.tagName = tagName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookTag bookTag = (BookTag) o;
-        return Objects.equals(id, bookTag.id) && Objects.equals(tagName, bookTag.tagName);
+        return Objects.equals(id, bookTag.id) && Objects.equals(tagName, bookTag.tagName) && Objects.equals(book, bookTag.book);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tagName);
+        return Objects.hash(id, tagName, book);
     }
 }

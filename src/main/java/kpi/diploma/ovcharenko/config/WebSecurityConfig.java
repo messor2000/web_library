@@ -40,6 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/user/savePassword/**",
                             "/user/resetOldPassword/**",
                             "/download/book/*",
+                            "/download/pdf/**",
                             "/covers/**",
                             "/js/**",
                             "/css/**",

@@ -24,6 +24,8 @@ public interface UserService extends UserDetailsService {
 
     void returnedTheBook(final Long bookCardId);
 
+    void deleteBookCard(final Long bookCardId);
+
     void createPasswordResetTokenForUser(final AppUser user, final String token);
 
     Optional<AppUser> getUserByPasswordResetToken(final String token);

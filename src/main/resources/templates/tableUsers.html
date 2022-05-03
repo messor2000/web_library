@@ -104,11 +104,11 @@
                                                class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal"
                                                >User book card</a>
-                                            <a th:href="@{/admin/updateUser/{id}(id=${user.id})}" type="button"
+                                            <a th:href="@{/admin/update/user/{id}(id=${user.id})}" type="button"
                                                class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal"
                                                th:text="#{user.update}">Update</a>
-                                            <form th:action="@{/admin/deleteUser/{id}(id=${user.id})}" method="post">
+                                            <form th:action="@{/admin/delete/user/{id}(id=${user.id})}" method="post">
                                                 <button class="btn btn-danger button btn btn-primary" type="submit"
                                                         th:text="#{user.delete}">Delete
                                                 </button>
@@ -119,7 +119,7 @@
                                 </tbody>
                             </table>
 
-                            <a th:href="@{/admin/addNewUser}" type="button"
+                            <a th:href="@{/admin/create/user}" type="button"
                                class="btn btn-danger button btn btn-primary"
                                data-bs-toggle="modal" data-bs-target="#exampleModal"
                                th:text="#{admin.add.user}">Add user</a>

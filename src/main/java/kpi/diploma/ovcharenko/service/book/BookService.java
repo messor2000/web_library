@@ -15,9 +15,9 @@ public interface BookService {
 
     Book findBookById(Long id);
 
-    void addNewBook(Book book, String category);
+    void addNewBook(Book book, String category, String tag);
 
-    void updateBook(Book book, String category);
+    void updateBook(Book book, String category, String tag);
 
     void addCoverToTheBook(MultipartFile file, Long bookId);
 
@@ -40,6 +40,4 @@ public interface BookService {
     Page<Book> findByKeyWord(String search, Pageable pageable);
 
     List<BookStatus> getAllBooksStatus(Long bookId);
-
-    Set<BookTag> getAllBookTags();
 }

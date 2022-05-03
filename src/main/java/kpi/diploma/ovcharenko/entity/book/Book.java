@@ -74,13 +74,9 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCard> bookCards = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "book_tags",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private List<BookTag> tags = new ArrayList<>();
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<BookTag> tags = new HashSet<>();
 
     public void addCategory(BookCategory category) {
         categories.add(category);
@@ -95,6 +91,16 @@ public class Book {
     public void setStatus(BookStatus status) {
         statuses.add(status);
         status.setBook(this);
+    }
+
+    public void addTag(BookTag bookTag) {
+        tags.add(bookTag);
+        bookTag.setBook(this);
+    }
+
+    public void removeTag(BookTag bookTag) {
+        tags.remove(bookTag);
+        bookTag.setBook(null);
     }
 
     public Book(@NotBlank(message = "Book name is mandatory") String bookName, int year, String author,

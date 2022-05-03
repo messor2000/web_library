@@ -7,9 +7,9 @@ import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
-import kpi.diploma.ovcharenko.repo.BookTagRepository;
 import kpi.diploma.ovcharenko.repo.CategoryRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
+import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,35 +28,40 @@ public class LibraryBookService implements BookService {
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
     private final BookStatusRepository bookStatusRepository;
-    private final BookTagRepository bookTagRepository;
+    private final BookTagService bookTagService;
     private final AmazonClient amazonClient;
 
     public LibraryBookService(BookRepository bookRepository, CategoryRepository categoryRepository, AmazonClient amazonClient,
-                              BookStatusRepository bookStatusRepository, BookTagRepository bookTagRepository) {
+                              BookStatusRepository bookStatusRepository, BookTagService bookTagService) {
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
         this.bookStatusRepository = bookStatusRepository;
-        this.bookTagRepository = bookTagRepository;
         this.amazonClient = amazonClient;
+        this.bookTagService = bookTagService;
     }
 
     @Override
-    @Transactional
     public void deleteBookById(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
-
-        bookRepository.delete(book);
+        Book book = bookRepository.findById(id).get();
+        bookRepository.deleteById(id);
+        bookTagService.deleteBookTagByBook(book);
     }
 
     @Override
     @Transactional
-    public void updateBook(Book book, String category) {
+    public void updateBook(Book book, String category, String tag) {
         BookCategory bookCategory = new BookCategory(category);
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
 
         if (category != null && !category.equals("")) {
             book.addCategory(bookCategory);
+        }
+
+        if (tag != null && !tag.equals("")) {
+            if (!bookTagService.existBookTagByBookAndTag(tag, book)) {
+                BookTag bookTag = new BookTag(tag);
+                book.addTag(bookTag);
+            }
         }
 
         if (book.getAmount() > bookStatuses.size()) {
@@ -110,16 +115,20 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public void addNewBook(Book book, String category) {
-        BookCategory bookCategory = new BookCategory(category);
-
+    public void addNewBook(Book book, String category, String tag) {
         for (int i = 0; i < book.getAmount(); i++) {
             BookStatus status = new BookStatus(Status.FREE);
             book.setStatus(status);
         }
 
-        if (category != null) {
+        if (category != null && !category.equals("")) {
+            BookCategory bookCategory = new BookCategory(category);
             book.addCategory(bookCategory);
+        }
+
+        if (tag != null && !tag.equals("")) {
+            BookTag bookTag = new BookTag(tag);
+            book.addTag(bookTag);
         }
 
         bookRepository.save(book);
@@ -137,7 +146,13 @@ public class LibraryBookService implements BookService {
 
     @Override
     public Set<String> findAllCategories() {
-        return categoryRepository.findAllCategories();
+        Set<String> stringBookCategories = new HashSet<>();
+        List<BookCategory> bookCategories = (List<BookCategory>) categoryRepository.findAll();
+        for (BookCategory bookCategory: bookCategories) {
+            stringBookCategories.add(bookCategory.getCategory());
+        }
+
+        return stringBookCategories;
     }
 
     @Override
@@ -172,11 +187,6 @@ public class LibraryBookService implements BookService {
     @Override
     public List<BookStatus> getAllBooksStatus(Long bookId) {
         return bookStatusRepository.findAllByBookId(bookId);
-    }
-
-    @Override
-    public Set<BookTag> getAllBookTags() {
-        return bookTagRepository.findAll();
     }
 }
 

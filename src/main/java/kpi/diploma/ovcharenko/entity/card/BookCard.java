@@ -37,12 +37,12 @@ public class BookCard {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name="book_id")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name="book_id", nullable = false)
     private Book book;
 
     @Column(name = "status", columnDefinition = "ENUM('WAIT_FOR_APPROVE', 'APPROVED', 'BOOKED_RETURNED')")

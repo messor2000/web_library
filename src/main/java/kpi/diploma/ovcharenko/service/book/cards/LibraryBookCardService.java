@@ -1,5 +1,6 @@
-package kpi.diploma.ovcharenko.service.book;
+package kpi.diploma.ovcharenko.service.book.cards;
 
+import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.repo.BookCardRepository;
@@ -46,11 +47,5 @@ public class LibraryBookCardService implements BookCardService {
     @Override
     public List<BookCard> findAllBookCardsWithStatus(CardStatus status) {
         return bookCardRepository.findAllByCardStatus(status);
-    }
-
-    @Override
-    @Transactional
-    public void deleteBookCard(Long bookCardId) {
-        bookCardRepository.deleteBookCardById(bookCardId);
     }
 }
