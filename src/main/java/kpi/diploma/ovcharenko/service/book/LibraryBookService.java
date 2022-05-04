@@ -7,7 +7,7 @@ import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
-import kpi.diploma.ovcharenko.repo.CategoryRepository;
+import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +26,15 @@ import java.util.Set;
 public class LibraryBookService implements BookService {
 
     private final BookRepository bookRepository;
-    private final CategoryRepository categoryRepository;
+    private final BookCategoryRepository bookCategoryRepository;
     private final BookStatusRepository bookStatusRepository;
     private final BookTagService bookTagService;
     private final AmazonClient amazonClient;
 
-    public LibraryBookService(BookRepository bookRepository, CategoryRepository categoryRepository, AmazonClient amazonClient,
+    public LibraryBookService(BookRepository bookRepository, BookCategoryRepository bookCategoryRepository, AmazonClient amazonClient,
                               BookStatusRepository bookStatusRepository, BookTagService bookTagService) {
         this.bookRepository = bookRepository;
-        this.categoryRepository = categoryRepository;
+        this.bookCategoryRepository = bookCategoryRepository;
         this.bookStatusRepository = bookStatusRepository;
         this.amazonClient = amazonClient;
         this.bookTagService = bookTagService;
@@ -50,11 +50,13 @@ public class LibraryBookService implements BookService {
     @Override
     @Transactional
     public void updateBook(Book book, String category, String tag) {
-        BookCategory bookCategory = new BookCategory(category);
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
 
         if (category != null && !category.equals("")) {
-            book.addCategory(bookCategory);
+            if (!bookCategoryRepository.existsBookCategoryByCategoryAndAndBook(category, book)) {
+                BookCategory bookCategory = new BookCategory(category);
+                book.addCategory(bookCategory);
+            }
         }
 
         if (tag != null && !tag.equals("")) {
@@ -147,7 +149,7 @@ public class LibraryBookService implements BookService {
     @Override
     public Set<String> findAllCategories() {
         Set<String> stringBookCategories = new HashSet<>();
-        List<BookCategory> bookCategories = (List<BookCategory>) categoryRepository.findAll();
+        List<BookCategory> bookCategories = (List<BookCategory>) bookCategoryRepository.findAll();
         for (BookCategory bookCategory: bookCategories) {
             stringBookCategories.add(bookCategory.getCategory());
         }
@@ -172,10 +174,10 @@ public class LibraryBookService implements BookService {
     @Transactional
     public void deleteCategory(Long id, String category) {
         Book book = findBookById(id);
-        BookCategory bookCategory = categoryRepository.findByCategoryAndBook(category, book);
+        BookCategory bookCategory = bookCategoryRepository.findByCategoryAndBook(category, book);
         book.removeCategory(bookCategory);
 
-        categoryRepository.deleteById(bookCategory.getId());
+        bookCategoryRepository.deleteById(bookCategory.getId());
         bookRepository.save(book);
     }
 

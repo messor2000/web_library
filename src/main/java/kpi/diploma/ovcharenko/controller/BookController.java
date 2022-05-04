@@ -2,7 +2,6 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookModel;
-import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.service.book.BookService;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -227,12 +223,10 @@ public class BookController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/book/deleteCategory/{id}")
-    public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category,
-                                     RedirectAttributes redirectAttributes) {
+    public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category) {
         bookService.deleteCategory(id, category);
 
-        redirectAttributes.addAttribute("bookId", id);
-        return "redirect:/edit/{bookId}";
+        return "redirect:/";
     }
 }
 

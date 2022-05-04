@@ -61,6 +61,6 @@ public class LibraryBookTagService implements BookTagService {
 
     @Override
     public boolean existBookTagByBookAndTag(String tag, Book book) {
-        return bookTagRepository.existsBookTagByTagNameAndAndBook(tag, book);
+        return bookTagRepository.existsBookTagByTagNameAndBook(tag, book);
     }
 }

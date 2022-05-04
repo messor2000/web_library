@@ -17,7 +17,7 @@ public interface BookTagRepository extends CrudRepository<BookTag, Long> {
 
     boolean existsBookTagByTagName(String tag);
 
-    boolean existsBookTagByTagNameAndAndBook(String tag, Book book);
+    boolean existsBookTagByTagNameAndBook(String tag, Book book);
 
     @Query("SELECT b FROM BookTag b WHERE b.tagName IN :tags")
     Set<BookTag> findByTags(@Param("tags") Set<String> tags);
