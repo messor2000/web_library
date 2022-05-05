@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 services:
   db:
     image: messor2000/mysql
@@ -11,6 +11,34 @@ services:
       MYSQL_ROOT_PASSWORD: password
     volumes:
       - dbdata:/var/lib/mysql
+
+  ps_db:
+    image: postgres
+    container_name: pgdb_web_library
+    restart: always
+    ports:
+      - "54320:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_USER: user
+      PGADMIN_DEFAULT_EMAIL: user@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
 volumes:
   dbdata:
+  local_pgdata:
+  pgadmin-data:
 
