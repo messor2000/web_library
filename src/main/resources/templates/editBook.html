@@ -122,6 +122,11 @@
                                         <td th:text="${category}"></td>
                                     </tr>
 
+                                    <p data-tooltip="Якщо треба додати категорію або тег до книжки якого нема в списку,
+                                    просто вписуйте в поле нову назву"
+                                       th:text="#{information}">
+                                        Наведи сюда курсор.</p>
+
                                     <label>
                                         <input style="width:300px; height:30px;" list="select" name="category"
                                                th:name="category" id="category" th:placeholder="#{book.categories}">
@@ -136,16 +141,12 @@
                                     <tr th:each="tag : ${bookTags}">
                                         <td th:text="${tag}"></td>
                                     </tr>
-                                    <p data-tooltip="Якщо треба додати категорію або тег до книжки якого нема в списку,
-                                    просто вписуйте в поле нову назву"
-                                       th:text="#{information}">
-                                        Наведи сюда курсор.</p>
 
                                     <label>
                                         <input style="width:300px; height:30px;" list="tag" name="bookTag"
                                                th:name="bookTag" th:placeholder="#{book.tag}">
                                         <datalist class="form-control" id="tag" th:name="bookTag">
-                                            <option th:each="bookTag : ${bookTags}" th:value="${bookTag}"
+                                            <option th:each="bookTag : ${tags}" th:value="${bookTag}"
                                                     th:text="${bookTag}">
                                             </option>
                                         </datalist>
@@ -163,8 +164,7 @@
                                     <input type="file" name="pdfFile" accept="application/pdf" id="pdfFile"/>
 
                                     <label for="description" th:text="#{book.description}">Description</label>
-                                    <input style="width: 500px; height: 250px; text-align: justify" type="text"
-                                           th:field="${book.description}" id="description"
+                                    <input type="text" th:field="${book.description}" id="description"
                                            placeholder="Description">
 
                                     <input type="submit" class="btn btn-primary" th:value="#{book.update}">

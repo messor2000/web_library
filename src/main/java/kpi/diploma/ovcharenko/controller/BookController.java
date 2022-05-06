@@ -99,6 +99,7 @@ public class BookController {
         Book book = bookService.findBookById(id);
         Set<String> bookCategories = bookService.findBookCategories(book);
         List<BookStatus> statuses = bookService.getAllBooksStatus(id);
+        Set<String> bookTags = bookTagService.findBookTagsByBookId(id);
         int statusFree = 0;
         int statusBooked = 0;
         int statusTaken = 0;
@@ -117,6 +118,7 @@ public class BookController {
 
         model.addAttribute("bookCategories", bookCategories);
         model.addAttribute("book", book);
+        model.addAttribute("bookTags", bookTags);
         model.addAttribute("statuses", statuses);
         model.addAttribute("statusFree", statusFree);
         model.addAttribute("statusBooked", statusBooked);
@@ -161,7 +163,7 @@ public class BookController {
     @GetMapping("/add")
     public String showAddForm(BookModel bookModel, Model model) {
         Set<String> categories = bookService.findAllCategories();
-        Set<String> bookTags = bookTagService.getAllBookTags();
+        Set<String> bookTags = bookTagService.findAllTagNames();
 
         model.addAttribute("categories", categories);
         model.addAttribute("bookModel", bookModel);
@@ -191,9 +193,9 @@ public class BookController {
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Book book = bookService.findBookById(id);
         Set<String> categories = bookService.findAllCategories();
-        Set<String> tags = bookTagService.getAllBookTags();
+        Set<String> tags = bookTagService.findAllTagNames();
         Set<String> bookCategories = bookService.findBookCategories(book);
-        Set<String> bookTags = bookTagService.findBookTags(book);
+        Set<String> bookTags = bookTagService.findBookTagsByBookId(id);
 
         model.addAttribute("categories", categories);
         model.addAttribute("tags", tags);
@@ -215,8 +217,12 @@ public class BookController {
         }
 
         bookService.updateBook(book, category, bookTag);
-        bookService.changeBookCover(imageFile, id);
-        bookService.addBookPdf(pdfFile, book.getId());
+        if (!imageFile.isEmpty()) {
+            bookService.changeBookCover(imageFile, id);
+        }
+        if (!pdfFile.isEmpty()) {
+            bookService.addBookPdf(pdfFile, book.getId());
+        }
 
         return "redirect:/";
     }

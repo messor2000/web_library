@@ -104,6 +104,10 @@
                                 <tr th:each="category : ${bookCategories}">
                                     <a th:href="@{/{category}(category=${category})}" th:text="${category}"></a>
                                 </tr>
+                                <label th:text="#{book.tag}">Book tag</label>
+                                <tr th:each="tag : ${bookTags}">
+                                    <td th:text="${tag}"></td>
+                                </tr>
 
                                 <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                     <label th:text="#{books.status}">Status</label>

@@ -7,18 +7,16 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface BookTagRepository extends CrudRepository<BookTag, Long> {
     Set<BookTag> findAll();
 
-    void deleteBookTagByBook(Book book);
+    Optional<BookTag> findBookTagByTagName(String tagName);
 
-    boolean existsBookTagByTagName(String tag);
+    Set<BookTag> findByBooks_Id(Long bookId);
 
-    boolean existsBookTagByTagNameAndBook(String tag, Book book);
-
-    @Query("SELECT b FROM BookTag b WHERE b.tagName IN :tags")
-    Set<BookTag> findByTags(@Param("tags") Set<String> tags);
+    Set<BookTag> findAllByBooksIn(Set<Book> books);
 }

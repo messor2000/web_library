@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -74,9 +75,13 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCard> bookCards = new HashSet<>();
 
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<BookTag> tags = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "books_tags",
+            joinColumns = {@JoinColumn(name = "book_id")},
+            inverseJoinColumns = {@JoinColumn(name = "book_tag_id")}
+    )
+    Set<BookTag> tags = new HashSet<>();
 
     public void addCategory(BookCategory category) {
         categories.add(category);
@@ -95,12 +100,7 @@ public class Book {
 
     public void addTag(BookTag bookTag) {
         tags.add(bookTag);
-        bookTag.setBook(this);
-    }
-
-    public void removeTag(BookTag bookTag) {
-        tags.remove(bookTag);
-        bookTag.setBook(null);
+        bookTag.setBooks(Collections.singleton(this));
     }
 
     public Book(@NotBlank(message = "Book name is mandatory") String bookName, int year, String author,

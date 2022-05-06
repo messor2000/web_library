@@ -5,9 +5,9 @@ import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
+import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
-import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,28 +43,26 @@ public class LibraryBookService implements BookService {
 
     @Override
     public void deleteBookById(Long id) {
-        Book book = bookRepository.findById(id).get();
         bookRepository.deleteById(id);
-        bookTagService.deleteBookTagByBook(book);
     }
 
     @Override
-    @Transactional
     public void updateBook(Book book, String category, String tag) {
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
 
         if (category != null && !category.equals("")) {
-            if (!bookCategoryRepository.existsBookCategoryByCategoryAndAndBook(category, book)) {
+            if (!bookCategoryRepository.existsBookCategoryByCategoryAndBook(category, book)) {
                 BookCategory bookCategory = new BookCategory(category);
                 book.addCategory(bookCategory);
             }
         }
 
         if (tag != null && !tag.equals("")) {
-            if (!bookTagService.existBookTagByBookAndTag(tag, book)) {
-                BookTag bookTag = new BookTag(tag);
-                book.addTag(bookTag);
-            }
+            BookTag bookTag = bookTagService.findBookTagByTagName(tag).orElse(new BookTag(tag));
+            bookTagService.saveBookTag(bookTag);
+            Set<BookTag> allTags = bookTagService.findBookTagByBook(Collections.singleton(book));
+            allTags.add(bookTag);
+            book.setTags(allTags);
         }
 
         if (book.getAmount() > bookStatuses.size()) {
@@ -129,8 +128,8 @@ public class LibraryBookService implements BookService {
         }
 
         if (tag != null && !tag.equals("")) {
-            BookTag bookTag = new BookTag(tag);
-            book.addTag(bookTag);
+            BookTag bookTag = bookTagService.findBookTagByTagName(tag).orElse(new BookTag(tag));
+            book.getTags().add(bookTag);
         }
 
         bookRepository.save(book);

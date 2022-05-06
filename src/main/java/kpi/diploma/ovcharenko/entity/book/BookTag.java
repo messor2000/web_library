@@ -12,9 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,8 +35,8 @@ public class BookTag {
     @Column(name = "tag_name")
     private String tagName;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    private Book book;
+    @ManyToMany(mappedBy = "tags")
+    private Set<Book> books = new HashSet<>();
 
     public BookTag(String tagName) {
         this.tagName = tagName;
@@ -44,11 +47,11 @@ public class BookTag {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookTag bookTag = (BookTag) o;
-        return Objects.equals(id, bookTag.id) && Objects.equals(tagName, bookTag.tagName) && Objects.equals(book, bookTag.book);
+        return Objects.equals(id, bookTag.id) && Objects.equals(tagName, bookTag.tagName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tagName, book);
+        return Objects.hash(id, tagName);
     }
 }

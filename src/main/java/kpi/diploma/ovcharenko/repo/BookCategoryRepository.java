@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface BookCategoryRepository extends CrudRepository<BookCategory, Long> {
     BookCategory findByCategoryAndBook(String category, Book book);
 
-    boolean existsBookCategoryByCategoryAndAndBook(String category, Book book);
+    boolean existsBookCategoryByCategoryAndBook(String category, Book book);
 }

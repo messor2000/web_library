@@ -2,10 +2,11 @@ package kpi.diploma.ovcharenko.service.data;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
-import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.repo.BookRepository;
+import kpi.diploma.ovcharenko.repo.BookTagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -31,10 +32,12 @@ import java.util.Set;
 public class LibraryExcelDataService implements ExcelDataService {
 
     private final BookRepository bookRepository;
+    private final BookTagRepository bookTagRepository;
 
     @Autowired
-    public LibraryExcelDataService(BookRepository bookRepository) {
+    public LibraryExcelDataService(BookRepository bookRepository, BookTagRepository bookTagRepository) {
         this.bookRepository = bookRepository;
+        this.bookTagRepository = bookTagRepository;
     }
 
     @Override
@@ -70,6 +73,13 @@ public class LibraryExcelDataService implements ExcelDataService {
                 book.addCategory(bookCategory);
                 book.setAmount(1);
                 book.setSection(section);
+
+                String tag = getCellValue(row, 4);
+                if (tag != null && !tag.equals("")) {
+                    BookTag bookTag = bookTagRepository.findBookTagByTagName(tag).orElse(new BookTag(tag));
+                    book.getTags().add(bookTag);
+                }
+
 
                 BookStatus bookStatus = new BookStatus(Status.FREE);
                 book.setStatus(bookStatus);
