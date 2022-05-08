@@ -214,6 +214,11 @@ public class LibraryUserService implements UserService {
         bookRepository.save(book);
     }
 
+    @Override
+    public void deleteBookCard(Long bookCardId) {
+        bookCardRepository.deleteById(bookCardId);
+    }
+
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles){
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))

@@ -156,15 +156,15 @@
                                                         </button>
                                                     </form>
                                                 </div>
-<!--                                                <div th:if="${bookCard.cardStatus.equals(bookCard.cardStatus.BOOK_RETURNED)}">-->
-<!--                                                    <form th:action="@{/admin/delete/bookCard/{id}(id=${bookCard.id})}"-->
-<!--                                                          method="post">-->
-<!--                                                        <button class="btn btn-danger button btn btn-primary"-->
-<!--                                                                type="submit" th:text="#{bookCard.delete}">-->
-<!--                                                            Delete book card-->
-<!--                                                        </button>-->
-<!--                                                    </form>-->
-<!--                                                </div>-->
+                                                <div th:if="${bookCard.cardStatus.equals(bookCard.cardStatus.BOOK_RETURNED)}">
+                                                    <form th:action="@{/admin/delete/bookCard/{id}(id=${bookCard.id})}"
+                                                          method="post">
+                                                        <button class="btn btn-danger button btn btn-primary"
+                                                                type="submit" th:text="#{bookCard.delete}">
+                                                            Delete book card
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

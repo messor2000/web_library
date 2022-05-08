@@ -1,5 +1,6 @@
-package kpi.diploma.ovcharenko.service.book;
+package kpi.diploma.ovcharenko.service.book.cards;
 
+import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 
@@ -15,6 +16,4 @@ public interface BookCardService {
     List<BookCard> findAllUserBookCardsAndStatus(Long userId, CardStatus status);
 
     List<BookCard> findAllBookCardsWithStatus(CardStatus status);
-
-    void deleteBookCard(Long bookCardId);
 }

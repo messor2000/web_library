@@ -74,10 +74,10 @@
                 <div class="page-title category-title">
                     <h1 th:text="#{upload.page}">File Upload & Data Save Page</h1>
                 </div>
-                
+
                 <div>
                     <p th:text="#{file.example}"></p>
-                    <img src="/img/example.png" alt="">
+                    <p><img src="/img/example.png" width="700" height="400" alt=""></p>
                 </div>
 
                 <form method="POST" enctype="multipart/form-data" action="/files/upload">
@@ -90,22 +90,40 @@
                         <tr>
                             <td th:text="#{upload.file.page}">Page for saved</td>
                             <td><label>
-                                <input type="number" name="pageNum">
+                                <input style="width:150px; height:30px;" type="number" name="pageNum">
                             </label></td>
                         </tr>
 
                         <tr>
                             <td th:text="#{book.section}">Section</td>
                             <td><label>
-                                <input type="text" name="section">
+                                <input style="width:150px; height:30px;" type="text" name="section">
                             </label></td>
+                        </tr>
+
+                        <tr>
+                            <td data-tooltip="Якщо треба додати категорію або тег до книжки якого нема в списку,
+                                    просто вписуйте в поле нову назву. Можно додавати декілько категорій вписуя їх через пробел або кому"
+                                th:text="#{book.tag}"></td>
+
+                            <td>
+                                <label>
+                                    <input style="width:300px; height:30px;" list="tag" name="bookTag"
+                                           th:name="bookTag" th:placeholder="#{book.tag}">
+                                </label>
+                                <datalist class="form-control" id="tag" th:name="bookTag">
+                                    <option th:each="bookTag : ${tags}" th:value="${bookTag}"
+                                            th:text="${bookTag}">
+                                    </option>
+                                </datalist>
+                            </td>
                         </tr>
 
                         <tr>
                             <td th:text="#{upload.file.category}">Select subject for book</td>
                             <td>
                                 <label>
-                                    <input style="width:400px; height:40px;" list="select" name="category"
+                                    <input style="width:300px; height:30px;" list="select" name="category"
                                            th:name="category" th:placeholder="#{book.categories}">
                                     <datalist class="form-control" id="select" name="category" th:name="category">
                                         <option value="Без категории">Без категории</option>
@@ -117,25 +135,17 @@
                                 </label>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td></td>
-                            <td><input type="submit"  th:value="#{upload}" value="Upload"/></td>
-                        </tr>
                     </table>
-
-                    <ul>
-                        <li th:each="file : ${files}">
-                            <a th:href="${file}" th:text="${file}"></a>
-                        </li>
-                    </ul>
+                    <button type="submit" class="btn btn-danger button btn btn-primary"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal" th:text="#{upload}">Submit
+                    </button>
                 </form>
 
             </div>
         </div>
     </div>
 
-    <footer id="footer" class="page-footer">
+    <footer id="footer">
         <div class="row footer-wrapper">
             <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
         </div>

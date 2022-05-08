@@ -1,6 +1,7 @@
 package kpi.diploma.ovcharenko.service.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +15,9 @@ public interface BookService {
 
     Book findBookById(Long id);
 
-    void addNewBook(Book book, String category);
+    void addNewBook(Book book, String category, String tag);
 
-    void updateBook(Book book, String category);
+    void updateBook(Book book, String category, String tag);
 
     void addCoverToTheBook(MultipartFile file, Long bookId);
 

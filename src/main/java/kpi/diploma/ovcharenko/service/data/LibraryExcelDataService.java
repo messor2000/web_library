@@ -2,9 +2,9 @@ package kpi.diploma.ovcharenko.service.data;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
-import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -38,7 +39,8 @@ public class LibraryExcelDataService implements ExcelDataService {
     }
 
     @Override
-    public void getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String category, String section) {
+    @Transactional
+    public void getExcelDataAsList(MultipartFile excelFilePath, int pageIndex, String category, String section, Set<BookTag> tags) {
         List<Book> books = new ArrayList<>();
 
         XSSFWorkbook workbook = null;
@@ -69,8 +71,12 @@ public class LibraryExcelDataService implements ExcelDataService {
                 bookCategory.setCategory(category);
                 book.addCategory(bookCategory);
                 book.setAmount(1);
-                book.setDescription("---");
                 book.setSection(section);
+
+                for (BookTag tag: tags) {
+                    tag.getBooks().add(book);
+                    book.getTags().add(tag);
+                }
 
                 BookStatus bookStatus = new BookStatus(Status.FREE);
                 book.setStatus(bookStatus);
@@ -82,8 +88,6 @@ public class LibraryExcelDataService implements ExcelDataService {
 
         bookRepository.saveAll(books);
     }
-
-
 
     private int convertStringToInt(String str) {
         int result = 0;
