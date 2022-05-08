@@ -141,6 +141,8 @@ public class BookController {
         model.addAttribute("categories", categories);
         model.addAttribute("books", books);
 
+        search.contains(" ");
+
         return "library";
     }
 

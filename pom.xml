@@ -126,6 +126,11 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.12.187</version>
         </dependency>
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>2.16.2</version>
+        </dependency>
     </dependencies>
 
     <build>

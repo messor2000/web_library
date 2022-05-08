@@ -28,6 +28,7 @@ public class BookCategory {
     @Column(name = "idcategory", insertable = false, updatable = false)
     private Long id;
 
+
     @Column(name = "category")
     private String category;
 

@@ -2,12 +2,15 @@ package kpi.diploma.ovcharenko.entity.card;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
+import kpi.diploma.ovcharenko.util.PostgreSQLEnumType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -31,6 +34,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "booking_card")
+@TypeDef(
+        name = "pgsql_enum",
+        typeClass = PostgreSQLEnumType.class
+)
 public class BookCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,12 +48,14 @@ public class BookCard {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name="book_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name="book_id")
     private Book book;
 
-    @Column(name = "status", columnDefinition = "ENUM('WAIT_FOR_APPROVE', 'APPROVED', 'BOOKED_RETURNED')")
+    //    @Column(name = "status", columnDefinition = "ENUM('WAIT_FOR_APPROVE', 'APPROVED', 'BOOKED_RETURNED')")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @Type(type = "pgsql_enum")
     private CardStatus cardStatus;
 
     @CreationTimestamp
