@@ -77,7 +77,7 @@ public class AppUser {
     private Collection<UserRole> roles = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<BookCard> bookCards = new HashSet<>();
 
     public void addBookCard(BookCard bookCard) {

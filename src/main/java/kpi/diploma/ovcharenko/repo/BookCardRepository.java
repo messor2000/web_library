@@ -1,5 +1,6 @@
 package kpi.diploma.ovcharenko.repo;
 
+import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import org.springframework.data.repository.CrudRepository;
@@ -19,6 +20,5 @@ public interface BookCardRepository extends CrudRepository<BookCard, Long> {
 
     BookCard findBookCardById(Long bookCardId);
 
-    void deleteBookCardById(Long id);
 }
 

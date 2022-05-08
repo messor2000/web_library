@@ -95,22 +95,26 @@
                                     <span th:if="${#fields.hasErrors('bookName')}" th:errors="*{bookName}"></span>
 
                                     <label for="author" th:text="#{book.author}">Author</label>
-                                    <input type="text" th:field="${book.author}" id="author" placeholder="Author">
+                                    <input style="width: 300px" type="text" th:field="${book.author}" id="author"
+                                           placeholder="Author">
                                     <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
 
                                     <label for="year" th:text="#{book.year}">Year</label>
-                                    <input type="number" th:field="${book.year}" id="year" placeholder="Year">
+                                    <input style="width: 300px" type="number" th:field="${book.year}" id="year"
+                                           placeholder="Year">
                                     <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></span>
 
                                     <label for="amount" th:text="#{book.amount}">Amount</label>
-                                    <input type="number" th:field="${book.amount}" id="amount" placeholder="Amount">
+                                    <input style="width: 300px" type="number" th:field="${book.amount}" id="amount"
+                                           placeholder="Amount">
                                     <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
                                     <p data-tooltip="Якщо треба зменшити кількість книжок, то треба видалити цю і створити
-                                    нову. Якщо треба додати, то просто вписується нова кількість" th:text="#{information}">
+                                    нову. Якщо треба додати, то просто вписується нова кількість"
+                                       th:text="#{information}">
                                         Наведи сюда курсор.</p>
 
                                     <label for="section" th:text="#{book.section}">Section</label>
-                                    <input type="text" class="form-control" id="section"
+                                    <input style="width: 300px" type="text" class="form-control" id="section"
                                            th:placeholder="#{book.section}" th:field="*{section}"/>
 
                                     <label th:text="#{book.categories}">Book Categories</label>
@@ -118,12 +122,32 @@
                                         <td th:text="${category}"></td>
                                     </tr>
 
+                                    <p data-tooltip="Якщо треба додати категорію або тег до книжки якого нема в списку,
+                                    просто вписуйте в поле нову назву"
+                                       th:text="#{information}">
+                                        Наведи сюда курсор.</p>
+
                                     <label>
-                                        <input style="width:250px; height:20px;" list="select" name="category"
-                                               th:name="category" id="category" placeholder="Category">
-                                        <datalist class="form-control" id="select" name="category" th:name="category">
+                                        <input style="width:300px; height:30px;" list="select" name="category"
+                                               th:name="category" id="category" th:placeholder="#{book.categories}">
+                                        <datalist class="form-control" id="select" th:name="category">
                                             <option th:each="category : ${categories}" th:value="${category}"
                                                     th:text="${category}">
+                                            </option>
+                                        </datalist>
+                                    </label>
+
+                                    <label th:text="#{book.tag}">Book tag</label>
+                                    <tr th:each="tag : ${bookTags}">
+                                        <td th:text="${tag}"></td>
+                                    </tr>
+
+                                    <label>
+                                        <input style="width:300px; height:30px;" list="tag" name="bookTag"
+                                               th:name="bookTag" th:placeholder="#{book.tag}">
+                                        <datalist class="form-control" id="tag" th:name="bookTag">
+                                            <option th:each="bookTag : ${tags}" th:value="${bookTag}"
+                                                    th:text="${bookTag}">
                                             </option>
                                         </datalist>
                                     </label>
@@ -151,7 +175,7 @@
                                     <label for="categoryForDelete">
                                         <select class="form-control" id="categoryForDelete" name="category">
                                             <option value="">Select category for delete</option>
-                                            <option th:each="category : ${bookCategories}"
+                                            <option style="width: 300px" th:each="category : ${bookCategories}"
                                                     th:value="${category}"
                                                     th:text="${category}">
                                             </option>

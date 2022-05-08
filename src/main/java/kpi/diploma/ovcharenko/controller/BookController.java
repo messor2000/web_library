@@ -5,7 +5,7 @@ import kpi.diploma.ovcharenko.entity.book.BookModel;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.service.book.BookService;
-import kpi.diploma.ovcharenko.service.user.UserService;
+import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,9 +35,11 @@ public class BookController {
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     private final BookService bookService;
+    private final BookTagService bookTagService;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, BookTagService bookTagService) {
         this.bookService = bookService;
+        this.bookTagService = bookTagService;
     }
 
     @GetMapping("/")
@@ -62,35 +64,6 @@ public class BookController {
 
         return "library";
     }
-
-//    @GetMapping(value = "/{category}")
-//    public String getBooksByCategory(Model model, @PathVariable("category") String category,
-//                                     @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size,
-//                                     RedirectAttributes redirectAttributes) {
-//        int currentPage = page.orElse(FIRST_PAGE);
-//        int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
-//
-//        Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
-//        Set<String> categories = bookService.findAllCategories();
-//
-//        if (!categories.contains(category)) {
-//            redirectAttributes.addFlashAttribute("message",
-//                    "Such category doesn't exist" + category + "!");
-//        }
-//
-//        model.addAttribute("books", bookPage);
-//        model.addAttribute("categories", categories);
-//
-//        int totalPages = bookPage.getTotalPages();
-//        if (totalPages > 0) {
-//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-//                    .boxed()
-//                    .collect(Collectors.toList());
-//            model.addAttribute("pageNumbers", pageNumbers);
-//        }
-//
-//        return "library";
-//    }
 
     @GetMapping(value = "/category")
     public String getBooksByCategory(Model model, @RequestParam("category") String category,
@@ -126,11 +99,12 @@ public class BookController {
         Book book = bookService.findBookById(id);
         Set<String> bookCategories = bookService.findBookCategories(book);
         List<BookStatus> statuses = bookService.getAllBooksStatus(id);
+        Set<String> bookTags = bookTagService.findBookTagsByBookId(id);
         int statusFree = 0;
         int statusBooked = 0;
         int statusTaken = 0;
 
-        for (BookStatus status: statuses) {
+        for (BookStatus status : statuses) {
             if (status.getStatus().equals(Status.FREE)) {
                 statusFree++;
             }
@@ -144,6 +118,7 @@ public class BookController {
 
         model.addAttribute("bookCategories", bookCategories);
         model.addAttribute("book", book);
+        model.addAttribute("bookTags", bookTags);
         model.addAttribute("statuses", statuses);
         model.addAttribute("statusFree", statusFree);
         model.addAttribute("statusBooked", statusBooked);
@@ -177,7 +152,7 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/delete/{id}")
+    @GetMapping(value = "/admin/delete/{id}")
     public String deleteBookById(@PathVariable("id") Long id) {
         bookService.deleteBookById(id);
 
@@ -188,44 +163,55 @@ public class BookController {
     @GetMapping("/add")
     public String showAddForm(BookModel bookModel, Model model) {
         Set<String> categories = bookService.findAllCategories();
+        Set<String> bookTags = bookTagService.findAllTagNames();
 
         model.addAttribute("categories", categories);
         model.addAttribute("bookModel", bookModel);
+        model.addAttribute("bookTags", bookTags);
         return "addBook";
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/book/add")
     public String addNewBook(@Valid Book book, BindingResult result, @RequestParam(value = "category") String category,
+                             @RequestParam(value = "bookTag") String bookTag,
                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
                              @RequestParam(value = "pdfFile", required = false) MultipartFile pdfFile) {
         if (result.hasErrors()) {
             return "addBook";
         }
 
-        bookService.addNewBook(book, category);
-        bookService.addCoverToTheBook(imageFile, book.getId());
-        bookService.addBookPdf(pdfFile, book.getId());
+        bookService.addNewBook(book, category, bookTag);
+        if (!imageFile.isEmpty()) {
+            bookService.changeBookCover(imageFile, book.getId());
+        }
+        if (!pdfFile.isEmpty()) {
+            bookService.addBookPdf(pdfFile, book.getId());
+        }
 
         return "redirect:/";
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping("/edit/{id}")
+    @GetMapping("/admin/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Book book = bookService.findBookById(id);
         Set<String> categories = bookService.findAllCategories();
+        Set<String> tags = bookTagService.findAllTagNames();
         Set<String> bookCategories = bookService.findBookCategories(book);
+        Set<String> bookTags = bookTagService.findBookTagsByBookId(id);
 
         model.addAttribute("categories", categories);
+        model.addAttribute("tags", tags);
         model.addAttribute("bookCategories", bookCategories);
+        model.addAttribute("bookTags", bookTags);
         model.addAttribute("book", book);
         return "editBook";
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping(value = "/book/update/{id}", consumes = {"multipart/form-data"})
-    public String updateBook(@PathVariable("id") long id, @Valid Book book,
+    public String updateBook(@PathVariable("id") long id, @Valid Book book, @RequestParam(value = "bookTag") String bookTag,
                              @RequestParam(value = "category") String category, BindingResult result,
                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
                              @RequestParam(value = "pdfFile", required = false) MultipartFile pdfFile) {
@@ -234,21 +220,23 @@ public class BookController {
             return "editBook";
         }
 
-        bookService.updateBook(book, category);
-        bookService.changeBookCover(imageFile, id);
-        bookService.addBookPdf(pdfFile, book.getId());
+        bookService.updateBook(book, category, bookTag);
+        if (!imageFile.isEmpty()) {
+            bookService.changeBookCover(imageFile, id);
+        }
+        if (!pdfFile.isEmpty()) {
+            bookService.addBookPdf(pdfFile, id);
+        }
 
         return "redirect:/";
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/book/deleteCategory/{id}")
-    public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category,
-                                     RedirectAttributes redirectAttributes) {
+    public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category) {
         bookService.deleteCategory(id, category);
 
-        redirectAttributes.addAttribute("bookId", id);
-        return "redirect:/edit/{bookId}";
+        return "redirect:/";
     }
 }
 

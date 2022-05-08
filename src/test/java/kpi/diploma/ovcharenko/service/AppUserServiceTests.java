@@ -54,7 +54,7 @@ class AppUserServiceTests {
                 .build();
         BookCategory bookCategory = new BookCategory("forTest");
 
-        bookService.addNewBook(book, bookCategory.getCategory());
+//        bookService.addNewBook(book, bookCategory.getCategory());
     }
 
     @AfterEach

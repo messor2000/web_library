@@ -86,43 +86,62 @@
                      aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form th:action="@{/book/add}" method="post" th:object="${bookModel}" enctype="multipart/form-data">
+                            <form th:action="@{/book/add}" method="post" th:object="${bookModel}"
+                                  enctype="multipart/form-data">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="bookName" th:text="#{book.name}">Book name</label>
                                         <input type="text" class="form-control" id="bookName" th:field="*{bookName}"
                                                th:placeholder="#{book.name}"/>
                                         <label for="author" th:text="#{book.author}">Author</label>
-                                        <input type="text" class="form-control" id="author" th:field="*{author}"
+                                        <input style="width: 300px" type="text" class="form-control" id="author"
+                                               th:field="*{author}"
                                                th:placeholder="#{book.author}"/>
                                         <label for="year" th:text="#{book.year}">Year</label>
-                                        <input type="number" class="form-control" id="year"
+                                        <input style="width: 300px" type="number" class="form-control" id="year"
                                                th:placeholder="#{book.year}" th:field="*{year}"/>
                                         <label for="amount" th:text="#{book.amount}">Amount</label>
-                                        <input type="number" class="form-control" id="amount"
-                                               th:placeholder="#{book.amount}" th:field="*{amount}" th:value="1"/>
+                                        <input style="width: 300px" type="number" class="form-control" id="amount"
+                                               placeholder="1" th:field="*{amount}" value="1"/>
                                         <label for="section" th:text="#{book.section}">Section</label>
-                                        <input type="text" class="form-control" id="section"
+                                        <input style="width: 300px" type="text" class="form-control" id="section"
                                                th:placeholder="#{book.section}" th:field="*{section}"/>
 
+
+                                        <p data-tooltip="Поля для вводу категорій та тегов для книжки. Якщо потрібного тега
+                                        або категорії нема у списку, тоді просто вписуйте нову назву в поле. Якщо категорія
+                                        чи тег не протрібен, пропускайте відповідне поле"
+                                           th:text="#{information}">
+                                            Наведи сюда курсор.</p>
                                         <label>
-                                            <input style="width:250px; height:20px;" list="select" name="category"
-                                                   th:name="category" id="category" placeholder="Category">
-                                            <datalist class="form-control" id="select" name="category"
-                                                      th:name="category">
+                                            <input style="width:300px; height:20px;" list="select" name="category"
+                                                   th:name="category" id="category" th:placeholder="#{book.categories}">
+                                            <datalist class="form-control" id="select" th:name="category">
                                                 <option th:each="category : ${categories}" th:value="${category}"
                                                         th:text="${category}">
                                                 </option>
                                             </datalist>
                                         </label>
 
-                                        <label for="imageFile" th:text="#{book.cover}">Book cover: </label>
-                                        <input type="file" name="imageFile" accept="image/png, image/jpeg" id="imageFile"/>
+                                        <label>
+                                            <input style="width:300px; height:20px;" list="tag" name="bookTag"
+                                                   th:name="bookTag" th:placeholder="#{book.tag}">
+                                            <datalist class="form-control" id="tag" th:name="bookTag">
+                                                <option th:each="bookTag : ${bookTags}" th:value="${bookTag}"
+                                                        th:text="${bookTag}">
+                                                </option>
+                                            </datalist>
+                                        </label>
 
                                         <label for="description" th:text="#{book.description}">Description</label>
-                                        <input type="text" id="description" th:placeholder="#{book.description}">
+                                        <input type="text" id="description"
+                                               th:placeholder="#{book.description}">
 
-                                        <label for="pdfFile" >Pdf:</label>
+                                        <label for="imageFile" th:text="#{book.cover}">Book cover: </label>
+                                        <input type="file" name="imageFile" accept="image/png, image/jpeg"
+                                               id="imageFile"/>
+
+                                        <label for="pdfFile">Pdf:</label>
                                         <input type="file" name="pdfFile" accept="application/pdf" id="pdfFile"/>
 
                                     </div>
@@ -138,7 +157,7 @@
 
 
             <!-- Footer Content -->
-            <footer id="footer" class="page-footer">
+            <footer id="footer">
                 <div class="row footer-wrapper">
                     <div class="copyright small-12 columns">&copy; 2021 - <a>Ovcharenko Oleksandr</a></div>
                 </div>

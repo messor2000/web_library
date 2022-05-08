@@ -47,7 +47,7 @@ class BookServiceTests {
                 .build();
         BookCategory bookCategory = new BookCategory(category);
 
-        bookService.addNewBook(book, bookCategory.getCategory());
+//        bookService.addNewBook(book, bookCategory.getCategory());
     }
 
     @AfterEach
@@ -81,7 +81,7 @@ class BookServiceTests {
                 .build();
         BookCategory bookCategory = new BookCategory(categoryForTest);
 
-        bookService.addNewBook(book, bookCategory.getCategory());
+//        bookService.addNewBook(book, bookCategory.getCategory());
 
         Book foundBook = bookService.findBookById(book.getId());
 
@@ -118,37 +118,37 @@ class BookServiceTests {
         assertEquals(book.getBookName(), foundBook.getBookName());
     }
 
-    @Test
-    @DisplayName("Test find all books categories")
-    void findAllCategoriesTest() {
-        Set<String> categoriesBeforeAddingNewOne = bookService.findAllCategories();
-        bookService.updateBook(book, "newBookCategory");
-        Set<String> categoriesAfterAddingNewOne = bookService.findAllCategories();
+//    @Test
+//    @DisplayName("Test find all books categories")
+//    void findAllCategoriesTest() {
+//        Set<String> categoriesBeforeAddingNewOne = bookService.findAllCategories();
+//        bookService.updateBook(book, "newBookCategory");
+//        Set<String> categoriesAfterAddingNewOne = bookService.findAllCategories();
+//
+//        assertEquals(categoriesBeforeAddingNewOne.size() + 1, categoriesAfterAddingNewOne.size());
+//    }
+//
+//    @Test
+//    @DisplayName("Test find all book categories")
+//    void findBookCategoriesTest() {
+//        bookService.updateBook(book, "testCategory2");
+//
+//        Set<String> bookAllCategories = bookService.findBookCategories(book);
+//
+//        assertEquals(2, bookAllCategories.size());
+//    }
 
-        assertEquals(categoriesBeforeAddingNewOne.size() + 1, categoriesAfterAddingNewOne.size());
-    }
-
-    @Test
-    @DisplayName("Test find all book categories")
-    void findBookCategoriesTest() {
-        bookService.updateBook(book, "testCategory2");
-
-        Set<String> bookAllCategories = bookService.findBookCategories(book);
-
-        assertEquals(2, bookAllCategories.size());
-    }
-
-    @Test
-    @DisplayName("Test delete book category and found one is previous book category")
-    void deleteBookAndCheckTheRemainingCategory() {
-        String testBookCategory = "testCategory2";
-        bookService.updateBook(book, testBookCategory);
-
-        bookService.deleteCategory(book.getId(), testBookCategory);
-        Set<String> bookAllCategories = bookService.findBookCategories(book);
-
-        assertTrue(bookAllCategories.contains(testBookCategory));
-    }
+//    @Test
+//    @DisplayName("Test delete book category and found one is previous book category")
+//    void deleteBookAndCheckTheRemainingCategory() {
+//        String testBookCategory = "testCategory2";
+//        bookService.updateBook(book, testBookCategory);
+//
+//        bookService.deleteCategory(book.getId(), testBookCategory);
+//        Set<String> bookAllCategories = bookService.findBookCategories(book);
+//
+//        assertTrue(bookAllCategories.contains(testBookCategory));
+//    }
 
 //    @Test
 //    @DisplayName("Test get one book that taken by user")

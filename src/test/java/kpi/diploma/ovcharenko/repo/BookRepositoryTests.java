@@ -38,7 +38,7 @@ class BookRepositoryTests {
                 .amount(1)
                 .build();
 
-        bookService.addNewBook(book, category);
+//        bookService.addNewBook(book, category);
 
         Page<Book> books = bookRepository.findByCategoryContains(category ,PageRequest.of(0, 20));
 
@@ -56,7 +56,7 @@ class BookRepositoryTests {
                 .amount(1)
                 .build();
 
-        bookService.addNewBook(book, "forTestCategory");
+//        bookService.addNewBook(book, "forTestCategory");
 
         Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(name ,PageRequest.of(0, 20));
 
@@ -75,7 +75,7 @@ class BookRepositoryTests {
                 .amount(1)
                 .build();
 
-        bookService.addNewBook(book, "forTestCategory");
+//        bookService.addNewBook(book, "forTestCategory");
 
         Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(author ,PageRequest.of(0, 20));
 
@@ -94,7 +94,7 @@ class BookRepositoryTests {
                 .year(year)
                 .build();
 
-        bookService.addNewBook(book, "forTestCategory");
+//        bookService.addNewBook(book, "forTestCategory");
 
         Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(String.valueOf(year),PageRequest.of(0, 20));
 

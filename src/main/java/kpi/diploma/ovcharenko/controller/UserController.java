@@ -5,7 +5,7 @@ import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.exception.ValidPassportException;
-import kpi.diploma.ovcharenko.service.book.BookCardService;
+import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
 import kpi.diploma.ovcharenko.service.user.UserService;
@@ -297,7 +297,7 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/delete/bookCard/{id}")
     public String deleteBookCard(@PathVariable(name = "id") Long bookCardId, HttpServletRequest request) {
-        bookCardService.deleteBookCard(bookCardId);
+        userService.deleteBookCard(bookCardId);
 
         return getPreviousPageByRequest(request).orElse("/");
     }
@@ -341,19 +341,44 @@ public class UserController {
         return "redirect:/admin/allUsers";
     }
 
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/admin/create/user")
+    public String createUser(Model model, @ModelAttribute("user") @Valid UserModel userModel) {
+        model.addAttribute("userForm", new AppUser());
+
+        return "createNewUser";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/admin/create/user")
+    public String createUser(@ModelAttribute("user") @Valid UserModel userModel, BindingResult result) {
+        AppUser existing = userService.findByEmail(userModel.getEmail());
+        if (existing != null) {
+            result.rejectValue("email", null, "There is already an account registered with that email");
+        }
+
+        if (result.hasErrors()) {
+            return "registration";
+        }
+
+        userService.save(userModel);
+
+        return "redirect:/admin/allUsers";
+    }
+
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/delete/user/{id}")
-    public String deleteUser(@PathVariable("id") Long id, Model model) {
-        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        AppUser user = userService.findByEmail(currentUser);
-        List<AppUser> appUsers = userService.showAllUsers();
+    public String deleteUser(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
+//        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+//        AppUser user = userService.findByEmail(currentUser);
+//        List<AppUser> appUsers = userService.showAllUsers();
 
         userService.deleteUser(id);
 
-        model.addAttribute("appUser", user);
-        model.addAttribute("appUsers", appUsers);
-        return "redirect:/profile";
+//        model.addAttribute("appUser", user);
+//        model.addAttribute("appUsers", appUsers);
+        return getPreviousPageByRequest(request).orElse("/");
     }
 
     @GetMapping("/emailError")
