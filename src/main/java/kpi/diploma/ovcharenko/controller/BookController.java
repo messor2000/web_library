@@ -182,8 +182,12 @@ public class BookController {
         }
 
         bookService.addNewBook(book, category, bookTag);
-        bookService.addCoverToTheBook(imageFile, book.getId());
-        bookService.addBookPdf(pdfFile, book.getId());
+        if (!imageFile.isEmpty()) {
+            bookService.changeBookCover(imageFile, book.getId());
+        }
+        if (!pdfFile.isEmpty()) {
+            bookService.addBookPdf(pdfFile, book.getId());
+        }
 
         return "redirect:/";
     }
@@ -221,7 +225,7 @@ public class BookController {
             bookService.changeBookCover(imageFile, id);
         }
         if (!pdfFile.isEmpty()) {
-            bookService.addBookPdf(pdfFile, book.getId());
+            bookService.addBookPdf(pdfFile, id);
         }
 
         return "redirect:/";

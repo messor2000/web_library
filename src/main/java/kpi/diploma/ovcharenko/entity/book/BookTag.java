@@ -35,7 +35,7 @@ public class BookTag {
     @Column(name = "tag_name")
     private String tagName;
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<Book> books = new HashSet<>();
 
     public BookTag(String tagName) {

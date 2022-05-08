@@ -14,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +47,7 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
+    @Transactional
     public void updateBook(Book book, String category, String tag) {
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
 
@@ -116,6 +117,7 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
+    @Transactional
     public void addNewBook(Book book, String category, String tag) {
         for (int i = 0; i < book.getAmount(); i++) {
             BookStatus status = new BookStatus(Status.FREE);
@@ -129,6 +131,7 @@ public class LibraryBookService implements BookService {
 
         if (tag != null && !tag.equals("")) {
             BookTag bookTag = bookTagService.findBookTagByTagName(tag).orElse(new BookTag(tag));
+            bookTag.getBooks().add(book);
             book.getTags().add(bookTag);
         }
 

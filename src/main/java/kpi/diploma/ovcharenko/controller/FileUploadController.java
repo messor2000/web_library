@@ -1,6 +1,8 @@
 package kpi.diploma.ovcharenko.controller;
 
+import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.exception.StorageFileNotFoundException;
+import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
 import kpi.diploma.ovcharenko.service.data.ExcelDataService;
 import kpi.diploma.ovcharenko.service.updloader.StorageService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,19 +34,26 @@ public class FileUploadController {
 
     private final StorageService storageService;
     private final ExcelDataService excelDataService;
+    private final BookTagService bookTagService;
 
     @Autowired
-    public FileUploadController(StorageService storageService, ExcelDataService excelDataService) {
+    public FileUploadController(StorageService storageService, ExcelDataService excelDataService, BookTagService bookTagService) {
         this.storageService = storageService;
         this.excelDataService = excelDataService;
+        this.bookTagService = bookTagService;
     }
 
     @GetMapping("/upload")
     public String listUploadedFiles(Model model) {
+        Set<String> tags = bookTagService.findAllTagNames();
+
+        model.addAttribute("tags", tags);
         model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toUri().toString())
                 .collect(Collectors.toList()));
+
+
 
         return "uploadPage";
     }
@@ -58,10 +69,12 @@ public class FileUploadController {
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("pageNum") String pageNum,
                                    @RequestParam("category") String category, @RequestParam("section") String section,
-                                   RedirectAttributes redirectAttributes) {
+                                   @RequestParam("tag") String tag, RedirectAttributes redirectAttributes) {
         storageService.store(file);
 
-        excelDataService.getExcelDataAsList(file, Integer.parseInt(pageNum), category, section);
+        Set<BookTag> bookTags = tagSetOfTagsFromString(tag);
+
+        excelDataService.getExcelDataAsList(file, Integer.parseInt(pageNum), category, section, bookTags);
 
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
@@ -72,5 +85,16 @@ public class FileUploadController {
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<StorageFileNotFoundException> handleStorageFileNotFound(StorageFileNotFoundException e) {
         return ResponseEntity.notFound().build();
+    }
+
+    private static Set<BookTag> tagSetOfTagsFromString(String tags) {
+        String[] split  = tags.split("[ ,]+");
+        Set<BookTag> bookTags = new HashSet<>();
+
+        for (String tag: split) {
+            bookTags.add(new BookTag(tag));
+        }
+
+        return bookTags;
     }
 }
