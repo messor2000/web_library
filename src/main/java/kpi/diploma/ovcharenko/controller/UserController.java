@@ -118,7 +118,7 @@ public class UserController {
         } catch (final Exception e) {
             log.debug(e.getLocalizedMessage(), e);
             model.addAttribute("message", e.getLocalizedMessage());
-            return "redirect:/login";
+            return "redirect:/emailError";
         }
         return "infoAboutEmail";
     }

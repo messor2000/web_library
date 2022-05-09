@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -185,6 +187,10 @@ public class LibraryBookService implements BookService {
 
     @Override
     public Page<Book> findByKeyWord(String search, Pageable pageable) {
+        if (NumberUtils.isDigits(search)) {
+            return bookRepository.findByYearContaining(Integer.parseInt(search), pageable);
+        }
+
         return bookRepository.findByBookNameOrAuthorOrYear(search, pageable);
     }
 

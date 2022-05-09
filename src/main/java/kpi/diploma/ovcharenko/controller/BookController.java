@@ -66,13 +66,20 @@ public class BookController {
     }
 
     @GetMapping(value = "/category")
-    public String getBooksByCategory(Model model, @RequestParam("category") String category,
+    public String getBooksByCategory(Model model, @RequestParam(value = "category", required = false) String category,
                                      @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size,
                                      RedirectAttributes redirectAttributes) {
         int currentPage = page.orElse(FIRST_PAGE);
         int pageSize = size.orElse(DEFAULT_PAGE_SIZE);
 
-        Page<Book> bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
+        Page<Book> bookPage;
+
+        if (category == null || category.equals("")) {
+            bookPage = bookService.getAllBooks(PageRequest.of(currentPage - 1, pageSize));
+        } else {
+            bookPage = bookService.getBookByCategory(PageRequest.of(currentPage - 1, pageSize), category);
+        }
+
         Set<String> categories = bookService.findAllCategories();
 
         if (!categories.contains(category)) {

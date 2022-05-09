@@ -127,6 +127,11 @@
             <artifactId>hibernate-types-52</artifactId>
             <version>2.16.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
     </dependencies>
 
     <build>

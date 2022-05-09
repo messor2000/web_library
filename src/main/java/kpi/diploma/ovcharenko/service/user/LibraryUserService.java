@@ -4,23 +4,17 @@ import kpi.diploma.ovcharenko.config.PasswordEncoder;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
-import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
+import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.PasswordResetToken;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.UserRole;
-import kpi.diploma.ovcharenko.repo.BookCardRepository;
-import kpi.diploma.ovcharenko.repo.BookRepository;
-import kpi.diploma.ovcharenko.repo.BookStatusRepository;
-import kpi.diploma.ovcharenko.repo.PasswordResetTokenRepository;
-import kpi.diploma.ovcharenko.repo.UserRepository;
-import org.springframework.context.annotation.Lazy;
+import kpi.diploma.ovcharenko.repo.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -58,7 +52,6 @@ public class LibraryUserService implements UserService {
         user.setFirstName(userModel.getFirstName());
         user.setLastName(userModel.getLastName());
         user.setEmail(userModel.getEmail());
-//        user.setPassword(passwordEncoder.encode(userModel.getPassword()));
         user.setPassword(passwordEncoder.passwordEncoder().encode(userModel.getPassword()));
         user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
 
@@ -109,7 +102,6 @@ public class LibraryUserService implements UserService {
 
     @Override
     public void changeUserPassword(AppUser user, String password) {
-//        user.setPassword(passwordEncoder.encode(password));
         user.setPassword(passwordEncoder.passwordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -121,7 +113,6 @@ public class LibraryUserService implements UserService {
 
     @Override
     public boolean checkIfValidOldPassword(final AppUser user, final String oldPassword) {
-//        return passwordEncoder.matches(oldPassword, user.getPassword());
         return passwordEncoder.passwordEncoder().matches(oldPassword, user.getPassword());
     }
 
