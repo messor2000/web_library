@@ -89,6 +89,14 @@
                             <div class="modal-content">
                                 <form action="#" th:action="@{/book/update/{id}(id=${book.id})}"
                                       th:object="${book}" method="post" enctype="multipart/form-data">
+                                    <label for="imageFile" th:text="#{book.cover}">Book cover: </label>
+                                    <img th:src="@{'https://s3.us-east-1.amazonaws.com/pson-library-bucket/book/'+${book.id}}"
+                                         height="300px" width="300px" alt="" src=""/>
+                                    <label for="imageFile" th:text="#{book.new.cover}">Choose new image for book
+                                        cover: </label>
+                                    <input type="file" name="imageFile" accept="image/png, image/jpeg, image/jpg"
+                                           id="imageFile"/>
+
                                     <label for="bookName" th:text="#{book.name}">Book Name</label>
                                     <input type="text" th:field="${book.bookName}" id="bookName"
                                            placeholder="Book Name">
@@ -151,14 +159,6 @@
                                             </option>
                                         </datalist>
                                     </label>
-
-                                    <label for="imageFile" th:text="#{book.cover}">Book cover: </label>
-                                    <img th:src="@{'https://s3.us-east-1.amazonaws.com/pson-library-bucket/'+${book.id}}"
-                                         height="300px" width="300px" alt="" src=""/>
-                                    <label for="imageFile" th:text="#{book.new.cover}">Choose new image for book
-                                        cover: </label>
-                                    <input type="file" name="imageFile" accept="image/png, image/jpeg, image/jpg"
-                                           id="imageFile"/>
 
                                     <label for="pdfFile">Pdf:</label>
                                     <input type="file" name="pdfFile" accept="application/pdf" id="pdfFile"/>

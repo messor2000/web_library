@@ -11,11 +11,13 @@ import kpi.diploma.ovcharenko.entity.user.PasswordResetToken;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.UserRole;
 import kpi.diploma.ovcharenko.repo.*;
+import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
@@ -33,14 +35,16 @@ public class LibraryUserService implements UserService {
     private final BookCardRepository bookCardRepository;
     private final BookStatusRepository bookStatusRepository;
     private final PasswordResetTokenRepository resetTokenRepository;
+    private final AmazonClient amazonClient;
 
     public LibraryUserService(UserRepository userRepository, BookRepository bookRepository, PasswordResetTokenRepository resetTokenRepository,
-                              BookCardRepository bookCardRepository, BookStatusRepository bookStatusRepository) {
+                              BookCardRepository bookCardRepository, BookStatusRepository bookStatusRepository, AmazonClient amazonClient) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.bookStatusRepository = bookStatusRepository;
         this.bookCardRepository = bookCardRepository;
+        this.amazonClient = amazonClient;
     }
 
     @Override
@@ -64,6 +68,11 @@ public class LibraryUserService implements UserService {
         user.setEmail(userModel.getEmail());
         user.setTelephoneNumber(userModel.getTelephoneNumber());
         userRepository.save(user);
+    }
+
+    @Override
+    public void addPhotoImage(MultipartFile file, String email) {
+        amazonClient.uploadPhotoImage(file, email);
     }
 
     @Override

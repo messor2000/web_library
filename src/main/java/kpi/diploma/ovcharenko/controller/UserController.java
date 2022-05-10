@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -148,13 +149,6 @@ public class UserController {
         AppUser user = userService.findByEmail(currentUser);
         List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
 
-        Set<CardStatus> cardStatuses = new HashSet<>();
-
-        for (BookCard bookCard : bookCards) {
-            cardStatuses.add(bookCard.getCardStatus());
-        }
-
-        log.info(cardStatuses);
 
         model.addAttribute("appUser", user);
         model.addAttribute("bookCards", bookCards);
@@ -192,12 +186,17 @@ public class UserController {
     }
 
     @PostMapping("/user/update/profile")
-    public String updateUserProfile(Model model, @ModelAttribute("user") @Valid UserModel userModel) {
+    public String updateUserProfile(Model model, @ModelAttribute("user") @Valid UserModel userModel,
+                                    @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
         userService.updateUser(user.getId(), userModel);
         List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
         List<AppUser> appUsers = userService.showAllUsers();
+
+        if (!imageFile.isEmpty()) {
+            userService.addPhotoImage(imageFile, user.getEmail());
+        }
 
         model.addAttribute("appUser", user);
         model.addAttribute("bookCards", bookCards);
@@ -369,15 +368,9 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/delete/user/{id}")
-    public String deleteUser(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
-//        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-//        AppUser user = userService.findByEmail(currentUser);
-//        List<AppUser> appUsers = userService.showAllUsers();
-
+    public String deleteUser(@PathVariable("id") Long id, HttpServletRequest request) {
         userService.deleteUser(id);
 
-//        model.addAttribute("appUser", user);
-//        model.addAttribute("appUsers", appUsers);
         return getPreviousPageByRequest(request).orElse("/");
     }
 

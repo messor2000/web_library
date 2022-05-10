@@ -88,7 +88,16 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <form action="#" th:action="@{/user/update/profile}"
-                                      th:object="${user}" method="post">
+                                      th:object="${user}" method="post" enctype="multipart/form-data">
+
+                                    <label for="imageFile" th:text="#{user.photo}">Avatar: </label>
+                                    <img th:src="@{'https://s3.us-east-1.amazonaws.com/pson-library-bucket/user/'+${user.email}}"
+                                         height="300px" width="300px" alt="" src=""/>
+                                    <label for="imageFile" th:text="#{user.photo.new}">Choose new image for avatar
+                                        cover: </label>
+                                    <input type="file" name="imageFile" th:name="imageFile" accept="image/png, image/jpeg, image/jpg"
+                                           id="imageFile"/>
+
                                     <label for="firstName" th:text="#{reg.first.name}"> first name</label>
                                     <input type="text" th:field="${user.firstName}" id="firstName">
                                     <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>

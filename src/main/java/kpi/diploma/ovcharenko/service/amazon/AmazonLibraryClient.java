@@ -50,7 +50,19 @@ public class AmazonLibraryClient implements AmazonClient {
     public void uploadImage(MultipartFile multipartFile, Long bookId) {
         try {
             File file = convertMultiPartToFile(multipartFile);
-            String fileName = bookId.toString();
+            String fileName = "book/" + bookId.toString();
+            uploadFileTos3bucket(fileName, file);
+            file.delete();
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
+
+    @Override
+    public void uploadPhotoImage(MultipartFile multipartFile, String email) {
+        try {
+            File file = convertMultiPartToFile(multipartFile);
+            String fileName = "user/" + email;
             uploadFileTos3bucket(fileName, file);
             file.delete();
         } catch (Exception e) {
@@ -61,7 +73,7 @@ public class AmazonLibraryClient implements AmazonClient {
     @Override
     public void changeFile(MultipartFile multipartFile, Long bookId) {
         try {
-            String fileName = bookId.toString();
+            String fileName = "book/" + bookId.toString();
             String objectKey = endpointUrl + "/" + bucketName + "/" + fileName;
             s3client.deleteObject(bucketName, objectKey);
 

@@ -3,6 +3,7 @@ package kpi.diploma.ovcharenko.service.user;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,4 +38,6 @@ public interface UserService extends UserDetailsService {
     List<AppUser> showAllUsers();
 
     void updateUser(Long userId, final UserModel userModel);
+
+    void addPhotoImage(MultipartFile file, String email);
 }

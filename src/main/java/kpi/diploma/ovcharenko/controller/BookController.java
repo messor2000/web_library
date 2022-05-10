@@ -131,8 +131,6 @@ public class BookController {
         model.addAttribute("statusBooked", statusBooked);
         model.addAttribute("statusTaken", statusTaken);
 
-        log.info(String.valueOf(statuses));
-
         return "bookInfo";
     }
 
@@ -192,7 +190,7 @@ public class BookController {
 
         bookService.addNewBook(book, category, bookTag);
         if (!imageFile.isEmpty()) {
-            bookService.changeBookCover(imageFile, book.getId());
+            bookService.addCoverToTheBook(imageFile, book.getId());
         }
         if (!pdfFile.isEmpty()) {
             bookService.addBookPdf(pdfFile, book.getId());
