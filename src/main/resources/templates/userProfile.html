@@ -86,8 +86,8 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <label th:text="#{user.photo}">Avatar: </label>
-                                <img th:src="@{'https://s3.us-east-1.amazonaws.com/pson-library-bucket/user/'+${user.email}}"
-                                     height="600px" width="600px" alt="" src=""/>
+                                <img th:src="@{'https://s3.us-east-1.amazonaws.com/pson-library-bucket/user/'+${appUser.email}}"
+                                     height="300px" width="300px" alt="" src=""/>
                                 <label th:text="#{reg.first.name}">First Name</label>
                                 <p th:text="${appUser.firstName}"></p>
                                 <label th:text="#{reg.last.name}">Last Name</label>
