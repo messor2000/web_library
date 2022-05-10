@@ -52,7 +52,6 @@ public class BookCard {
     @JoinColumn(name="book_id")
     private Book book;
 
-    //    @Column(name = "status", columnDefinition = "ENUM('WAIT_FOR_APPROVE', 'APPROVED', 'BOOKED_RETURNED')")
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     @Type(type = "pgsql_enum")

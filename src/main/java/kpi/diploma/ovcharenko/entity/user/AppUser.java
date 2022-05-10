@@ -11,19 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
@@ -60,6 +48,9 @@ public class AppUser {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "number")
+    private String telephoneNumber;
+
     @NotEmpty
     @Column(name = "password")
     private String password;
@@ -79,6 +70,9 @@ public class AppUser {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<BookCard> bookCards = new HashSet<>();
+
+    @OneToOne(mappedBy="user", cascade={CascadeType.REMOVE,CascadeType.PERSIST}, orphanRemoval = true)
+    private PasswordResetToken token;
 
     public void addBookCard(BookCard bookCard) {
         bookCards.add(bookCard);

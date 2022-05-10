@@ -16,4 +16,6 @@ public interface BookTagService {
     Optional<BookTag> findBookTagByTagName(String tagName);
 
     Set<String> findBookTagsByBookId(Long bookId);
+
+    Set<String> findBookNameByTag(String tag);
 }

@@ -127,7 +127,6 @@ a.button:hover, a.button:focus {
     width: 150px;
     height: 40px;
     text-indent: -9999px;
-    background: url("../../public/logo.png");
     transition: background-color 250ms ease-out;
 }
 
@@ -991,6 +990,16 @@ h1 {
 [data-tooltip]:hover::after {
     opacity: 1; /* Показываем подсказку */
     top: 2em; /* Положение подсказки */
+}
+
+.button2 {
+    border: none;
+    background-color: #7a96d0;
+    padding: 12px 28px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
 
 

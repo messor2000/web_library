@@ -58,9 +58,9 @@
                         <i>EN</i>
                     </a>
                 </div>
-                <div class="localization" th:if="${#locale.toString() == 'en_GB'}">
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
                     <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UA')}">
-                        <i>UK</i>
+                        <i>UA</i>
                     </a>
                 </div>
 
@@ -101,12 +101,15 @@
                         <div>
                             <form th:action="@{/table/category}" method="get">
                                 <div class="nav-category">
-                                    <a th:href="@{/table/}" class="filter-item" th:text="#{category.all}">All categories</a>
+                                    <button th:href="@{/table/}" class="filter-item" th:text="#{category.all}">All
+                                        categories
+                                    </button>
                                 </div>
                                 <div class="nav-category">
                                     <label>
                                         <select th:name="category" style="width: 300px">
-                                            <option disabled selected th:text="#{category.find}">Find by category</option>
+                                            <option disabled selected th:text="#{category.find}">Find by category
+                                            </option>
                                             <option th:each="category : ${categories}"
                                                     th:text="${category}">
                                             </option>
@@ -115,7 +118,7 @@
                                 </div>
 
                                 <div class="nav-category">
-                                    <button type="submit" th:text="#{category.find}">Find by category</button>
+                                    <button type="submit" class="button2" th:text="#{category.find}">Submit</button>
                                 </div>
                             </form>
                         </div>

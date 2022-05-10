@@ -32,14 +32,11 @@ public class LibraryUserService implements UserService {
     private final BookRepository bookRepository;
     private final BookCardRepository bookCardRepository;
     private final BookStatusRepository bookStatusRepository;
-    private final PasswordEncoder passwordEncoder;
     private final PasswordResetTokenRepository resetTokenRepository;
 
-    public LibraryUserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                              BookRepository bookRepository, PasswordResetTokenRepository resetTokenRepository,
+    public LibraryUserService(UserRepository userRepository, BookRepository bookRepository, PasswordResetTokenRepository resetTokenRepository,
                               BookCardRepository bookCardRepository, BookStatusRepository bookStatusRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.bookRepository = bookRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.bookStatusRepository = bookStatusRepository;
@@ -52,7 +49,8 @@ public class LibraryUserService implements UserService {
         user.setFirstName(userModel.getFirstName());
         user.setLastName(userModel.getLastName());
         user.setEmail(userModel.getEmail());
-        user.setPassword(passwordEncoder.passwordEncoder().encode(userModel.getPassword()));
+        user.setTelephoneNumber(userModel.getTelephoneNumber());
+        user.setPassword(PasswordEncoder.passwordEncoder().encode(userModel.getPassword()));
         user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
 
         return userRepository.save(user);
@@ -64,11 +62,13 @@ public class LibraryUserService implements UserService {
         user.setFirstName(userModel.getFirstName());
         user.setLastName(userModel.getLastName());
         user.setEmail(userModel.getEmail());
+        user.setTelephoneNumber(userModel.getTelephoneNumber());
         userRepository.save(user);
     }
 
     @Override
     public void deleteUser(Long id) {
+        resetTokenRepository.deleteAllByUserId(id);
         userRepository.deleteById(id);
     }
 
@@ -102,7 +102,7 @@ public class LibraryUserService implements UserService {
 
     @Override
     public void changeUserPassword(AppUser user, String password) {
-        user.setPassword(passwordEncoder.passwordEncoder().encode(user.getPassword()));
+        user.setPassword(PasswordEncoder.passwordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -113,7 +113,7 @@ public class LibraryUserService implements UserService {
 
     @Override
     public boolean checkIfValidOldPassword(final AppUser user, final String oldPassword) {
-        return passwordEncoder.passwordEncoder().matches(oldPassword, user.getPassword());
+        return PasswordEncoder.passwordEncoder().matches(oldPassword, user.getPassword());
     }
 
     @Override
@@ -173,7 +173,7 @@ public class LibraryUserService implements UserService {
         BookCard bookCard = bookCardRepository.findBookCardById(bookCardId);
         Book book = bookRepository.findById(bookCard.getBook().getId()).get();
 
-        bookCard.setCardStatus(CardStatus.BOOK_RETURNED);
+        bookCard.setCardStatus(CardStatus.REJECT);
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
         for (BookStatus bookStatus: bookStatuses) {

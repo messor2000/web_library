@@ -34,6 +34,8 @@ public class UserModel {
     @NotEmpty
     private String email;
 
+    private String telephoneNumber;
+
     @Email
     @NotEmpty
     private String confirmEmail;

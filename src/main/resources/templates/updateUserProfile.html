@@ -102,6 +102,9 @@
                                     <input type="email" th:field="${user.email}" id="email">
                                     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
 
+                                    <label for="tel" th:text="#{reg.number}"> number</label>
+                                    <input type="tel" th:field="${user.telephoneNumber}" id="tel">
+
                                     <input type="submit" class="btn btn-danger button btn btn-primary" th:value="#{user.update}">
                                 </form>
 

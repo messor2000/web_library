@@ -1,12 +1,15 @@
 package kpi.diploma.ovcharenko.repo;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.card.BookCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Set;
 
 @Repository
 public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
@@ -22,6 +25,9 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
     @Query("select b from Book b where b.year = :year")
     Page<Book> findByYearContaining(int year, Pageable pageable);
 
+//    Page<Book> findByBookCardsContaining(Set<BookCard> bookCards, Pageable pageable);
+
+    Page<Book> findBooksByBookName(String bookName, Pageable pageable);
 }
 
 

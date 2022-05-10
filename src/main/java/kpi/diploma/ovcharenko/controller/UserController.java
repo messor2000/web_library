@@ -123,7 +123,7 @@ public class UserController {
         return "infoAboutEmail";
     }
 
-    @GetMapping("/user/resetOldPassword")
+    @GetMapping("/user/reset/password")
     public String showChangePasswordPage(Locale locale, @RequestParam("token") String token, RedirectAttributes redirectAttributes) {
         String result = securityService.validatePasswordResetToken(token);
         if (result != null) {
@@ -131,11 +131,11 @@ public class UserController {
             return "redirect:/login" + "&message=" + message;
         } else {
             redirectAttributes.addAttribute("token", token);
-            return "redirect:/updatePassword";
+            return "redirect:/update/password";
         }
     }
 
-    @PostMapping("/user/savePassword")
+    @PostMapping("/user/save/password")
     public String savePassword(@RequestParam("password") final String password, @RequestParam("token") String token) {
         Optional<AppUser> user = userService.getUserByPasswordResetToken(token);
         user.ifPresent(appUser -> userService.changeUserPassword(appUser, password));
@@ -396,7 +396,7 @@ public class UserController {
     }
 
     private SimpleMailMessage constructResetTokenEmail(String contextPath, Locale locale, String token, AppUser user) {
-        String url = contextPath + "/user/resetOldPassword?token=" + token;
+        String url = contextPath + "/user/reset/password?token=" + token;
         String message = messages.getMessage("message.resetPassword",
                 null, locale);
         return constructEmail(message + " \r\n" + url, user);

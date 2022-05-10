@@ -45,7 +45,6 @@ public class BookStatus {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    //    @Column(name = "book_status", columnDefinition = "ENUM('FREE', 'BOOKED', 'TAKEN')")
     @Column(name = "book_status")
     @Enumerated(EnumType.STRING)
     @Type(type = "pgsql_enum")

@@ -5,19 +5,19 @@ import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
+import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -190,6 +190,8 @@ public class LibraryBookService implements BookService {
         if (NumberUtils.isDigits(search)) {
             return bookRepository.findByYearContaining(Integer.parseInt(search), pageable);
         }
+
+//        Page<Book> books = bookRepository.findByBookCardsContaining(search, pageable);
 
         return bookRepository.findByBookNameOrAuthorOrYear(search, pageable);
     }

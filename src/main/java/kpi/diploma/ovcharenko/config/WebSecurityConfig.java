@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -39,8 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/table/**",
                             "/forgetPassword/*",
                             "/resetPassword/*",
-                            "/user/savePassword/**",
-                            "/user/resetOldPassword/**",
+                            "/user/save/password",
+                            "/update/password",
+                            "/user/reset/password/**",
                             "/download/book/*",
                             "/download/pdf/**",
                             "/covers/**",
@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
         auth.setUserDetailsService(userDetailsService);
-        auth.setPasswordEncoder(passwordEncoder.passwordEncoder());
+        auth.setPasswordEncoder(PasswordEncoder.passwordEncoder());
         return auth;
     }
 
@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder.passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(PasswordEncoder.passwordEncoder());
     }
 
 }

@@ -133,6 +133,14 @@
                                        th:each="error : ${#fields.errors('confirmEmail')}"
                                        th:text="${error}">Validation error</p>
                                 </div>
+                                <div class="form-group">
+                                    <label for="number" class="control-label" th:text="#{reg.number}">number</label>
+                                    <input id="number"
+                                           type="tel"
+                                           class="form-control"
+                                           placeholder="+380-000-00-00"
+                                           th:field="*{telephoneNumber}" style="width: 300px"/>
+                                </div>
                                 <div class="form-group"
                                      th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
                                     <label for="password" class="control-label"

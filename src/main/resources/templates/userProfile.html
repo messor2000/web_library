@@ -85,13 +85,15 @@
                          aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <label>First Name</label>
+                                <label th:text="#{reg.first.name}">First Name</label>
                                 <p th:text="${appUser.firstName}"></p>
-                                <label>Last Name</label>
+                                <label th:text="#{reg.last.name}">Last Name</label>
                                 <p th:text="${appUser.lastName}"></p>
-                                <label>Email</label>
+                                <label th:text="#{reg.email}">Email</label>
                                 <p th:text="${appUser.email}"></p>
-                                <label>Registration date</label>
+                                <label th:text="#{reg.number}">num</label>
+                                <p th:text="${appUser.telephoneNumber}"></p>
+                                <label th:text="#{reg.date}">Registration date</label>
                                 <p th:text="${appUser.registrationDate}"></p>
                                 <p><a th:href="@{/user/update/profile}" th:method="get" type="button"
                                       class="btn btn-danger button btn btn-primary"
@@ -111,6 +113,7 @@
                                                 <td th:text="#{book.name}">Book Name</td>
                                                 <td th:text="#{book.author}">Author</td>
                                                 <td th:text="#{book.year}">Year</td>
+                                                <td th:text="#{book.section}">Section</td>
                                                 <td th:text="#{book.status}">Status</td>
                                                 <td th:text="#{book.action}">Action</td>
                                             </tr>

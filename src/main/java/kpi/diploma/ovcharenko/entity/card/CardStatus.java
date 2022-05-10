@@ -1,7 +1,7 @@
 package kpi.diploma.ovcharenko.entity.card;
 
 public enum CardStatus {
-    WAIT_FOR_APPROVE("WAIT_FOR_APPROVE"), APPROVED("APPROVED"), BOOK_RETURNED("BOOK_RETURNED");
+    WAIT_FOR_APPROVE("WAIT_FOR_APPROVE"), APPROVED("APPROVED"), BOOK_RETURNED("BOOK_RETURNED"), REJECT("REJECT");
 
     public final String statusName;
 
