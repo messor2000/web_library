@@ -27,8 +27,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                     .antMatchers("/registration").not().fullyAuthenticated()
-                    .antMatchers("/add", "/uploadPage", "/delete/*", "/edit/*", "/deleteCategory/*",
-                "/admin/allUserBooks/*", "/admin/allUsers", "/admin/update/user", "/admin/approve/book/*", "/admin/putBackIntoTheLibrary/*",
+                    .antMatchers("/add", "/uploadPage", "/delete/*", "/edit/*", "/delete/category/*" , "/book/delete/tag/*",
+                            "/book/delete/category/*" , "/admin/allUserBooks/*", "/admin/allUsers", "/admin/update/user", "/admin/approve/book/*",
+                            "/admin/putBackIntoTheLibrary/*",
                             "/admin/delete/user/*", "/admin/delete/bookCard/*", "/admin/showBookingCards")
                     .hasRole("ADMIN")
                     .antMatchers("/profile", "/user/change/password", "/user/update/password", "/user/update/profile").hasAnyRole("USER", "ADMIN")

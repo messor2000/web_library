@@ -204,6 +204,20 @@ public class LibraryBookService implements BookService {
     public List<BookStatus> getAllBooksStatus(Long bookId) {
         return bookStatusRepository.findAllByBookId(bookId);
     }
+
+    @Override
+    public void deleteTagFromTheBook(Long bookId, String tag) {
+        Book book = findBookById(bookId);
+        Set<BookTag> allTags = bookTagService.findBookTagByBook(Collections.singleton(book));
+
+        BookTag bookTag = bookTagService.findBookTagByTagName(tag).get();
+
+        allTags.remove(bookTag);
+
+        book.setTags(allTags);
+
+        bookRepository.save(book);
+    }
 }
 
 

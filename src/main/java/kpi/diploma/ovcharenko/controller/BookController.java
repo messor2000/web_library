@@ -146,8 +146,6 @@ public class BookController {
         model.addAttribute("categories", categories);
         model.addAttribute("books", books);
 
-        search.contains(" ");
-
         return "library";
     }
 
@@ -239,11 +237,19 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/book/deleteCategory/{id}")
+    @PostMapping("/book/delete/category/{id}")
     public String deleteBookCategory(@PathVariable("id") long id, @RequestParam(value = "category") String category) {
         bookService.deleteCategory(id, category);
 
-        return "redirect:/";
+        return "redirect:/find/" + id;
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/book/delete/tag/{id}")
+    public String deleteBookTag(@PathVariable("id") long id, @RequestParam(value = "tag") String tag) {
+        bookService.deleteTagFromTheBook(id, tag);
+
+        return "redirect:/find/" + id;
     }
 }
 

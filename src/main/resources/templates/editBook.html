@@ -170,18 +170,32 @@
                                     <input type="submit" class="btn btn-primary" th:value="#{book.update}">
                                 </form>
 
-                                <form th:action="@{/book/deleteCategory/{id}(id=${book.id})}" method="post">
-                                    <label for="category">Delete category</label>
+                                <form th:action="@{/book/delete/category/{id}(id=${book.id})}" method="post">
+                                    <label for="category" th:value="#{delete.category}">Delete category</label>
                                     <label for="categoryForDelete">
                                         <select class="form-control" id="categoryForDelete" name="category">
-                                            <option value="">Select category for delete</option>
+                                            <option th:value="#{select.category.delete}" selected disabled>Select category for delete</option>
                                             <option style="width: 300px" th:each="category : ${bookCategories}"
                                                     th:value="${category}"
                                                     th:text="${category}">
                                             </option>
                                         </select>
                                     </label>
-                                    <input type="submit" class="btn btn-primary" value="Delete category">
+                                    <input type="submit" class="btn btn-primary" th:value="#{delete.category}">
+                                </form>
+
+                                <form th:action="@{/book/delete/tag/{id}(id=${book.id})}" method="post">
+                                    <label for="tagForDelete" th:text="#{delete.tag}">Delete tag</label>
+                                    <label for="tagForDelete">
+                                        <select class="form-control" id="tagForDelete" name="tag">
+                                            <option th:value="#{select.tag.delete}" disabled selected>Select tag for delete</option>
+                                            <option style="width: 300px" th:each="tag : ${bookTags}"
+                                                    th:value="${tag}"
+                                                    th:text="${tag}">
+                                            </option>
+                                        </select>
+                                    </label>
+                                    <input type="submit" class="btn btn-primary" th:value="#{delete.tag}">
                                 </form>
                             </div>
                         </div>

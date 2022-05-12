@@ -42,4 +42,6 @@ public interface BookService {
     Page<Book> findByKeyWord(String search, Pageable pageable);
 
     List<BookStatus> getAllBooksStatus(Long bookId);
+
+    void deleteTagFromTheBook(Long bookId, String tag);
 }

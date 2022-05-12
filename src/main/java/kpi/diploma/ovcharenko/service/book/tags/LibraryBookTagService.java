@@ -1,10 +1,12 @@
 package kpi.diploma.ovcharenko.service.book.tags;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
+import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.repo.BookTagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.HashSet;
