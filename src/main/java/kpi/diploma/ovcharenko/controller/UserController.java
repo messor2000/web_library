@@ -157,25 +157,6 @@ public class UserController {
         return "userProfile";
     }
 
-    @GetMapping("/profile/{bookStatus}")
-    public String viewUserProfileWithBooks(Model model, @PathVariable("bookStatus") CardStatus status) {
-        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        AppUser user = userService.findByEmail(currentUser);
-        List<BookCard> bookCardsWithStatus = bookCardService.findAllUserBookCardsAndStatus(user.getId(), status);
-        Set<CardStatus> cardStatuses = new HashSet<>();
-
-        for (BookCard bookCard : bookCardsWithStatus) {
-            cardStatuses.add(bookCard.getCardStatus());
-        }
-
-        log.info(cardStatuses);
-        model.addAttribute("appUser", user);
-        model.addAttribute("cardStatuses", cardStatuses);
-        model.addAttribute("bookCardsWithStatus", bookCardsWithStatus);
-
-        return "userProfile";
-    }
-
     @GetMapping("/user/update/profile")
     public String showUpdateProfileForm(Model model) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -197,6 +178,21 @@ public class UserController {
         if (!imageFile.isEmpty()) {
             userService.addPhotoImage(imageFile, user.getEmail());
         }
+
+        model.addAttribute("appUser", user);
+        model.addAttribute("bookCards", bookCards);
+        model.addAttribute("appUsers", appUsers);
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/user/delete/image")
+    public String deleteUserProfileImage(Model model) {
+        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        AppUser user = userService.findByEmail(currentUser);
+        List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
+        List<AppUser> appUsers = userService.showAllUsers();
+
+        userService.deletePhotoImage(user.getEmail());
 
         model.addAttribute("appUser", user);
         model.addAttribute("bookCards", bookCards);

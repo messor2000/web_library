@@ -108,6 +108,13 @@ public class AmazonLibraryClient implements AmazonClient {
         }
     }
 
+    @Override
+    public void deleteFileFromS3(String folder, String key) {
+        String fileName = folder + key;
+        String objectKey = endpointUrl + "/" + bucketName + "/" + fileName;
+        s3client.deleteObject(bucketName, objectKey);
+    }
+
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
 
@@ -121,6 +128,4 @@ public class AmazonLibraryClient implements AmazonClient {
         s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
-
-
 }

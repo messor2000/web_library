@@ -76,6 +76,11 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
+    public void deletePhotoImage(String email) {
+        amazonClient.deleteFileFromS3("user/", email);
+    }
+
+    @Override
     public void deleteUser(Long id) {
         resetTokenRepository.deleteAllByUserId(id);
         userRepository.deleteById(id);

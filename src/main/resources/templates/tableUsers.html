@@ -87,6 +87,7 @@
                             <table id="books" class="table table-bordered table-responsive-sm">
                                 <thead>
                                 <tr>
+                                    <th th:text="#{user.photo}">photo</th>
                                     <th th:text="#{reg.last.name}">Last name</th>
                                     <th th:text="#{reg.first.name}">First name</th>
                                     <th th:text="#{reg.email}">Email</th>
@@ -95,6 +96,9 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="user : ${appUsers}">
+                                    <td><img
+                                            th:src="@{'https://s3.us-east-1.amazonaws.com/pson-library-bucket/user/'+${user.email}}"
+                                            height="150" width="150" alt="" src=""/></td>
                                     <td th:text="${user.lastName}">title</td>
                                     <td th:text="${user.firstName}">title</td>
                                     <td th:text="${user.email}">title</td>
@@ -103,7 +107,7 @@
                                             <a th:href="@{/admin/checkUserBookCards/{id}(id=${user.id})}" type="button"
                                                class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                               >User book card</a>
+                                            >User book card</a>
                                             <a th:href="@{/admin/update/user/{id}(id=${user.id})}" type="button"
                                                class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal"

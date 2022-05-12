@@ -13,4 +13,6 @@ public interface AmazonClient {
     void uploadBookPdf(MultipartFile multipartFile, Long id);
 
     void downloadPdfFile(Book book);
+
+    void deleteFileFromS3(String folder, String key);
 }

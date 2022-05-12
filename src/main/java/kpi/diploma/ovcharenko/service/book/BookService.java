@@ -23,6 +23,8 @@ public interface BookService {
 
     void changeBookCover(MultipartFile file, Long bookId);
 
+    void deleteBookCover(Long bookId);
+
     void addBookPdf(MultipartFile file, Long bookId);
 
     void downloadPdf(Long bookId);

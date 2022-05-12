@@ -40,4 +40,6 @@ public interface UserService extends UserDetailsService {
     void updateUser(Long userId, final UserModel userModel);
 
     void addPhotoImage(MultipartFile file, String email);
+
+    void deletePhotoImage(String email);
 }

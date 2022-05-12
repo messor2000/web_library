@@ -5,7 +5,6 @@ import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
-import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
@@ -99,6 +98,11 @@ public class LibraryBookService implements BookService {
     @Override
     public void changeBookCover(MultipartFile file, Long bookId) {
         amazonClient.changeFile(file, bookId);
+    }
+
+    @Override
+    public void deleteBookCover(Long bookId) {
+        amazonClient.deleteFileFromS3("book/", String.valueOf(bookId));
     }
 
     @Override
