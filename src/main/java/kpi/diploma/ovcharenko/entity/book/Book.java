@@ -9,6 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -72,7 +74,8 @@ public class Book {
     private Set<BookCategory> categories = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCard> bookCards = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,

@@ -48,4 +48,9 @@ public class LibraryBookCardService implements BookCardService {
     public List<BookCard> findAllBookCardsWithStatus(CardStatus status) {
         return bookCardRepository.findAllByCardStatus(status);
     }
+
+    @Override
+    public void deleteBookCardByUserId(Long id) {
+        bookCardRepository.deleteBookCardsByUserId(id);
+    }
 }

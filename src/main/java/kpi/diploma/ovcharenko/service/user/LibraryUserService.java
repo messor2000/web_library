@@ -82,6 +82,7 @@ public class LibraryUserService implements UserService {
 
     @Override
     public void deleteUser(Long id) {
+        bookCardRepository.deleteBookCardsByUserId(id);
         resetTokenRepository.deleteAllByUserId(id);
         userRepository.deleteById(id);
     }

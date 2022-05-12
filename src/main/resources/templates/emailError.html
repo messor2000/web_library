@@ -57,9 +57,9 @@
                         <i>EN</i>
                     </a>
                 </div>
-                <div class="localization" th:if="${#locale.toString() == 'en_GB'}">
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
                     <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UA')}">
-                        <i>UK</i>
+                        <i>UA</i>
                     </a>
                 </div>
 
@@ -73,7 +73,7 @@
         </header>
 
         <!-- Main Section -->
-        <div class="main-box">
+        <div class="main-box" style="padding-bottom: 50px">
             <h1 class="alert alert-danger" th:utext="#{message.email.config.error}">Error</h1>
         </div>
         <!-- /main -->

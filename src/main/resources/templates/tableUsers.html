@@ -54,13 +54,13 @@
                 </div>
 
                 <div class="localization" th:if="${#locale.toString() == 'uk_UA'}">
-                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_GB')}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_US')}">
                         <i>EN</i>
                     </a>
                 </div>
-                <div class="localization" th:if="${#locale.toString() == 'en_GB'}">
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
                     <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UA')}">
-                        <i>UK</i>
+                        <i>UA</i>
                     </a>
                 </div>
 
@@ -75,7 +75,7 @@
 
 
         <!-- Main Section -->
-        <div class="main-box">
+        <div class="main-box" style="padding-bottom: 50px">
             <div class="page-container">
 
                 <div class="page-title category-title">
@@ -107,7 +107,7 @@
                                             <a th:href="@{/admin/checkUserBookCards/{id}(id=${user.id})}" type="button"
                                                class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                            >User book card</a>
+                                               th:text="#{booking.cards}">User book card</a>
                                             <a th:href="@{/admin/update/user/{id}(id=${user.id})}" type="button"
                                                class="btn btn-danger button btn btn-primary"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal"

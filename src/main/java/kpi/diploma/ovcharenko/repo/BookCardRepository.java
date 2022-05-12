@@ -20,5 +20,7 @@ public interface BookCardRepository extends CrudRepository<BookCard, Long> {
 
     BookCard findBookCardById(Long bookCardId);
 
+    void deleteBookCardsByUserId(Long id);
+
 }
 

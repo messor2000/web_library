@@ -16,4 +16,6 @@ public interface BookCardService {
     List<BookCard> findAllUserBookCardsAndStatus(Long userId, CardStatus status);
 
     List<BookCard> findAllBookCardsWithStatus(CardStatus status);
+
+    void deleteBookCardByUserId(Long id);
 }
