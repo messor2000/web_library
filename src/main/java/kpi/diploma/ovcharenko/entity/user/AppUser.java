@@ -68,10 +68,10 @@ public class AppUser {
     private Collection<UserRole> roles = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCard> bookCards = new HashSet<>();
 
-    @OneToOne(mappedBy="user", cascade={CascadeType.REMOVE,CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private PasswordResetToken token;
 
     public void addBookCard(BookCard bookCard) {

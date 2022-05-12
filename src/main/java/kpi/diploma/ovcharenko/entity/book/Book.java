@@ -72,13 +72,13 @@ public class Book {
     private Set<BookCategory> categories = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<BookCard> bookCards = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
-                    CascadeType.MERGE
+                    CascadeType.MERGE,
             })
     @JoinTable(
             name = "books_tags",
