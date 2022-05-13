@@ -130,11 +130,9 @@
                             </div>
 
                             <div>
-                                <a th:href="@{/download/pdf/{id}(id=${book.id})}" th:text="#{download.book}">download
-                                     book</a>
-                            </div>
+                                <a href="#" th:book_id="${book.id}" th:onclick="'openPdf(\''+ ${book.id} +'\')'" th:text="#{open.pdf}"></a>
 
-                            <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+                                <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
                                 <div th:if="${book.amount} >= 1">
                                     <form th:action="@{/takeBook/{id}(id=${book.id})}" method="post">
                                         <div class="col-sm-6 col-sm-offset-3">
@@ -175,6 +173,13 @@
     </div>
 
 </div>
+
+<script type="text/javascript">
+    function openPdf(id) {
+        window.open(`https://pson-library-bucket.s3.amazonaws.com/${id}.pdf`, '_blank', 'fullscreen=yes'); return false;
+    }
+</script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.js"></script>

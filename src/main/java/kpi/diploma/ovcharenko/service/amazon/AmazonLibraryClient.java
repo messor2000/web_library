@@ -7,9 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import kpi.diploma.ovcharenko.entity.book.Book;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +16,6 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
 
 @Log4j2
@@ -93,17 +90,6 @@ public class AmazonLibraryClient implements AmazonClient {
             uploadFileTos3bucket(fileName, file);
             file.delete();
         } catch (Exception e) {
-            log.error(e);
-        }
-    }
-
-    @Override
-    public void downloadPdfFile(Book book) {
-        try {
-            FileUtils.copyURLToFile(
-                    new URL("https://pson-library-bucket.s3.amazonaws.com/" + book.getId() + ".pdf"),
-                    new File("/Users/messor/Downloads/" + book.getBookName() + ".pdf"));
-        } catch (IOException e) {
             log.error(e);
         }
     }

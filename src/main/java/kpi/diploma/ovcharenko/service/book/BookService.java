@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 
@@ -26,8 +27,6 @@ public interface BookService {
     void deleteBookCover(Long bookId);
 
     void addBookPdf(MultipartFile file, Long bookId);
-
-    void downloadPdf(Long bookId);
 
     Page<Book> getAllBooks(Pageable pageable);
 

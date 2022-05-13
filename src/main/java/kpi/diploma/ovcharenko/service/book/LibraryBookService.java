@@ -10,14 +10,30 @@ import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -108,12 +124,6 @@ public class LibraryBookService implements BookService {
     @Override
     public void addBookPdf(MultipartFile file, Long bookId) {
         amazonClient.uploadBookPdf(file, bookId);
-    }
-
-    @Override
-    public void downloadPdf(Long bookId) {
-        Book book = findBookById(bookId);
-        amazonClient.downloadPdfFile(book);
     }
 
     @Override
@@ -218,6 +228,23 @@ public class LibraryBookService implements BookService {
 
         bookRepository.save(book);
     }
+
+    private void readPdf(HttpServletResponse response, String stringFile) {
+        response.reset();
+        response.setContentType("application/pdf");
+        try {
+            File file = new File(stringFile);
+            FileInputStream fileInputStream = new FileInputStream(file);
+            OutputStream outputStream = response.getOutputStream();
+            IOUtils.write(IOUtils.toByteArray(fileInputStream), outputStream);
+            response.setHeader("Content-Disposition",
+                    "inline; filename= file");
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 
