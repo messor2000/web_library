@@ -23,6 +23,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Getter
@@ -48,7 +52,7 @@ public class BookCard {
     private AppUser user;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name="book_id")
+    @JoinColumn(name = "book_id")
     private Book book;
 
     @Column(name = "status")
@@ -59,6 +63,24 @@ public class BookCard {
     @CreationTimestamp
     @Column(name = "create_time")
     private Timestamp createdTime;
+
+    public LocalDate returnCreationDateTime() {
+        DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d/MM/uuuu");
+        String text = createdTime.toLocalDateTime().format(formatters);
+
+        return LocalDate.parse(text, formatters);
+    }
+    public String calculateExistedTime() {
+        LocalDateTime localDateTime = createdTime.toLocalDateTime();
+        LocalDateTime now = LocalDateTime.now();
+
+        Duration duration = Duration.between(now, localDateTime);
+        long d = (duration.toDays()) * -1;
+        long h = (duration.toHours() - 24 * d) * -1;
+        long m = (duration.toMinutes() - 60 * duration.toHours()) * -1;
+
+        return d + "d " + h + "h " + m + "m";
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -112,6 +112,7 @@
                                         <td th:text="#{book.author}">Author</td>
                                         <td th:text="#{book.section}">Section</td>
                                         <td th:text="#{book.status}">Status</td>
+                                        <td th:text="#{bookCard.time.create}">Time</td>
                                         <td th:text="#{bookCard.time}">Time</td>
                                         <td th:text="#{book.action}">Action</td>
                                     </tr>
@@ -123,7 +124,8 @@
                                         <td th:text="${bookCard.book.author}">body</td>
                                         <td th:text="${bookCard.book.section}">body</td>
                                         <td th:text="${bookCard.cardStatus}">body</td>
-                                        <td th:text="${bookCard.createdTime}">body</td>
+                                        <td th:text="${bookCard.returnCreationDateTime()}">body</td>
+                                        <td th:text="${bookCard.calculateExistedTime()}">body</td>
                                         <td style="align-content: center">
                                             <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                                                 <div>
