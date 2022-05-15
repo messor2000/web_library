@@ -9,18 +9,11 @@ import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
+import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
 import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,12 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -46,20 +37,25 @@ public class LibraryBookService implements BookService {
     private final BookRepository bookRepository;
     private final BookCategoryRepository bookCategoryRepository;
     private final BookStatusRepository bookStatusRepository;
+
+    private final BookCardService bookCardService;
     private final BookTagService bookTagService;
     private final AmazonClient amazonClient;
 
     public LibraryBookService(BookRepository bookRepository, BookCategoryRepository bookCategoryRepository, AmazonClient amazonClient,
-                              BookStatusRepository bookStatusRepository, BookTagService bookTagService) {
+                              BookStatusRepository bookStatusRepository, BookTagService bookTagService, BookCardService bookCardService) {
         this.bookRepository = bookRepository;
         this.bookCategoryRepository = bookCategoryRepository;
         this.bookStatusRepository = bookStatusRepository;
         this.amazonClient = amazonClient;
         this.bookTagService = bookTagService;
+        this.bookCardService = bookCardService;
     }
 
     @Override
+    @Transactional
     public void deleteBookById(Long id) {
+        bookCardService.deleteBooCardByBookId(id);
         bookRepository.deleteById(id);
     }
 

@@ -1,18 +1,15 @@
 package kpi.diploma.ovcharenko.service.book.cards;
 
-import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.repo.BookCardRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class LibraryBookCardService implements BookCardService {
-
     private final BookCardRepository bookCardRepository;
 
     public LibraryBookCardService(BookCardRepository bookCardRepository) {
@@ -50,7 +47,8 @@ public class LibraryBookCardService implements BookCardService {
     }
 
     @Override
-    public void deleteBookCardByUserId(Long id) {
-        bookCardRepository.deleteBookCardsByUserId(id);
+    public void deleteBooCardByBookId(Long bookId) {
+        bookCardRepository.deleteBookCardsByBookId(bookId);
     }
+
 }

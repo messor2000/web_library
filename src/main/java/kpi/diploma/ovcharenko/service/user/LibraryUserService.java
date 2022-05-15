@@ -12,6 +12,7 @@ import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.UserRole;
 import kpi.diploma.ovcharenko.repo.*;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @Transactional
 public class LibraryUserService implements UserService {
@@ -90,6 +92,7 @@ public class LibraryUserService implements UserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser user = userRepository.findByEmail(email);
+        log.info(user.getPassword());
         if (user == null){
             throw new UsernameNotFoundException("Invalid username or password.");
         }
@@ -117,7 +120,7 @@ public class LibraryUserService implements UserService {
 
     @Override
     public void changeUserPassword(AppUser user, String password) {
-        user.setPassword(PasswordEncoder.passwordEncoder().encode(user.getPassword()));
+        user.setPassword(PasswordEncoder.passwordEncoder().encode(password));
         userRepository.save(user);
     }
 

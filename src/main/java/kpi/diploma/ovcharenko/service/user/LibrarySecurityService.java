@@ -38,6 +38,7 @@ public class LibrarySecurityService implements SecurityService {
 
     @Override
     public void autoLogin(String email, String password) {
+        log.info(password);
         UserDetails userDetails = userService.loadUserByUsername(email);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
 
