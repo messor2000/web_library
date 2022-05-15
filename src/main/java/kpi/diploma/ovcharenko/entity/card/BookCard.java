@@ -77,9 +77,14 @@ public class BookCard {
         Duration duration = Duration.between(now, localDateTime);
         long d = (duration.toDays()) * -1;
         long h = (duration.toHours() - 24 * d) * -1;
-        long m = (duration.toMinutes() - 60 * duration.toHours()) * -1;
 
-        return d + "d " + h + "h " + m + "m";
+        if (h > 24) {
+            return d + "d";
+        }
+
+        else {
+            return h + "h";
+        }
     }
 
     @Override
