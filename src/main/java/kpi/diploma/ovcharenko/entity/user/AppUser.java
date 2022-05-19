@@ -1,7 +1,5 @@
 package kpi.diploma.ovcharenko.entity.user;
 
-import kpi.diploma.ovcharenko.entity.book.Book;
-import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +17,6 @@ import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -33,8 +30,7 @@ import java.util.Set;
 public class AppUser {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Exclude
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotEmpty
@@ -61,7 +57,11 @@ public class AppUser {
     @Column(name = "create_time")
     private Timestamp registrationDate;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -71,12 +71,8 @@ public class AppUser {
 
     @EqualsAndHashCode.Exclude
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private Set<BookCard> bookCards = new HashSet<>();
-
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private PasswordResetToken token;
 
     public void addBookCard(BookCard bookCard) {
         bookCards.add(bookCard);
@@ -102,6 +98,22 @@ public class AppUser {
 
     public void setRoles(Collection<UserRole> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "AppUser{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", telephoneNumber='" + telephoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", enabled=" + enabled +
+                ", roles=" + roles +
+                ", bookCards=" + bookCards +
+                '}';
     }
 }
 

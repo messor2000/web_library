@@ -40,6 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/user/save/password",
                             "/update/password",
                             "/user/reset/password/**",
+                            "/registration/confirm/**",
                             "/download/book/*",
                             "/download/pdf/**",
                             "/covers/**",
@@ -58,10 +59,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .logoutSuccessUrl("/");
     }
-//    @Bean
-//    public static BCryptPasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider(){
@@ -80,5 +77,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(PasswordEncoder.passwordEncoder());
     }
-
 }

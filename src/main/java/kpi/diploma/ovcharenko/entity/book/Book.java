@@ -2,7 +2,6 @@ package kpi.diploma.ovcharenko.entity.book;
 
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
-import kpi.diploma.ovcharenko.entity.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,24 +11,10 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -65,17 +50,17 @@ public class Book {
     @Column(name = "section")
     private String section;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     private Set<BookStatus> statuses = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private Set<BookCategory> categories = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private Set<BookCard> bookCards = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,
@@ -103,11 +88,6 @@ public class Book {
     public void setStatus(BookStatus status) {
         statuses.add(status);
         status.setBook(this);
-    }
-
-    public void addTag(BookTag bookTag) {
-        tags.add(bookTag);
-        bookTag.setBooks(Collections.singleton(this));
     }
 
     public Book(@NotBlank(message = "Book name is mandatory") String bookName, int year, String author,

@@ -10,7 +10,13 @@ import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.PasswordResetToken;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.UserRole;
-import kpi.diploma.ovcharenko.repo.*;
+import kpi.diploma.ovcharenko.entity.user.VerificationToken;
+import kpi.diploma.ovcharenko.repo.BookCardRepository;
+import kpi.diploma.ovcharenko.repo.BookRepository;
+import kpi.diploma.ovcharenko.repo.BookStatusRepository;
+import kpi.diploma.ovcharenko.repo.PasswordResetTokenRepository;
+import kpi.diploma.ovcharenko.repo.UserRepository;
+import kpi.diploma.ovcharenko.repo.VerificationTokenRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,9 +24,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,37 +35,54 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Service
-@Transactional
 public class LibraryUserService implements UserService {
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
     private final BookCardRepository bookCardRepository;
     private final BookStatusRepository bookStatusRepository;
+    private final VerificationTokenRepository verificationTokenRepository;
     private final PasswordResetTokenRepository resetTokenRepository;
     private final AmazonClient amazonClient;
 
     public LibraryUserService(UserRepository userRepository, BookRepository bookRepository, PasswordResetTokenRepository resetTokenRepository,
-                              BookCardRepository bookCardRepository, BookStatusRepository bookStatusRepository, AmazonClient amazonClient) {
+                              BookCardRepository bookCardRepository, BookStatusRepository bookStatusRepository, AmazonClient amazonClient,
+                              VerificationTokenRepository verificationTokenRepository) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.bookStatusRepository = bookStatusRepository;
         this.bookCardRepository = bookCardRepository;
         this.amazonClient = amazonClient;
+        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     @Override
-    public AppUser save(UserModel userModel){
-        AppUser user = new AppUser();
-        user.setFirstName(userModel.getFirstName());
-        user.setLastName(userModel.getLastName());
-        user.setEmail(userModel.getEmail());
-        user.setTelephoneNumber(userModel.getTelephoneNumber());
-        user.setPassword(PasswordEncoder.passwordEncoder().encode(userModel.getPassword()));
-        user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
+    public AppUser save(UserModel userModel) {
+//        AppUser user = new AppUser();
+//        user.setFirstName(userModel.getFirstName());
+//        user.setLastName(userModel.getLastName());
+//        user.setEmail(userModel.getEmail());
+//        user.setTelephoneNumber(userModel.getTelephoneNumber());
+//        user.setPassword(PasswordEncoder.passwordEncoder().encode(userModel.getPassword()));
+//        user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
+
+        AppUser user = createUser(userModel);
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public AppUser createNewUserByAdmin(UserModel userModel) {
+        AppUser user = createUser(userModel);
+        user.setEnabled(true);
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void saveRegisteredUser(AppUser user) {
+        userRepository.save(user);
     }
 
     @Override
@@ -84,25 +107,48 @@ public class LibraryUserService implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        bookCardRepository.deleteBookCardsByUserId(id);
-        resetTokenRepository.deleteAllByUserId(id);
+        List<BookCard> bookCards = bookCardRepository.findAllByUserId(id);
+        PasswordResetToken passwordResetToken = resetTokenRepository.findByUserId(id);
+        VerificationToken verificationToken = verificationTokenRepository.findByUserId(id);
+
+        if (!bookCards.isEmpty()) {
+            bookCardRepository.deleteAll(bookCards);
+        }
+
+        if (passwordResetToken != null) {
+            resetTokenRepository.delete(passwordResetToken);
+        }
+
+        if (verificationToken != null) {
+            verificationTokenRepository.delete(verificationToken);
+        }
+
+//        bookCardRepository.deleteBookCardsByUserId(id);
+//        resetTokenRepository.deleteAllByUserId(id);
         userRepository.deleteById(id);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser user = userRepository.findByEmail(email);
-        log.info(user.getPassword());
-        if (user == null){
+
+        if (user == null) {
             throw new UsernameNotFoundException("Invalid username or password.");
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
                 user.getPassword(),
+                user.isEnabled(),
+                true,
+                true,
+                true,
                 mapRolesToAuthorities(user.getRoles()));
+
     }
 
     @Override
-    public AppUser findByEmail(String email){
+    public AppUser findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -110,6 +156,18 @@ public class LibraryUserService implements UserService {
     public AppUser findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+    }
+
+    @Override
+    @Transactional
+    public void createVerificationTokenForUser(final AppUser user, final String token) {
+        final VerificationToken myToken = new VerificationToken(token, user);
+        verificationTokenRepository.save(myToken);
+    }
+
+    @Override
+    public VerificationToken getVerificationToken(String token) {
+        return verificationTokenRepository.findByToken(token);
     }
 
     @Override
@@ -152,7 +210,7 @@ public class LibraryUserService implements UserService {
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(id);
 
-        for (BookStatus bookStatus: bookStatuses) {
+        for (BookStatus bookStatus : bookStatuses) {
             if (bookStatus.getStatus().equals(Status.FREE)) {
                 bookStatus.setStatus(Status.BOOKED);
                 book.setStatus(bookStatus);
@@ -174,7 +232,7 @@ public class LibraryUserService implements UserService {
         bookCard.setCardStatus(CardStatus.APPROVED);
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
-        for (BookStatus bookStatus: bookStatuses) {
+        for (BookStatus bookStatus : bookStatuses) {
             if (bookStatus.getStatus().equals(Status.BOOKED)) {
                 bookStatus.setStatus(Status.TAKEN);
                 book.setStatus(bookStatus);
@@ -194,7 +252,7 @@ public class LibraryUserService implements UserService {
         bookCard.setCardStatus(CardStatus.REJECT);
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
-        for (BookStatus bookStatus: bookStatuses) {
+        for (BookStatus bookStatus : bookStatuses) {
             if (bookStatus.getStatus().equals(Status.BOOKED)) {
                 bookStatus.setStatus(Status.FREE);
                 book.setStatus(bookStatus);
@@ -215,7 +273,7 @@ public class LibraryUserService implements UserService {
         bookCard.setCardStatus(CardStatus.BOOK_RETURNED);
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
-        for (BookStatus bookStatus: bookStatuses) {
+        for (BookStatus bookStatus : bookStatuses) {
             if (bookStatus.getStatus().equals(Status.TAKEN)) {
                 bookStatus.setStatus(Status.FREE);
                 book.setStatus(bookStatus);
@@ -233,9 +291,21 @@ public class LibraryUserService implements UserService {
         bookCardRepository.deleteById(bookCardId);
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles){
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles) {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
+    }
+
+    private AppUser createUser(UserModel userModel) {
+        AppUser user = new AppUser();
+        user.setFirstName(userModel.getFirstName());
+        user.setLastName(userModel.getLastName());
+        user.setEmail(userModel.getEmail());
+        user.setTelephoneNumber(userModel.getTelephoneNumber());
+        user.setPassword(PasswordEncoder.passwordEncoder().encode(userModel.getPassword()));
+        user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
+
+        return user;
     }
 }

@@ -2,6 +2,7 @@ package kpi.diploma.ovcharenko.service.user;
 
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
+import kpi.diploma.ovcharenko.entity.user.VerificationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,10 @@ public interface UserService extends UserDetailsService {
 
     AppUser save(final UserModel registration);
 
+    AppUser createNewUserByAdmin(UserModel userModel);
+
+    void saveRegisteredUser(final AppUser user);
+
     void deleteUser(Long id);
 
     void bookedBook(final Long id, final String userEmail);
@@ -26,6 +31,10 @@ public interface UserService extends UserDetailsService {
     void returnedTheBook(final Long bookCardId);
 
     void deleteBookCard(final Long bookCardId);
+
+    void createVerificationTokenForUser(final AppUser user, final String token);
+
+    VerificationToken getVerificationToken(String token);
 
     void createPasswordResetTokenForUser(final AppUser user, final String token);
 

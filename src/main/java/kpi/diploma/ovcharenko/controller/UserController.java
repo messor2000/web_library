@@ -4,12 +4,15 @@ import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
+import kpi.diploma.ovcharenko.entity.user.VerificationToken;
 import kpi.diploma.ovcharenko.exception.ValidPassportException;
+import kpi.diploma.ovcharenko.service.activation.OnRegistrationCompleteEvent;
 import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
 import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,6 +20,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -31,12 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Log4j2
 @Controller
@@ -47,14 +46,16 @@ public class UserController {
     private final SecurityService securityService;
     private final MessageSource messages;
     private final JavaMailSender mailSender;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public UserController(UserService userService, LibrarySecurityService securityService,
-                          MessageSource messages, JavaMailSender mailSender, BookCardService bookCardService) {
+    public UserController(UserService userService, LibrarySecurityService securityService, MessageSource messages,
+                          JavaMailSender mailSender, BookCardService bookCardService, ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
         this.securityService = securityService;
         this.messages = messages;
         this.mailSender = mailSender;
         this.bookCardService = bookCardService;
+        this.eventPublisher = eventPublisher;
     }
 
     @GetMapping("/login")
@@ -77,7 +78,7 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String registerUserAccount(@ModelAttribute("user") @Valid UserModel userModel, BindingResult result) {
+    public String registerUserAccount(@ModelAttribute("user") @Valid UserModel userModel, BindingResult result, HttpServletRequest request) {
         AppUser existing = userService.findByEmail(userModel.getEmail());
         if (existing != null) {
             result.rejectValue("email", null, "There is already an account registered with that email");
@@ -88,15 +89,40 @@ public class UserController {
         }
 
         userService.save(userModel);
+        final AppUser user = userService.findByEmail(userModel.getEmail());
 
-        securityService.autoLogin(userModel.getEmail(), userModel.getConfirmPassword());
+        final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
 
-        return "redirect:/";
+        return "regSuccessfully";
     }
 
-    @GetMapping("/forgetPassword")
-    public String showForgetPasswordPage() {
-        return "forgetPassword";
+    @GetMapping("/registration/confirm")
+    @Transactional
+    public String confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) {
+        final Locale locale = request.getLocale();
+
+        final VerificationToken verificationToken = userService.getVerificationToken(token);
+        if (verificationToken == null) {
+            final String message = messages.getMessage("auth.message.invalidToken", null, locale);
+            model.addAttribute("message", message);
+            return "redirect:/badUser";
+        }
+
+        final AppUser user = verificationToken.getUser();
+        final Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
+            model.addAttribute("expired", true);
+            model.addAttribute("token", token);
+            return "redirect:/badUser";
+        }
+
+        user.setEnabled(true);
+        userService.saveRegisteredUser(user);
+        model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
+
+        return "redirect:/login";
     }
 
     @PostMapping("/resetPassword")
@@ -356,7 +382,7 @@ public class UserController {
             return "registration";
         }
 
-        userService.save(userModel);
+        userService.createNewUserByAdmin(userModel);
 
         return "redirect:/admin/allUsers";
     }
@@ -378,6 +404,11 @@ public class UserController {
     @GetMapping("/update/password")
     public String redirectToUpdatePasswordPage() {
         return "updatePassword";
+    }
+
+    @GetMapping("/forgetPassword")
+    public String showForgetPasswordPage() {
+        return "forgetPassword";
     }
 
     private Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
