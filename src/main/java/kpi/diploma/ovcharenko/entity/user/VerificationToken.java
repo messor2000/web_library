@@ -26,7 +26,8 @@ public class VerificationToken {
     private String token;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToOne
+//    @OneToOne
+    @OneToOne(targetEntity = AppUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(nullable = false, name = "user_id", foreignKey = @ForeignKey(name = "FK_VERIFY_USER"))
     private AppUser user;
 

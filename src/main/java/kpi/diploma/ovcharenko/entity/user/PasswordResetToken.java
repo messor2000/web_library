@@ -28,7 +28,7 @@ public class PasswordResetToken {
     private String token;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToOne(targetEntity = AppUser.class, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(targetEntity = AppUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(nullable = false, name = "user_id")
     private AppUser user;
 

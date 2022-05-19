@@ -59,14 +59,6 @@ public class LibraryUserService implements UserService {
 
     @Override
     public AppUser save(UserModel userModel) {
-//        AppUser user = new AppUser();
-//        user.setFirstName(userModel.getFirstName());
-//        user.setLastName(userModel.getLastName());
-//        user.setEmail(userModel.getEmail());
-//        user.setTelephoneNumber(userModel.getTelephoneNumber());
-//        user.setPassword(PasswordEncoder.passwordEncoder().encode(userModel.getPassword()));
-//        user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
-
         AppUser user = createUser(userModel);
 
         return userRepository.save(user);
@@ -112,7 +104,7 @@ public class LibraryUserService implements UserService {
         VerificationToken verificationToken = verificationTokenRepository.findByUserId(id);
 
         if (!bookCards.isEmpty()) {
-            bookCardRepository.deleteAll(bookCards);
+            bookCardRepository.deleteBookCardsByUserId(id);
         }
 
         if (passwordResetToken != null) {
@@ -123,8 +115,6 @@ public class LibraryUserService implements UserService {
             verificationTokenRepository.delete(verificationToken);
         }
 
-//        bookCardRepository.deleteBookCardsByUserId(id);
-//        resetTokenRepository.deleteAllByUserId(id);
         userRepository.deleteById(id);
     }
 
