@@ -1,19 +1,133 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="">
 <head>
-    <title>Error Page</title>
-    <link href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
-    <script src="/webjars/jquery/3.2.1/jquery.min.js"></script>
-    <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title th:text="#{main.title}">Pson Library</title>
+    <link rel="shortcut icon" href="/img/icon.png" title="книга иконки" type="image/png">
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <script src="//use.fontawesome.com/84c9ca0cf8.js"></script>
+    <style >
+        body {
+            background: #F7FAFC;
+            color: #65A5E1;
+            font: 16px/1.3 "Roboto", sans-serif;
+        }
+
+        header {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #EC7433;
+            font: 100px/1 "Roboto";
+            text-transform: uppercase;
+            margin: 5% auto 35px;
+        }
+
+        article {
+            display: block;
+            text-align: center;
+            width: 650px;
+            margin: 10px auto;
+        }
+    </style>
 </head>
-<body>
-<div class="container">
-    <div class="jumbotron alert-danger">
-        <h1>Oops... something went wrong.</h1>
-        <h2 th:text="${status + ' ' + error}"></h2>
-        <a href="/">Back to library</a>
+<body >
+<div id="main-container" class="main-container nav-effect-1">
+    <nav class="nav-menu nav-effect-1" id="menu-1">
+        <h2 class="" th:text="#{title}">The Library</h2>
+        <ul>
+            <li><a href="/" th:text="#{nav.home}">Library</a></li>
+            <li><a href="/table/" th:text="#{nav.table}">Table library</a></li>
+
+            <div sec:authorize="!isAuthenticated()">
+                <li><a href="/registration" th:text="#{nav.registration}">Registration</a></li>
+                <li><a href="/login" th:text="#{nav.login}">Login</a></li>
+            </div>
+
+            <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                <li><a href="/files/upload" th:text="#{nav.upload.file}">Upload file</a></li>
+                <li><a href="/add" th:text="#{nav.add}">Add new book</a></li>
+                <li><a href="/admin/allUsers" th:text="#{nav.library.users}">Library users</a></li>
+                <li><a href="/admin/showBookingCards" th:text="#{nav.library.bookCards}">Booking card</a></li>
+            </div>
+
+            <div sec:authorize="hasAnyAuthority('ROLE_USER','ROLE_ADMIN')">
+                <li><a href="/profile" th:text="#{nav.profile}">My profile</a></li>
+                <li><a href="/logout" th:text="#{nav.logout}">Logout</a></li>
+            </div>
+        </ul>
+    </nav>
+
+    <div class="main clearfix">
+        <!-- Header Content -->
+        <header id="header" class="page-header">
+            <div class="page-header-container row">
+
+                <!-- Logo -->
+                <div class="main-logo">
+                    <a href="/">
+                        <img class="main-header-logo" src="/img/logo.jpeg" alt="">
+                    </a>
+                </div>
+
+                <div class="localization" th:if="${#locale.toString() == 'uk_UA'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='en_US')}">
+                        <i>EN</i>
+                    </a>
+                </div>
+                <div class="localization" th:if="${#locale.toString() == 'en_US'}">
+                    <a th:href="@{${#httpServletRequest.requestURI}(lang='uk_UA')}">
+                        <i>UA</i>
+                    </a>
+                </div>
+
+                <div class="menu-search">
+                    <!-- Main Navigation -->
+                    <div class="main-navigation">
+                        <a href="#" th:text="#{nav.menu}">Menu</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-box">
+            <div class="wrap" style="margin-top: 250px;">
+                <article>
+                    <header>
+                        <h1 id="fittext1" th:text="${status + ' ' + error}">
+                            <i class="fa fa-exclamation-triangle fa-fw"></i>
+                        </h1>
+                    </header>
+                    <p id="fittext2" th:text="#{message.error}">Oops... something went wrong.</p>
+
+
+                    <br> <a th:href="@{/}" th:text="#{message.backToLibrary}">Back </a>
+                </article>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script
+        src="//cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.js"></script>
+<script type="text/javascript">
+    $("#fittext1").fitText(1.1);
+    $("#fittext2").fitText(1.5);
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/4.0.0/shuffle.min.js"></script>
+<script src="/js/main.js"></script>
 </body>
 </html>
