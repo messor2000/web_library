@@ -51,6 +51,7 @@ public class BookCard {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
 
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "book_id")
     private Book book;
@@ -64,12 +65,15 @@ public class BookCard {
     @Column(name = "create_time")
     private Timestamp createdTime;
 
+    @SuppressWarnings("unused")
     public LocalDate returnCreationDateTime() {
         DateTimeFormatter formatters = DateTimeFormatter.ofPattern("d/MM/uuuu");
         String text = createdTime.toLocalDateTime().format(formatters);
 
         return LocalDate.parse(text, formatters);
     }
+
+    @SuppressWarnings("unused")
     public String calculateExistedTime() {
         LocalDateTime localDateTime = createdTime.toLocalDateTime();
         LocalDateTime now = LocalDateTime.now();
@@ -82,9 +86,7 @@ public class BookCard {
             return d + "d";
         }
 
-        else {
-            return h + "h";
-        }
+        return h + "h";
     }
 
     @Override

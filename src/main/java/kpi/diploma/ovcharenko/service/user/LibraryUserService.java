@@ -11,13 +11,14 @@ import kpi.diploma.ovcharenko.entity.user.PasswordResetToken;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.UserRole;
 import kpi.diploma.ovcharenko.entity.user.VerificationToken;
-import kpi.diploma.ovcharenko.repo.BookCardRepository;
+import kpi.diploma.ovcharenko.exception.BookDoesntPresentException;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.repo.BookStatusRepository;
 import kpi.diploma.ovcharenko.repo.PasswordResetTokenRepository;
 import kpi.diploma.ovcharenko.repo.UserRepository;
 import kpi.diploma.ovcharenko.repo.VerificationTokenRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
+import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,20 +40,20 @@ public class LibraryUserService implements UserService {
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
-    private final BookCardRepository bookCardRepository;
+    private final BookCardService bookCardService;
     private final BookStatusRepository bookStatusRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final PasswordResetTokenRepository resetTokenRepository;
     private final AmazonClient amazonClient;
 
     public LibraryUserService(UserRepository userRepository, BookRepository bookRepository, PasswordResetTokenRepository resetTokenRepository,
-                              BookCardRepository bookCardRepository, BookStatusRepository bookStatusRepository, AmazonClient amazonClient,
+                              BookCardService bookCardService, BookStatusRepository bookStatusRepository, AmazonClient amazonClient,
                               VerificationTokenRepository verificationTokenRepository) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.bookStatusRepository = bookStatusRepository;
-        this.bookCardRepository = bookCardRepository;
+        this.bookCardService = bookCardService;
         this.amazonClient = amazonClient;
         this.verificationTokenRepository = verificationTokenRepository;
     }
@@ -65,11 +66,11 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public AppUser createNewUserByAdmin(UserModel userModel) {
+    public void createNewUserByAdmin(UserModel userModel) {
         AppUser user = createUser(userModel);
         user.setEnabled(true);
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -98,13 +99,18 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
-        List<BookCard> bookCards = bookCardRepository.findAllByUserId(id);
+        List<BookCard> bookCards = bookCardService.findAllUserBookCards(id);
+        System.out.println(bookCards);
+        log.trace(bookCards);
         PasswordResetToken passwordResetToken = resetTokenRepository.findByUserId(id);
+        log.trace(passwordResetToken);
         VerificationToken verificationToken = verificationTokenRepository.findByUserId(id);
+        log.trace(verificationToken);
 
         if (!bookCards.isEmpty()) {
-            bookCardRepository.deleteBookCardsByUserId(id);
+            bookCardService.deleteBookCardByUserId(id);
         }
 
         if (passwordResetToken != null) {
@@ -134,7 +140,6 @@ public class LibraryUserService implements UserService {
                 true,
                 true,
                 mapRolesToAuthorities(user.getRoles()));
-
     }
 
     @Override
@@ -190,7 +195,8 @@ public class LibraryUserService implements UserService {
     @Transactional
     public void bookedBook(Long id, String userEmail) {
         AppUser user = findByEmail(userEmail);
-        Book book = bookRepository.findById(id).get();
+        Book book = bookRepository.findById(id).orElseThrow(() ->
+                new BookDoesntPresentException("Book with this id doesnt exist"));
 
         BookCard bookCard = new BookCard();
         bookCard.setBook(book);
@@ -211,13 +217,14 @@ public class LibraryUserService implements UserService {
         book.setAmount(book.getAmount() - 1);
 
         userRepository.save(user);
-        bookCardRepository.save(bookCard);
+        bookCardService.saveBookCard(bookCard);
     }
 
     @Override
     public void approveBookForUser(Long bookCardId) {
-        BookCard bookCard = bookCardRepository.findBookCardById(bookCardId);
-        Book book = bookRepository.findById(bookCard.getBook().getId()).get();
+        BookCard bookCard = bookCardService.findBookCardById(bookCardId);
+        Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
+                new BookDoesntPresentException("Book with this id doesnt exist"));
 
         bookCard.setCardStatus(CardStatus.APPROVED);
 
@@ -230,14 +237,15 @@ public class LibraryUserService implements UserService {
             }
         }
 
-        bookCardRepository.save(bookCard);
+        bookCardService.saveBookCard(bookCard);
         bookRepository.save(book);
     }
 
     @Override
     public void rejectTheBook(Long bookCardId) {
-        BookCard bookCard = bookCardRepository.findBookCardById(bookCardId);
-        Book book = bookRepository.findById(bookCard.getBook().getId()).get();
+        BookCard bookCard = bookCardService.findBookCardById(bookCardId);
+        Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
+                new BookDoesntPresentException("Book with this id doesnt exist"));
 
         bookCard.setCardStatus(CardStatus.REJECT);
 
@@ -251,14 +259,15 @@ public class LibraryUserService implements UserService {
         }
         book.setAmount(book.getAmount() + 1);
 
-        bookCardRepository.save(bookCard);
+        bookCardService.saveBookCard(bookCard);
         bookRepository.save(book);
     }
 
     @Override
     public void returnedTheBook(Long bookCardId) {
-        BookCard bookCard = bookCardRepository.findBookCardById(bookCardId);
-        Book book = bookRepository.findById(bookCard.getBook().getId()).get();
+        BookCard bookCard = bookCardService.findBookCardById(bookCardId);
+        Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
+                new BookDoesntPresentException("Book with this id doesnt exist"));
 
         bookCard.setCardStatus(CardStatus.BOOK_RETURNED);
 
@@ -272,13 +281,13 @@ public class LibraryUserService implements UserService {
         }
         book.setAmount(book.getAmount() + 1);
 
-        bookCardRepository.save(bookCard);
+        bookCardService.saveBookCard(bookCard);
         bookRepository.save(book);
     }
 
     @Override
     public void deleteBookCard(Long bookCardId) {
-        bookCardRepository.deleteById(bookCardId);
+        bookCardService.deleteBookCardByBookCardId(bookCardId);
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<UserRole> roles) {

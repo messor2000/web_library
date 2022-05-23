@@ -57,7 +57,6 @@ public class AppUser {
     @Column(name = "create_time")
     private Timestamp registrationDate;
 
-
     @Column(name = "enabled")
     private boolean enabled;
 

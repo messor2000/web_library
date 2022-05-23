@@ -37,7 +37,6 @@ public class LibraryBookService implements BookService {
     private final BookRepository bookRepository;
     private final BookCategoryRepository bookCategoryRepository;
     private final BookStatusRepository bookStatusRepository;
-
     private final BookCardService bookCardService;
     private final BookTagService bookTagService;
     private final AmazonClient amazonClient;
@@ -55,7 +54,7 @@ public class LibraryBookService implements BookService {
     @Override
     @Transactional
     public void deleteBookById(Long id) {
-        bookCardService.deleteBooCardByBookId(id);
+        bookCardService.deleteBookCardByBookId(id);
         bookRepository.deleteById(id);
     }
 
@@ -224,23 +223,6 @@ public class LibraryBookService implements BookService {
 
         bookRepository.save(book);
     }
-
-    private void readPdf(HttpServletResponse response, String stringFile) {
-        response.reset();
-        response.setContentType("application/pdf");
-        try {
-            File file = new File(stringFile);
-            FileInputStream fileInputStream = new FileInputStream(file);
-            OutputStream outputStream = response.getOutputStream();
-            IOUtils.write(IOUtils.toByteArray(fileInputStream), outputStream);
-            response.setHeader("Content-Disposition",
-                    "inline; filename= file");
-            outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
 
 

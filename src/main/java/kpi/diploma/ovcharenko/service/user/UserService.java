@@ -16,7 +16,7 @@ public interface UserService extends UserDetailsService {
 
     AppUser save(final UserModel registration);
 
-    AppUser createNewUserByAdmin(UserModel userModel);
+    void createNewUserByAdmin(UserModel userModel);
 
     void saveRegisteredUser(final AppUser user);
 

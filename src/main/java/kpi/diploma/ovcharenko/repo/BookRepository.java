@@ -24,10 +24,6 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
 
     @Query("select b from Book b where b.year = :year")
     Page<Book> findByYearContaining(int year, Pageable pageable);
-
-//    Page<Book> findByBookCardsContaining(Set<BookCard> bookCards, Pageable pageable);
-
-    Page<Book> findBooksByBookName(String bookName, Pageable pageable);
 }
 
 

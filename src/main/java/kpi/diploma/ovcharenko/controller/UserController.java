@@ -1,5 +1,6 @@
 package kpi.diploma.ovcharenko.controller;
 
+import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
@@ -7,6 +8,7 @@ import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.VerificationToken;
 import kpi.diploma.ovcharenko.exception.ValidPassportException;
 import kpi.diploma.ovcharenko.service.activation.OnRegistrationCompleteEvent;
+import kpi.diploma.ovcharenko.service.book.BookService;
 import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
 import kpi.diploma.ovcharenko.service.user.LibrarySecurityService;
 import kpi.diploma.ovcharenko.service.user.SecurityService;
@@ -35,13 +37,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.UUID;
 
 @Log4j2
 @Controller
 public class UserController {
 
     private final UserService userService;
+
+    private final BookService bookService;
     private final BookCardService bookCardService;
     private final SecurityService securityService;
     private final MessageSource messages;
@@ -49,8 +57,10 @@ public class UserController {
     private final ApplicationEventPublisher eventPublisher;
 
     public UserController(UserService userService, LibrarySecurityService securityService, MessageSource messages,
-                          JavaMailSender mailSender, BookCardService bookCardService, ApplicationEventPublisher eventPublisher) {
+                          JavaMailSender mailSender, BookCardService bookCardService, ApplicationEventPublisher eventPublisher,
+                          BookService bookService) {
         this.userService = userService;
+        this.bookService = bookService;
         this.securityService = securityService;
         this.messages = messages;
         this.mailSender = mailSender;
@@ -122,7 +132,7 @@ public class UserController {
         userService.saveRegisteredUser(user);
         model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
 
-        return "redirect:/login";
+        return "accountActivated";
     }
 
     @PostMapping("/resetPassword")
@@ -151,11 +161,10 @@ public class UserController {
     }
 
     @GetMapping("/user/reset/password")
-    public String showChangePasswordPage(Locale locale, @RequestParam("token") String token, RedirectAttributes redirectAttributes) {
+    public String showChangePasswordPage(@RequestParam("token") String token, RedirectAttributes redirectAttributes) {
         String result = securityService.validatePasswordResetToken(token);
         if (result != null) {
-            String message = messages.getMessage("auth.message." + result, null, locale);
-            return "redirect:/login" + "&message=" + message;
+            return "redirect:/login";
         } else {
             redirectAttributes.addAttribute("token", token);
             return "redirect:/update/password";
@@ -247,7 +256,12 @@ public class UserController {
     public String takeBook(@PathVariable(name = "id") Long id, HttpServletRequest request) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        userService.bookedBook(id, currentUser);
+        Book book = bookService.findBookById(id);
+        if (book.getAmount() == 0) {
+            return "bookTakenError";
+        } else {
+            userService.bookedBook(id, currentUser);
+        }
 
         return getPreviousPageByRequest(request).orElse("/");
     }

@@ -17,6 +17,11 @@ public class LibraryBookCardService implements BookCardService {
     }
 
     @Override
+    public void saveBookCard(BookCard bookCard) {
+        bookCardRepository.save(bookCard);
+    }
+
+    @Override
     public List<BookCard> findAllBookCards() {
         return bookCardRepository.findAll();
     }
@@ -47,8 +52,23 @@ public class LibraryBookCardService implements BookCardService {
     }
 
     @Override
-    public void deleteBooCardByBookId(Long bookId) {
+    public BookCard findBookCardById(Long bookCardId) {
+        return bookCardRepository.findBookCardById(bookCardId);
+    }
+
+    @Override
+    public void deleteBookCardByBookCardId(Long bookCardId) {
+        bookCardRepository.deleteById(bookCardId);
+    }
+
+    @Override
+    public void deleteBookCardByBookId(Long bookId) {
         bookCardRepository.deleteBookCardsByBookId(bookId);
+    }
+
+    @Override
+    public void deleteBookCardByUserId(Long userId) {
+        bookCardRepository.deleteBookCardsByUserId(userId);
     }
 
 }

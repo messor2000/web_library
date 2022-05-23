@@ -1,6 +1,5 @@
 package kpi.diploma.ovcharenko.repo;
 
-import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import org.springframework.data.repository.CrudRepository;
