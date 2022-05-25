@@ -154,8 +154,16 @@
                                            th:value="#{book.update}">Update</a>
                                     </div>
                                     <div>
-                                        <a th:href="@{/admin/delete/{id}(id=${book.id})}"
-                                           class="btn btn-danger button btn btn-primary download" th:value="#{book.delete}">Delete</a>
+<!--                                        <a th:href="@{/admin/delete/{id}(id=${book.id})}" method="post"-->
+<!--                                           class="btn btn-danger button btn btn-primary download" th:value="#{book.delete}">Delete</a>-->
+
+                                        <form th:action="@{/admin/delete/{id}(id=${book.id})}" method="post">
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <input type="submit"
+                                                       class="btn btn-danger button btn btn-primary download"
+                                                       th:value="#{book.delete}"/>
+                                            </div>
+                                        </form>
                                     </div>
                                 </table>
                             </div>

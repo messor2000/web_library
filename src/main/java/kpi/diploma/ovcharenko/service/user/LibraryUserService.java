@@ -94,23 +94,22 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public void deletePhotoImage(String email) {
-        amazonClient.deleteFileFromS3("user/", email);
+    public void changePhotoImage(MultipartFile file, String email) {
+        amazonClient.changeUserImage(file, email);
     }
 
     @Override
     @Transactional
-    public void deleteUser(Long id) {
-        List<BookCard> bookCards = bookCardService.findAllUserBookCards(id);
-        System.out.println(bookCards);
+    public void deleteUser(Long userId) {
+        List<BookCard> bookCards = bookCardService.findAllUserBookCards(userId);
         log.trace(bookCards);
-        PasswordResetToken passwordResetToken = resetTokenRepository.findByUserId(id);
+        PasswordResetToken passwordResetToken = resetTokenRepository.findByUserId(userId);
         log.trace(passwordResetToken);
-        VerificationToken verificationToken = verificationTokenRepository.findByUserId(id);
+        VerificationToken verificationToken = verificationTokenRepository.findByUserId(userId);
         log.trace(verificationToken);
 
         if (!bookCards.isEmpty()) {
-            bookCardService.deleteBookCardByUserId(id);
+            bookCardService.deleteBookCardByUserId(userId);
         }
 
         if (passwordResetToken != null) {
@@ -121,7 +120,7 @@ public class LibraryUserService implements UserService {
             verificationTokenRepository.delete(verificationToken);
         }
 
-        userRepository.deleteById(id);
+        userRepository.delete(findById(userId));
     }
 
     @Override
@@ -192,6 +191,7 @@ public class LibraryUserService implements UserService {
         return userRepository.findAll();
     }
 
+    @Override
     @Transactional
     public void bookedBook(Long id, String userEmail) {
         AppUser user = findByEmail(userEmail);
@@ -209,7 +209,6 @@ public class LibraryUserService implements UserService {
         for (BookStatus bookStatus : bookStatuses) {
             if (bookStatus.getStatus().equals(Status.FREE)) {
                 bookStatus.setStatus(Status.BOOKED);
-                book.setStatus(bookStatus);
                 break;
             }
         }
@@ -221,6 +220,7 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public void approveBookForUser(Long bookCardId) {
         BookCard bookCard = bookCardService.findBookCardById(bookCardId);
         Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
@@ -232,7 +232,6 @@ public class LibraryUserService implements UserService {
         for (BookStatus bookStatus : bookStatuses) {
             if (bookStatus.getStatus().equals(Status.BOOKED)) {
                 bookStatus.setStatus(Status.TAKEN);
-                book.setStatus(bookStatus);
                 break;
             }
         }
@@ -242,6 +241,7 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
+    @Transactional
     public void rejectTheBook(Long bookCardId) {
         BookCard bookCard = bookCardService.findBookCardById(bookCardId);
         Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
@@ -250,13 +250,16 @@ public class LibraryUserService implements UserService {
         bookCard.setCardStatus(CardStatus.REJECT);
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
+
+
         for (BookStatus bookStatus : bookStatuses) {
             if (bookStatus.getStatus().equals(Status.BOOKED)) {
                 bookStatus.setStatus(Status.FREE);
-                book.setStatus(bookStatus);
                 break;
             }
         }
+
+
         book.setAmount(book.getAmount() + 1);
 
         bookCardService.saveBookCard(bookCard);
@@ -264,7 +267,8 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public void returnedTheBook(Long bookCardId) {
+    @Transactional
+    public void returnTheBook(Long bookCardId) {
         BookCard bookCard = bookCardService.findBookCardById(bookCardId);
         Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
                 new BookDoesntPresentException("Book with this id doesnt exist"));
@@ -275,10 +279,10 @@ public class LibraryUserService implements UserService {
         for (BookStatus bookStatus : bookStatuses) {
             if (bookStatus.getStatus().equals(Status.TAKEN)) {
                 bookStatus.setStatus(Status.FREE);
-                book.setStatus(bookStatus);
                 break;
             }
         }
+
         book.setAmount(book.getAmount() + 1);
 
         bookCardService.saveBookCard(bookCard);

@@ -26,10 +26,8 @@ public class PasswordResetToken {
     private Long id;
 
     private String token;
-
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToOne(targetEntity = AppUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(nullable = false, name = "user_id")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
     private AppUser user;
 
     private Date expiryDate;
@@ -48,6 +46,7 @@ public class PasswordResetToken {
         return new Date(cal.getTime().getTime());
     }
 
+    @SuppressWarnings("unused")
     public void updateToken(final String token) {
         this.token = token;
         this.expiryDate = calculateExpiryDate();

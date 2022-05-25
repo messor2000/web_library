@@ -70,7 +70,7 @@ public class AppUser {
 
     @EqualsAndHashCode.Exclude
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCard> bookCards = new HashSet<>();
 
     public void addBookCard(BookCard bookCard) {

@@ -95,10 +95,18 @@ public class AmazonLibraryClient implements AmazonClient {
     }
 
     @Override
-    public void deleteFileFromS3(String folder, String key) {
-        String fileName = folder + key;
-        String objectKey = endpointUrl + "/" + bucketName + "/" + fileName;
-        s3client.deleteObject(bucketName, objectKey);
+    public void changeUserImage(MultipartFile multipartFile, String email) {
+        try {
+            String fileName = "user/" + email;
+            String objectKey = endpointUrl + "/" + bucketName + "/" + fileName;
+            s3client.deleteObject(bucketName, objectKey);
+
+            File file = convertMultiPartToFile(multipartFile);
+            uploadFileTos3bucket(fileName, file);
+            file.delete();
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {

@@ -25,10 +25,8 @@ public class VerificationToken {
 
     private String token;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @OneToOne
-    @OneToOne(targetEntity = AppUser.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(nullable = false, name = "user_id", foreignKey = @ForeignKey(name = "FK_VERIFY_USER"))
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_VERIFY_USER"))
     private AppUser user;
 
     private Date expiryDate;
@@ -75,6 +73,7 @@ public class VerificationToken {
         return new Date(cal.getTime().getTime());
     }
 
+    @SuppressWarnings("unused")
     public void updateToken(final String token) {
         this.token = token;
         this.expiryDate = calculateExpiryDate();

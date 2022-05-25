@@ -10,7 +10,7 @@ public interface AmazonClient {
 
     void changeFile(MultipartFile multipartFile, Long id);
 
-    void uploadBookPdf(MultipartFile multipartFile, Long id);
+    void changeUserImage(MultipartFile multipartFile, String email);
 
-    void deleteFileFromS3(String folder, String key);
+    void uploadBookPdf(MultipartFile multipartFile, Long id);
 }

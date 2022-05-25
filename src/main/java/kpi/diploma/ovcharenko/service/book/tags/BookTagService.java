@@ -17,5 +17,5 @@ public interface BookTagService {
 
     Set<String> findBookTagsByBookId(Long bookId);
 
-    Set<String> findBookNameByTag(String tag);
+    void deleteBookTag(BookTag bookTag);
 }

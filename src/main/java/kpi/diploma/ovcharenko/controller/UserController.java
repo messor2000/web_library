@@ -211,23 +211,8 @@ public class UserController {
         List<AppUser> appUsers = userService.showAllUsers();
 
         if (!imageFile.isEmpty()) {
-            userService.addPhotoImage(imageFile, user.getEmail());
+            userService.changePhotoImage(imageFile, user.getEmail());
         }
-
-        model.addAttribute("appUser", user);
-        model.addAttribute("bookCards", bookCards);
-        model.addAttribute("appUsers", appUsers);
-        return "redirect:/profile";
-    }
-
-    @PostMapping("/user/delete/image")
-    public String deleteUserProfileImage(Model model) {
-        final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        AppUser user = userService.findByEmail(currentUser);
-        List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
-        List<AppUser> appUsers = userService.showAllUsers();
-
-        userService.deletePhotoImage(user.getEmail());
 
         model.addAttribute("appUser", user);
         model.addAttribute("bookCards", bookCards);
@@ -323,8 +308,8 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/putBackIntoTheLibrary/{id}")
-    public String returnedBook(@PathVariable(name = "id") Long bookCardId, HttpServletRequest request) {
-        userService.returnedTheBook(bookCardId);
+    public String returnBook(@PathVariable(name = "id") Long bookCardId, HttpServletRequest request) {
+        userService.returnTheBook(bookCardId);
 
         return getPreviousPageByRequest(request).orElse("/");
     }

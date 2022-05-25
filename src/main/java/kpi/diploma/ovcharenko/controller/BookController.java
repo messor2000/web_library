@@ -150,7 +150,7 @@ public class BookController {
     }
 
     @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/admin/delete/{id}")
+    @PostMapping(value = "/admin/delete/{id}")
     public String deleteBookById(@PathVariable("id") Long id) {
         bookService.deleteBookById(id);
 

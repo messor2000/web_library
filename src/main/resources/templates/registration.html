@@ -165,18 +165,10 @@
                                        th:each="error : ${#fields.errors('confirmPassword')}"
                                        th:text="${error}">Validation error</p>
                                 </div>
+                                <button class="btn btn-danger button btn btn-primary" type="submit"
+                                        th:text="#{reg.title}">Reg
+                                </button>
 
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit"
-                                                   name="login-submit"
-                                                   id="login-submit"
-                                                   class="form-control btn btn-info"
-                                                   th:value="#{reg.title}"/>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <a href="/" th:href="@{/login}" th:text="#{reg.login}">Login here</a>
                                 </div>

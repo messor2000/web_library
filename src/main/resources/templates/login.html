@@ -107,22 +107,17 @@
                                            class="form-control"
                                            placeholder="Password"/>
                                 </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-sm-6 col-sm-offset-3">
-                                            <input type="submit"
-                                                   name="login-submit"
-                                                   id="login-submit"
-                                                   class="form-control btn btn-info"
-                                                   th:value="#{log.title}"/>
-                                        </div>
-                                    </div>
+
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button class="btn btn-danger button btn btn-primary" type="submit"
+                                            th:text="#{log.title}">Login
+                                    </button>
                                 </div>
                                 <div class="form-group">
                                     <a th:href="@{/registration}" th:text="#{log.button.reg}">Register here</a>
                                 </div>
                                 <div class="form-group">
-                                    <a th:href="@{/forgetPassword}"  th:text="#{log.forgot}">Forgot your
+                                    <a th:href="@{/forgetPassword}" th:text="#{log.forgot}">Forgot your
                                         password?</a>
                                 </div>
                             </form>

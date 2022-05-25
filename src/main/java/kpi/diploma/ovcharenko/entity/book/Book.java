@@ -13,7 +13,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -49,18 +48,19 @@ public class Book {
 
     @Column(name = "section")
     private String section;
-
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookStatus> statuses = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCategory> categories = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BookCard> bookCards = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,
@@ -85,7 +85,7 @@ public class Book {
         category.setBook(null);
     }
 
-    public void setStatus(BookStatus status) {
+    public void addStatus(BookStatus status) {
         statuses.add(status);
         status.setBook(this);
     }
@@ -104,11 +104,12 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return year == book.year && amount == book.amount && Objects.equals(id, book.id) && Objects.equals(bookName, book.bookName) && Objects.equals(author, book.author) && Objects.equals(description, book.description);
+        return year == book.year && amount == book.amount && Objects.equals(id, book.id) && Objects.equals(bookName, book.bookName)
+                && Objects.equals(author, book.author) && Objects.equals(description, book.description) && Objects.equals(section, book.section);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookName, year, author, amount, description);
+        return Objects.hash(id, bookName, year, author, amount, description, section);
     }
 }

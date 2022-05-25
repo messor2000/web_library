@@ -28,7 +28,7 @@ public interface UserService extends UserDetailsService {
 
     void rejectTheBook(Long bookCardId);
 
-    void returnedTheBook(final Long bookCardId);
+    void returnTheBook(final Long bookCardId);
 
     void deleteBookCard(final Long bookCardId);
 
@@ -50,5 +50,5 @@ public interface UserService extends UserDetailsService {
 
     void addPhotoImage(MultipartFile file, String email);
 
-    void deletePhotoImage(String email);
+    void changePhotoImage(MultipartFile file, String email);
 }

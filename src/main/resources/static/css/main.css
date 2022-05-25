@@ -994,7 +994,8 @@ h1 {
 
 .button2 {
     border: none;
-    background-color: #7a96d0;
+    background-color: #1583cc;
+    color: #fefefe;
     padding: 12px 28px;
     text-align: center;
     text-decoration: none;

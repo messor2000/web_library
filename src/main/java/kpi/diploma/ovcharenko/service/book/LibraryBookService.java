@@ -7,12 +7,10 @@ import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
 import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.repo.BookRepository;
-import kpi.diploma.ovcharenko.repo.BookStatusRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
-import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
+import kpi.diploma.ovcharenko.service.book.status.BookStatusService;
 import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,11 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -36,32 +29,44 @@ public class LibraryBookService implements BookService {
 
     private final BookRepository bookRepository;
     private final BookCategoryRepository bookCategoryRepository;
-    private final BookStatusRepository bookStatusRepository;
-    private final BookCardService bookCardService;
+    private final BookStatusService bookStatusService;
     private final BookTagService bookTagService;
     private final AmazonClient amazonClient;
 
     public LibraryBookService(BookRepository bookRepository, BookCategoryRepository bookCategoryRepository, AmazonClient amazonClient,
-                              BookStatusRepository bookStatusRepository, BookTagService bookTagService, BookCardService bookCardService) {
+                              BookStatusService bookStatusService, BookTagService bookTagService) {
         this.bookRepository = bookRepository;
         this.bookCategoryRepository = bookCategoryRepository;
-        this.bookStatusRepository = bookStatusRepository;
+        this.bookStatusService = bookStatusService;
         this.amazonClient = amazonClient;
         this.bookTagService = bookTagService;
-        this.bookCardService = bookCardService;
     }
 
     @Override
     @Transactional
-    public void deleteBookById(Long id) {
-        bookCardService.deleteBookCardByBookId(id);
-        bookRepository.deleteById(id);
+    public void deleteBookById(Long bookId) {
+//        Set<BookTag> bookTags = bookTagService.findBookTagByBook(Collections.singleton(findBookById(bookId)));
+        List<BookStatus> bookStatuses = bookStatusService.findBookStatusesByBookId(bookId);
+        log.trace(String.valueOf(bookId));
+        log.trace(String.valueOf(bookId.getClass()));
+
+//        if (!bookTags.isEmpty()) {
+//            for (BookTag bookTag: bookTags) {
+//                bookTagService.deleteBookTag(bookTag);
+//            }
+//        }
+
+        if (!bookStatuses.isEmpty()) {
+            bookStatusService.deleteBookStatusesByBookId(bookId);
+        }
+
+        bookRepository.deleteById(bookId);
     }
 
     @Override
     @Transactional
     public void updateBook(Book book, String category, String tag) {
-        List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
+        List<BookStatus> bookStatuses = bookStatusService.findBookStatusesByBookId(book.getId());
 
         if (category != null && !category.equals("")) {
             if (!bookCategoryRepository.existsBookCategoryByCategoryAndBook(category, book)) {
@@ -82,7 +87,7 @@ public class LibraryBookService implements BookService {
             int difference = book.getAmount() - bookStatuses.size();
             for (int i = 0; i < difference; i++) {
                 BookStatus status = new BookStatus(Status.FREE);
-                book.setStatus(status);
+                book.addStatus(status);
             }
         }
 
@@ -91,7 +96,7 @@ public class LibraryBookService implements BookService {
             for (int i = 0; i < difference; i++) {
                 BookStatus status = bookStatuses.get(i);
                 if (status.getStatus().equals(Status.FREE)) {
-                    bookStatusRepository.delete(status);
+                    bookStatusService.deleteBookStatus(status);
                 } else {
                     throw new RuntimeException("All books is used, can't delete");
                 }
@@ -112,11 +117,6 @@ public class LibraryBookService implements BookService {
     }
 
     @Override
-    public void deleteBookCover(Long bookId) {
-        amazonClient.deleteFileFromS3("book/", String.valueOf(bookId));
-    }
-
-    @Override
     public void addBookPdf(MultipartFile file, Long bookId) {
         amazonClient.uploadBookPdf(file, bookId);
     }
@@ -130,9 +130,13 @@ public class LibraryBookService implements BookService {
     @Override
     @Transactional
     public void addNewBook(Book book, String category, String tag) {
+        if (book.getAmount() == 0) {
+            book.setAmount(1);
+        }
+
         for (int i = 0; i < book.getAmount(); i++) {
             BookStatus status = new BookStatus(Status.FREE);
-            book.setStatus(status);
+            book.addStatus(status);
         }
 
         if (category != null && !category.equals("")) {
@@ -207,7 +211,7 @@ public class LibraryBookService implements BookService {
 
     @Override
     public List<BookStatus> getAllBooksStatus(Long bookId) {
-        return bookStatusRepository.findAllByBookId(bookId);
+        return bookStatusService.findBookStatusesByBookId(bookId);
     }
 
     @Override

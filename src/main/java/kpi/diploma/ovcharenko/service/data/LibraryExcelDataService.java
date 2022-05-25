@@ -79,7 +79,7 @@ public class LibraryExcelDataService implements ExcelDataService {
                 }
 
                 BookStatus bookStatus = new BookStatus(Status.FREE);
-                book.setStatus(bookStatus);
+                book.addStatus(bookStatus);
                 books.add(book);
             }
         }
@@ -125,7 +125,7 @@ public class LibraryExcelDataService implements ExcelDataService {
                 Book updatedBook = filteredBooks.stream().filter(data -> Objects.equals(data, book)).findFirst().get();
                 updatedBook.setAmount(updatedBook.getAmount() + 1);
                 BookStatus bookStatus = new BookStatus(Status.FREE);
-                updatedBook.setStatus(bookStatus);
+                updatedBook.addStatus(bookStatus);
             }
         }
 
