@@ -42,11 +42,6 @@ public class LibraryBookCardService implements BookCardService {
     }
 
     @Override
-    public List<BookCard> findAllUserBookCardsAndStatus(Long userId, CardStatus status) {
-        return bookCardRepository.findAllByUserIdAndCardStatus(userId, status);
-    }
-
-    @Override
     public List<BookCard> findAllBookCardsWithStatus(CardStatus status) {
         return bookCardRepository.findAllByCardStatus(status);
     }
@@ -62,13 +57,12 @@ public class LibraryBookCardService implements BookCardService {
     }
 
     @Override
-    public void deleteBookCardByBookId(Long bookId) {
-        bookCardRepository.deleteBookCardsByBookId(bookId);
-    }
-
-    @Override
     public void deleteBookCardByUserId(Long userId) {
         bookCardRepository.deleteBookCardsByUserId(userId);
     }
 
+    @Override
+    public void deleteAllBookCardsByBookId(Long bookId) {
+        bookCardRepository.deleteBookCardsByBookId(bookId);
+    }
 }

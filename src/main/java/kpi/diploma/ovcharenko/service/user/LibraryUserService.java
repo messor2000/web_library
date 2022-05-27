@@ -120,8 +120,9 @@ public class LibraryUserService implements UserService {
             verificationTokenRepository.delete(verificationToken);
         }
 
-        userRepository.delete(findById(userId));
+        userRepository.deleteUserById(userId);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

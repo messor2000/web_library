@@ -5,9 +5,11 @@ import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.book.status.Status;
+import kpi.diploma.ovcharenko.exception.BookDoesntPresentException;
 import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import kpi.diploma.ovcharenko.service.amazon.AmazonClient;
+import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
 import kpi.diploma.ovcharenko.service.book.status.BookStatusService;
 import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,36 +33,25 @@ public class LibraryBookService implements BookService {
     private final BookCategoryRepository bookCategoryRepository;
     private final BookStatusService bookStatusService;
     private final BookTagService bookTagService;
+    private final BookCardService bookCardService;
     private final AmazonClient amazonClient;
 
     public LibraryBookService(BookRepository bookRepository, BookCategoryRepository bookCategoryRepository, AmazonClient amazonClient,
-                              BookStatusService bookStatusService, BookTagService bookTagService) {
+                              BookStatusService bookStatusService, BookTagService bookTagService, BookCardService bookCardService) {
         this.bookRepository = bookRepository;
         this.bookCategoryRepository = bookCategoryRepository;
         this.bookStatusService = bookStatusService;
         this.amazonClient = amazonClient;
         this.bookTagService = bookTagService;
+        this.bookCardService = bookCardService;
     }
 
     @Override
     @Transactional
     public void deleteBookById(Long bookId) {
-//        Set<BookTag> bookTags = bookTagService.findBookTagByBook(Collections.singleton(findBookById(bookId)));
-        List<BookStatus> bookStatuses = bookStatusService.findBookStatusesByBookId(bookId);
-        log.trace(String.valueOf(bookId));
-        log.trace(String.valueOf(bookId.getClass()));
+        bookCardService.deleteAllBookCardsByBookId(bookId);
 
-//        if (!bookTags.isEmpty()) {
-//            for (BookTag bookTag: bookTags) {
-//                bookTagService.deleteBookTag(bookTag);
-//            }
-//        }
-
-        if (!bookStatuses.isEmpty()) {
-            bookStatusService.deleteBookStatusesByBookId(bookId);
-        }
-
-        bookRepository.deleteById(bookId);
+        bookRepository.deleteBookById(bookId);
     }
 
     @Override
@@ -124,7 +115,7 @@ public class LibraryBookService implements BookService {
     @Override
     public Book findBookById(Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid retrievedBook Id:" + id));
+                .orElseThrow(() -> new BookDoesntPresentException("Invalid retrievedBook Id:" + id));
     }
 
     @Override

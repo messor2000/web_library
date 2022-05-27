@@ -11,7 +11,7 @@
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"/>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
     <script src="//use.fontawesome.com/84c9ca0cf8.js"></script>
-    <style >
+    <style>
         body {
             background: #F7FAFC;
             color: #65A5E1;
@@ -39,7 +39,7 @@
         }
     </style>
 </head>
-<body >
+<body>
 <div id="main-container" class="main-container nav-effect-1">
     <nav class="nav-menu nav-effect-1" id="menu-1">
         <h2 class="" th:text="#{title}">The Library</h2>
@@ -102,14 +102,19 @@
             <div class="wrap" style="margin-top: 250px;">
                 <article>
                     <header>
-                        <h1 id="fittext1" th:text="${status + ' ' + error}">
+                        <h1 id="fittext1" th:utext="${error}">
                             <i class="fa fa-exclamation-triangle fa-fw"></i>
                         </h1>
                     </header>
                     <p id="fittext2" th:text="#{message.error}">Oops... something went wrong.</p>
 
 
-                    <br> <a th:href="@{/}" th:text="#{message.backToLibrary}">Back </a>
+                    <br> <a th:href="@{/}" th:text="#{message.backToLibrary}">Back</a>
+                    <div class="col-sm-12 d-flex justify-content-center">
+                        <span><a class="btn custom-smile-btn-back mr-1 ml-1" onclick="history.go(-1)">
+                            <span class="text" th:text="#{message.backToPreviousPage}">Back</span></a></span>
+                    </div>
+
                 </article>
             </div>
         </div>

@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -20,6 +21,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -48,6 +50,7 @@ public class Book {
 
     @Column(name = "section")
     private String section;
+
     @EqualsAndHashCode.Exclude
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -59,8 +62,10 @@ public class Book {
     private Set<BookCategory> categories = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ToString.Exclude
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<BookCard> bookCards = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,
@@ -97,19 +102,5 @@ public class Book {
         this.author = author;
         this.amount = amount;
         this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return year == book.year && amount == book.amount && Objects.equals(id, book.id) && Objects.equals(bookName, book.bookName)
-                && Objects.equals(author, book.author) && Objects.equals(description, book.description) && Objects.equals(section, book.section);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, bookName, year, author, amount, description, section);
     }
 }

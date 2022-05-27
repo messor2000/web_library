@@ -5,9 +5,11 @@ import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.util.PostgreSQLEnumType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.*;
 
 import javax.persistence.CascadeType;
@@ -32,6 +34,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -46,11 +49,12 @@ public class BookCard {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
     private AppUser user;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
 
@@ -85,18 +89,5 @@ public class BookCard {
         }
 
         return h + "h";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BookCard that = (BookCard) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, user);
     }
 }

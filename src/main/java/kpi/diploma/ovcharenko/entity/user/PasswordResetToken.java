@@ -1,19 +1,29 @@
 package kpi.diploma.ovcharenko.entity.user;
 
-import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Calendar;
 import java.util.Date;
-
-
-import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -26,7 +36,9 @@ public class PasswordResetToken {
     private Long id;
 
     private String token;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private AppUser user;
 
@@ -50,23 +62,5 @@ public class PasswordResetToken {
     public void updateToken(final String token) {
         this.token = token;
         this.expiryDate = calculateExpiryDate();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PasswordResetToken that = (PasswordResetToken) o;
-        return Objects.equals(id, that.id) && Objects.equals(token, that.token) && Objects.equals(user, that.user) && Objects.equals(expiryDate, that.expiryDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, token, user, expiryDate);
-    }
-
-    @Override
-    public String toString() {
-        return "Token [String=" + token + "]" + "[Expires" + expiryDate + "]";
     }
 }

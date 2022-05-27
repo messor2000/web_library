@@ -19,44 +19,44 @@ class AppUserRepositoryTests {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
+//
+//    @Test
+//    @DisplayName("Test find user by email")
+//    void shouldReturnUserByEmail() {
+//        AppUser user = new AppUser().toBuilder()
+//                .firstName("test1")
+//                .lastName("test1")
+//                .email("test1@gmail.com")
+//                .password(passwordEncoder.encode("password"))
+//                .build();
+//
+//        userRepository.save(user);
+//
+//        AppUser foundUser = userRepository.findByEmail("test1@gmail.com");
+//
+//        userRepository.delete(user);
+//
+//        assertEquals(user.getEmail(), foundUser.getEmail());
+//    }
 
-    @Test
-    @DisplayName("Test find user by email")
-    void shouldReturnUserByEmail() {
-        AppUser user = new AppUser().toBuilder()
-                .firstName("test1")
-                .lastName("test1")
-                .email("test1@gmail.com")
-                .password(passwordEncoder.encode("password"))
-                .build();
-
-        userRepository.save(user);
-
-        AppUser foundUser = userRepository.findByEmail("test1@gmail.com");
-
-        userRepository.delete(user);
-
-        assertEquals(user.getEmail(), foundUser.getEmail());
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("Test delete user by email")
-    void deleteUserByEmailTest() {
-        String userEmail = "test1@gmail.com";
-        AppUser user = new AppUser().toBuilder()
-                .firstName("test1")
-                .lastName("test1")
-                .email(userEmail)
-                .password(passwordEncoder.encode("password"))
-                .build();
-
-        userRepository.save(user);
-
-        userRepository.deleteAppUserByEmail(userEmail);
-
-        assertNull(userRepository.findByEmail(userEmail));
-    }
+//    @Test
+//    @Transactional
+//    @DisplayName("Test delete user by email")
+//    void deleteUserByEmailTest() {
+//        String userEmail = "test1@gmail.com";
+//        AppUser user = new AppUser().toBuilder()
+//                .firstName("test1")
+//                .lastName("test1")
+//                .email(userEmail)
+//                .password(passwordEncoder.encode("password"))
+//                .build();
+//
+//        userRepository.save(user);
+//
+//        userRepository.deleteAppUserByEmail(userEmail);
+//
+//        assertNull(userRepository.findByEmail(userEmail));
+//    }
 }

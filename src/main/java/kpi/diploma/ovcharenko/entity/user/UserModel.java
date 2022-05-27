@@ -39,6 +39,4 @@ public class UserModel {
     @Email
     @NotEmpty
     private String confirmEmail;
-
-
 }

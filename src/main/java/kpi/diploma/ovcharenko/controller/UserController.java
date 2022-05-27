@@ -6,7 +6,7 @@ import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.VerificationToken;
-import kpi.diploma.ovcharenko.exception.ValidPassportException;
+import kpi.diploma.ovcharenko.exception.ValidPasswordException;
 import kpi.diploma.ovcharenko.service.activation.OnRegistrationCompleteEvent;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
@@ -227,11 +227,11 @@ public class UserController {
 
     @PostMapping("/user/update/password")
     public String changeUserPassword(@RequestParam("password") String password,
-                                     @RequestParam("oldpassword") String oldPassword) throws ValidPassportException {
+                                     @RequestParam("oldpassword") String oldPassword) throws ValidPasswordException {
         AppUser user = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (!userService.checkIfValidOldPassword(user, oldPassword)) {
-            throw new ValidPassportException("Old password is invalid");
+            throw new ValidPasswordException("Old password is invalid");
         }
         userService.changeUserPassword(user, password);
         return "redirect:/login";

@@ -4,6 +4,7 @@ import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.util.PostgreSQLEnumType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -52,18 +54,5 @@ public class BookStatus {
 
     public BookStatus(Status status) {
         this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BookStatus status1 = (BookStatus) o;
-        return Objects.equals(book, status1.book) && status == status1.status;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(book, status);
     }
 }

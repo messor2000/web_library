@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -17,12 +18,13 @@ import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -60,6 +62,7 @@ public class AppUser {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @EqualsAndHashCode.Exclude
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -78,41 +81,8 @@ public class AppUser {
         bookCard.setUser(this);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AppUser user = (AppUser) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password);
-    }
-
     public void setRoles(Collection<UserRole> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "AppUser{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", telephoneNumber='" + telephoneNumber + '\'' +
-                ", password='" + password + '\'' +
-                ", registrationDate=" + registrationDate +
-                ", enabled=" + enabled +
-                ", roles=" + roles +
-                ", bookCards=" + bookCards +
-                '}';
     }
 }
 
