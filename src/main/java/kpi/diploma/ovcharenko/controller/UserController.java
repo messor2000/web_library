@@ -184,7 +184,6 @@ public class UserController {
         AppUser user = userService.findByEmail(currentUser);
         List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
 
-
         model.addAttribute("appUser", user);
         model.addAttribute("bookCards", bookCards);
         model.addAttribute("bookCardsWithStatus", bookCards);
@@ -217,7 +216,8 @@ public class UserController {
         model.addAttribute("appUser", user);
         model.addAttribute("bookCards", bookCards);
         model.addAttribute("appUsers", appUsers);
-        return "redirect:/profile";
+
+        return "redirect:/";
     }
 
     @GetMapping("/user/change/password")

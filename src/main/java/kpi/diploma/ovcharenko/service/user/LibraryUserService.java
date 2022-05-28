@@ -89,11 +89,6 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public void addPhotoImage(MultipartFile file, String email) {
-        amazonClient.uploadPhotoImage(file, email);
-    }
-
-    @Override
     public void changePhotoImage(MultipartFile file, String email) {
         amazonClient.changeUserImage(file, email);
     }
