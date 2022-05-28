@@ -217,7 +217,7 @@ public class UserController {
         model.addAttribute("bookCards", bookCards);
         model.addAttribute("appUsers", appUsers);
 
-        return "redirect:/";
+        return "accountActivated";
     }
 
     @GetMapping("/user/change/password")
