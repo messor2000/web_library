@@ -26,5 +26,9 @@ public interface BookCardRepository extends CrudRepository<BookCard, Long> {
     @Modifying
     @Query("delete from BookCard bc where bc.user.id = :id")
     void deleteBookCardsByUserId(Long id);
+
+    @Modifying
+    @Query("delete from BookCard bc where bc.id = :id")
+    void deleteBookCardByCardId(Long id);
 }
 

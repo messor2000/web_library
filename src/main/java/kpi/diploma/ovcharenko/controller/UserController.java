@@ -205,7 +205,7 @@ public class UserController {
                                     @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
-        userService.updateUser(user.getId(), userModel);
+        userService.updateUser(user.getId(), userModel, false);
         List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
         List<AppUser> appUsers = userService.showAllUsers();
 
@@ -217,7 +217,7 @@ public class UserController {
         model.addAttribute("bookCards", bookCards);
         model.addAttribute("appUsers", appUsers);
 
-        return "accountUpdated";
+        return "redirect:/accountActivated";
     }
 
     @GetMapping("/user/change/password")

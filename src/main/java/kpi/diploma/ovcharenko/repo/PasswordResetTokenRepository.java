@@ -2,6 +2,8 @@ package kpi.diploma.ovcharenko.repo;
 
 import kpi.diploma.ovcharenko.entity.user.PasswordResetToken;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
@@ -11,6 +13,7 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
 
     PasswordResetToken findByUserId(Long userId);
 
-    @SuppressWarnings("unused")
-    void deleteAllByUserId(Long id);
+    @Modifying
+    @Query("delete from PasswordResetToken t where t.id = :id")
+    void deletePasswordResetTokenById(Long id);
 }
