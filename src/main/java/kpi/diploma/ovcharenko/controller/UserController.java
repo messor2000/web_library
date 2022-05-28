@@ -217,7 +217,7 @@ public class UserController {
         model.addAttribute("bookCards", bookCards);
         model.addAttribute("appUsers", appUsers);
 
-        return "redirect:/accountActivated";
+        return "redirect:/account/updated";
     }
 
     @GetMapping("/user/change/password")
@@ -273,7 +273,7 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @GetMapping("/admin/showBookingCards")
     public String showAllBookingCardsExceptOld(Model model) {
-        List<BookCard> bookCards = bookCardService.findAllExceptReturned();
+        List<BookCard> bookCards = bookCardService.findAllBookCards();
 
         model.addAttribute("bookCards", bookCards);
 
@@ -353,8 +353,9 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/update/user/{id}")
-    public String updateUser(Model model, @PathVariable("id") Long id, @ModelAttribute("user") @Valid UserModel userModel) {
-        userService.updateUser(id, userModel);
+    public String updateUser(Model model, @PathVariable("id") Long id, @ModelAttribute("user") @Valid UserModel userModel,
+                             @RequestParam("flag") boolean flag) {
+        userService.updateUser(id, userModel, flag);
         List<AppUser> appUsers = userService.showAllUsers();
 
         model.addAttribute("appUsers", appUsers);
@@ -408,6 +409,11 @@ public class UserController {
     @GetMapping("/forgetPassword")
     public String showForgetPasswordPage() {
         return "forgetPassword";
+    }
+
+    @GetMapping("/account/updated")
+    public String showAccountUpdatedPage() {
+        return "accountUpdated";
     }
 
     private Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
