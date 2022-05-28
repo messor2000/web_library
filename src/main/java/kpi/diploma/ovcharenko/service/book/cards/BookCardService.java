@@ -10,8 +10,6 @@ public interface BookCardService {
     void saveBookCard(BookCard bookCard);
     List<BookCard> findAllBookCards();
 
-    List<BookCard> findAllExceptReturned();
-
     List<BookCard> findAllUserBookCards(Long userId);
 
     List<BookCard> findAllBookCardsWithStatus(CardStatus status);

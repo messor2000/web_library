@@ -86,7 +86,7 @@
                          aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form action="#" th:action="@{/admin/updateUser/{id}(id=${user.id})}"
+                                <form action="#" th:action="@{/admin/update/user/{id}(id=${user.id})}"
                                       th:object="${user}" method="post">
                                     <label for="firstName" th:text="#{reg.first.name}"> first name</label>
                                     <input type="text" th:field="${user.firstName}" id="firstName">
@@ -102,6 +102,10 @@
 
                                     <label for="tel" th:text="#{reg.number}"> number</label>
                                     <input type="tel" th:field="${user.telephoneNumber}" id="tel">
+
+                                    <label>
+                                        <input type="checkbox" name="flag" th:checked="*{allPrivileges}" th:text="#{make.user.admin}"/>
+                                    </label>
 
                                     <input type="submit" class="btn btn-primary" th:value="#{user.update.profile}">
                                 </form>

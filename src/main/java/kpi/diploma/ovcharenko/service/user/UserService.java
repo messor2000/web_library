@@ -46,7 +46,9 @@ public interface UserService extends UserDetailsService {
 
     List<AppUser> showAllUsers();
 
-    void updateUser(Long userId, final UserModel userModel);
+//    void updateUser(Long userId, final UserModel userModel);
+
+    void updateUser(Long userId, final UserModel userModel, boolean flag);
 
     void changePhotoImage(MultipartFile file, String email);
 }

@@ -188,6 +188,8 @@ public class UserController {
         model.addAttribute("bookCards", bookCards);
         model.addAttribute("bookCardsWithStatus", bookCards);
 
+        System.out.println(user);
+
         return "userProfile";
     }
 
@@ -205,7 +207,7 @@ public class UserController {
                                     @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
         final String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userService.findByEmail(currentUser);
-        userService.updateUser(user.getId(), userModel);
+        userService.updateUser(user.getId(), userModel, false);
         List<BookCard> bookCards = bookCardService.findAllUserBookCards(user.getId());
         List<AppUser> appUsers = userService.showAllUsers();
 
@@ -217,7 +219,7 @@ public class UserController {
         model.addAttribute("bookCards", bookCards);
         model.addAttribute("appUsers", appUsers);
 
-        return "accountActivated";
+        return "redirect:/accountActivated";
     }
 
     @GetMapping("/user/change/password")
@@ -273,16 +275,6 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @GetMapping("/admin/showBookingCards")
     public String showAllBookingCardsExceptOld(Model model) {
-        List<BookCard> bookCards = bookCardService.findAllExceptReturned();
-
-        model.addAttribute("bookCards", bookCards);
-
-        return "bookCards";
-    }
-
-    @Secured("ROLE_ADMIN")
-    @GetMapping("/admin/showBookingCards/old")
-    public String showBookingCardsWithAllStatuses(Model model) {
         List<BookCard> bookCards = bookCardService.findAllBookCards();
 
         model.addAttribute("bookCards", bookCards);
@@ -347,14 +339,16 @@ public class UserController {
     public String showUserUpdatePage(@PathVariable("id") Long id, Model model) {
         AppUser user = userService.findById(id);
 
+        model.addAttribute("flag", true);
         model.addAttribute("user", user);
         return "updateUserByAdmin";
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/update/user/{id}")
-    public String updateUser(Model model, @PathVariable("id") Long id, @ModelAttribute("user") @Valid UserModel userModel) {
-        userService.updateUser(id, userModel);
+    public String updateUser(Model model, @PathVariable("id") Long id, @ModelAttribute("user") @Valid UserModel userModel,
+                             @RequestParam("flag") boolean flag) {
+        userService.updateUser(id, userModel, flag);
         List<AppUser> appUsers = userService.showAllUsers();
 
         model.addAttribute("appUsers", appUsers);
@@ -386,7 +380,6 @@ public class UserController {
         return "redirect:/admin/allUsers";
     }
 
-
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/delete/user/{id}")
     public String deleteUser(@PathVariable("id") Long id, HttpServletRequest request) {
@@ -408,6 +401,11 @@ public class UserController {
     @GetMapping("/forgetPassword")
     public String showForgetPasswordPage() {
         return "forgetPassword";
+    }
+
+    @GetMapping("/account/updated")
+    public String showAccountUpdatedPage() {
+        return "accountUpdated";
     }
 
     private Optional<String> getPreviousPageByRequest(HttpServletRequest request) {

@@ -4,6 +4,7 @@ import kpi.diploma.ovcharenko.entity.card.BookCard;
 import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.repo.BookCardRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +28,6 @@ public class LibraryBookCardService implements BookCardService {
     }
 
     @Override
-    public List<BookCard> findAllExceptReturned() {
-        List<BookCard> bookCards = new ArrayList<>();
-
-        bookCards.addAll(bookCardRepository.findAllByCardStatus(CardStatus.WAIT_FOR_APPROVE));
-        bookCards.addAll(bookCardRepository.findAllByCardStatus(CardStatus.APPROVED));
-
-        return bookCards;
-    }
-
-    @Override
     public List<BookCard> findAllUserBookCards(Long userId) {
         return bookCardRepository.findAllByUserId(userId);
     }
@@ -52,8 +43,9 @@ public class LibraryBookCardService implements BookCardService {
     }
 
     @Override
+    @Transactional
     public void deleteBookCardByBookCardId(Long bookCardId) {
-        bookCardRepository.deleteById(bookCardId);
+        bookCardRepository.deleteBookCardByCardId(bookCardId);
     }
 
     @Override

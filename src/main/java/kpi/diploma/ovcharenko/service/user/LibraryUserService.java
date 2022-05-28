@@ -59,6 +59,24 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                user.isEnabled(),
+                true,
+                true,
+                true,
+                mapRolesToAuthorities(user.getRoles()));
+    }
+
+    @Override
     public AppUser save(UserModel userModel) {
         AppUser user = createUser(userModel);
 
@@ -79,12 +97,18 @@ public class LibraryUserService implements UserService {
     }
 
     @Override
-    public void updateUser(Long userId, UserModel userModel) {
+    public void updateUser(Long userId, UserModel userModel, boolean flag) {
         AppUser user = findById(userId);
         user.setFirstName(userModel.getFirstName());
         user.setLastName(userModel.getLastName());
         user.setEmail(userModel.getEmail());
         user.setTelephoneNumber(userModel.getTelephoneNumber());
+
+        if (flag && !user.getRoles().contains(new UserRole("ROLE_ADMIN"))) {
+            user.setRoles(Collections.singletonList(new UserRole("ROLE_ADMIN")));
+            user.setAllPrivileges(true);
+        }
+
         userRepository.save(user);
     }
 
@@ -108,33 +132,14 @@ public class LibraryUserService implements UserService {
         }
 
         if (passwordResetToken != null) {
-            resetTokenRepository.delete(passwordResetToken);
+            resetTokenRepository.deletePasswordResetTokenById(passwordResetToken.getId());
         }
 
         if (verificationToken != null) {
-            verificationTokenRepository.delete(verificationToken);
+            verificationTokenRepository.deleteVerificationTokenById(verificationToken.getId());
         }
 
         userRepository.deleteUserById(userId);
-    }
-
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        AppUser user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("Invalid username or password.");
-        }
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                user.isEnabled(),
-                true,
-                true,
-                true,
-                mapRolesToAuthorities(user.getRoles()));
     }
 
     @Override
@@ -304,6 +309,7 @@ public class LibraryUserService implements UserService {
         user.setTelephoneNumber(userModel.getTelephoneNumber());
         user.setPassword(PasswordEncoder.passwordEncoder().encode(userModel.getPassword()));
         user.setRoles(Collections.singletonList(new UserRole("ROLE_USER")));
+        user.setAllPrivileges(false);
 
         return user;
     }
