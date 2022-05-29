@@ -79,16 +79,28 @@
             <div class="page-container" style="padding-bottom: 50px">
                 <div class="container">
                     <div class="container">
-                        <h1 class="alert alert-danger" th:utext="${message}">error</h1>
+                        <h1 class="alert alert-danger" th:text="${message}">error</h1>
                         <h1 th:text="${param.message[0]}">Error Message</h1>
                         <br/>
                         <a class="btn btn-default" th:href="@{/registration.html}" th:utext="#{reg.title}">signup</a>
 
-<!--                        <div th:if="${expired}">-->
-<!--                            <br/>-->
-<!--                            <h1 th:utext="#{label.form.resendRegistrationToken}">resend</h1>-->
-<!--                            <button onclick="resendToken()">resend</button>-->
-<!--                        </div>-->
+                        <div th:if="${expired}">
+                            <form th:action="@{/user/resendRegistrationToken}" method="get">
+<!--                                <br/>-->
+<!--                                <span th:if="${token != null}" th:utext="#{token.message}">token</span>-->
+<!--                                <span th:utext="${token}">token</span>-->
+<!--                                <br/>-->
+
+                                <label>
+                                    <input type="text" th:name="token" hidden name="token"/>
+                                </label>
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <button class="btn btn-danger button btn btn-primary" type="submit"
+                                            th:text="#{message.resendToken}">Resend token
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

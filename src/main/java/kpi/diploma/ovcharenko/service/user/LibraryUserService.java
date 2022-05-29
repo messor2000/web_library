@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -158,6 +159,24 @@ public class LibraryUserService implements UserService {
     public void createVerificationTokenForUser(final AppUser user, final String token) {
         final VerificationToken myToken = new VerificationToken(token, user);
         verificationTokenRepository.save(myToken);
+    }
+
+    @Override
+    @Transactional
+    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
+        VerificationToken vToken = verificationTokenRepository.findByToken(existingVerificationToken);
+        vToken.updateToken(UUID.randomUUID().toString());
+        vToken = verificationTokenRepository.save(vToken);
+        return vToken;
+    }
+
+    @Override
+    public AppUser getUserByVerificationToken(String verificationToken) {
+        final VerificationToken token = verificationTokenRepository.findByToken(verificationToken);
+        if (token != null) {
+            return token.getUser();
+        }
+        return null;
     }
 
     @Override

@@ -88,7 +88,8 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String registerUserAccount(@ModelAttribute("user") @Valid UserModel userModel, BindingResult result, HttpServletRequest request) {
+    public String registerUserAccount(@ModelAttribute("user") @Valid UserModel userModel, BindingResult result, HttpServletRequest request,
+                                      Model model) {
         AppUser existing = userService.findByEmail(userModel.getEmail());
         if (existing != null) {
             result.rejectValue("email", null, "There is already an account registered with that email");
@@ -100,11 +101,36 @@ public class UserController {
 
         userService.save(userModel);
         final AppUser user = userService.findByEmail(userModel.getEmail());
+        final String token = UUID.randomUUID().toString();
 
         final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl, token));
+        model.addAttribute("token", token);
 
         return "regSuccessfully";
+    }
+
+    @GetMapping("/user/resendRegistrationToken")
+    public String resendRegistrationToken(final HttpServletRequest request, final Model model, @RequestParam("token") final String existingToken) {
+        final VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
+        final AppUser user = userService.getUserByVerificationToken(newToken.getToken());
+
+        try {
+            final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+            final SimpleMailMessage email = constructResetVerificationTokenEmail(appUrl, request.getLocale(), newToken.getToken(), user);
+            mailSender.send(email);
+        } catch (final MailAuthenticationException e) {
+            log.trace("MailAuthenticationException", e);
+            return "redirect:/emailError";
+        } catch (final Exception e) {
+            log.trace(e.getLocalizedMessage(), e);
+            model.addAttribute("message", e.getLocalizedMessage());
+            return "redirect:/emailError";
+        }
+
+        model.addAttribute("token", newToken);
+
+        return "resendVerificationToken";
     }
 
     @GetMapping("/registration/confirm")
@@ -120,6 +146,13 @@ public class UserController {
         }
 
         final AppUser user = verificationToken.getUser();
+
+        if (user == null) {
+            final String message = messages.getMessage("auth.message.invalidToken", null, locale);
+            model.addAttribute("message", message);
+            return "redirect:/badUser";
+        }
+
         final Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
@@ -130,7 +163,6 @@ public class UserController {
 
         user.setEnabled(true);
         userService.saveRegisteredUser(user);
-        model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
 
         return "accountActivated";
     }
@@ -150,10 +182,10 @@ public class UserController {
             final SimpleMailMessage email = constructResetTokenEmail(appUrl, request.getLocale(), token, user);
             mailSender.send(email);
         } catch (final MailAuthenticationException e) {
-            log.debug("MailAuthenticationException", e);
+            log.trace("MailAuthenticationException", e);
             return "redirect:/emailError";
         } catch (final Exception e) {
-            log.debug(e.getLocalizedMessage(), e);
+            log.trace(e.getLocalizedMessage(), e);
             model.addAttribute("message", e.getLocalizedMessage());
             return "redirect:/emailError";
         }
@@ -421,8 +453,15 @@ public class UserController {
     }
 
     private SimpleMailMessage constructResetTokenEmail(String contextPath, Locale locale, String token, AppUser user) {
-        String url = contextPath + "/user/reset/password?token=" + token;
-        String message = messages.getMessage("message.resetPassword",
+        final String url = contextPath + "/user/reset/password?token=" + token;
+        final String message = messages.getMessage("message.resetPassword",
+                null, locale);
+        return constructEmail(message + " \r\n" + url, user);
+    }
+
+    private SimpleMailMessage constructResetVerificationTokenEmail(String contextPath, Locale locale, String token, AppUser user) {
+        final String url = contextPath + "/registration/confirm?token=" + token;
+        final String message = messages.getMessage("message.regSuccLink",
                 null, locale);
         return constructEmail(message + " \r\n" + url, user);
     }

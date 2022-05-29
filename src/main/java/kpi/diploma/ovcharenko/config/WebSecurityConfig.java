@@ -41,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/update/password",
                             "/user/reset/password/**",
                             "/registration/confirm/**",
+                            "/user/resendRegistrationToken",
                             "/download/book/*",
                             "/download/pdf/**",
                             "/covers/**",

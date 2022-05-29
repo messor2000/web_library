@@ -89,7 +89,11 @@
         <div class="main-box" style="padding-bottom: 50px">
             <h1 class="alert alert-danger" th:utext="#{message.book.taken.error}">Error</h1>
 
-            <a href="/login" th:text="#{message.backToLibrary}">Back to login page</a>
+            <br> <a th:href="@{/}" th:text="#{message.backToLibrary}">Back</a>
+            <div class="col-sm-12 d-flex justify-content-center">
+                        <span><a class="btn custom-smile-btn-back mr-1 ml-1" onclick="history.go(-1)">
+                            <span class="text" th:text="#{message.backToPreviousPage}">Back</span></a></span>
+            </div>
         </div>
         <!-- /main -->
 

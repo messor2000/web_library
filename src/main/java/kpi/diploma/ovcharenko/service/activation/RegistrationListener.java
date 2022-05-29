@@ -19,7 +19,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private final MessageSource messages;
     private final JavaMailSender mailSender;
 
-    public RegistrationListener( UserService userService, MessageSource messages, JavaMailSender mailSender) {
+    public RegistrationListener(UserService userService, MessageSource messages, JavaMailSender mailSender) {
         this.userService = userService;
         this.messages = messages;
         this.mailSender = mailSender;
@@ -32,10 +32,10 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     private void confirmRegistration(OnRegistrationCompleteEvent event) {
         AppUser user = event.getUser();
-        String token = UUID.randomUUID().toString();
-        userService.createVerificationTokenForUser(user, token);
+//        String token = UUID.randomUUID().toString();
+        userService.createVerificationTokenForUser(user, event.getToken());
 
-        final SimpleMailMessage email = constructEmailMessage(event, user, token);
+        final SimpleMailMessage email = constructEmailMessage(event, user, event.getToken());
         mailSender.send(email);
     }
 
@@ -43,7 +43,8 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         final String recipientAddress = user.getEmail();
         final String subject = "Registration Confirmation";
         final String confirmationUrl = event.getAppUrl() + "/registration/confirm?token=" + token;
-        final String message = messages.getMessage("message.regSuccLink", null, "You registered successfully. To confirm your registration, please click on the below link.", event.getLocale());
+        final String message = messages.getMessage("message.regSuccLink", null,
+                "You registered successfully. To confirm your registration, please click on the below link.", event.getLocale());
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);

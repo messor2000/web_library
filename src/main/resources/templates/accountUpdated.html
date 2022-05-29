@@ -81,7 +81,11 @@
                     <h1 th:text="#{message.accountUpdated}">Success massage</h1>
                 </div>
 
-                <a href="/" th:text="#{message.backToLibrary}">Back to main page</a>
+                <br> <a th:href="@{/login}" th:text="#{message.backToLogin}">Back</a>
+                <div class="col-sm-12 d-flex justify-content-center">
+                        <span><a class="btn custom-smile-btn-back mr-1 ml-1" onclick="history.go(-1)">
+                            <span class="text" th:text="#{message.backToPreviousPage}">Back</span></a></span>
+                </div>
             </div>
         </div>
     </div>

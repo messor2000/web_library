@@ -34,6 +34,10 @@ public interface UserService extends UserDetailsService {
 
     void createVerificationTokenForUser(final AppUser user, final String token);
 
+    VerificationToken generateNewVerificationToken(final String existingVerificationToken);
+
+    AppUser getUserByVerificationToken(final String verificationToken);
+
     VerificationToken getVerificationToken(String token);
 
     void createPasswordResetTokenForUser(final AppUser user, final String token);
@@ -45,8 +49,6 @@ public interface UserService extends UserDetailsService {
     boolean checkIfValidOldPassword(final AppUser user, final String oldPassword);
 
     List<AppUser> showAllUsers();
-
-//    void updateUser(Long userId, final UserModel userModel);
 
     void updateUser(Long userId, final UserModel userModel, boolean flag);
 
