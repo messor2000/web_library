@@ -79,28 +79,23 @@
             <div class="page-container" style="padding-bottom: 50px">
                 <div class="container">
                     <div class="container">
-                        <h1 class="alert alert-danger" th:text="${message}">error</h1>
-                        <h1 th:text="${param.message[0]}">Error Message</h1>
+                        <h1 class="alert alert-danger" th:utext="${message}">error</h1>
                         <br/>
-                        <a class="btn btn-default" th:href="@{/registration.html}" th:utext="#{reg.title}">signup</a>
 
-                        <div th:if="${expired}">
+                        <div class="page-title category-title">
                             <form th:action="@{/user/resendRegistrationToken}" method="get">
-<!--                                <br/>-->
-<!--                                <span th:if="${token != null}" th:utext="#{token.message}">token</span>-->
-<!--                                <span th:utext="${token}">token</span>-->
-<!--                                <br/>-->
-
-                                <label>
-                                    <input type="text" th:name="token" hidden name="token"/>
+                                <label hidden>
+                                    <input type="text" th:name="token" hidden th:value="${token}" name="token"/>
                                 </label>
                                 <div class="col-sm-6 col-sm-offset-3">
-                                    <button class="btn btn-danger button btn btn-primary" type="submit"
+                                    <button disabled id='btn1' class="btn btn-danger button btn btn-primary" type="submit"
                                             th:text="#{message.resendToken}">Resend token
                                     </button>
                                 </div>
                             </form>
                         </div>
+
+                        <a class="btn btn-default" th:href="@{/registration.html}" th:utext="#{reg.title}">signup</a>
                     </div>
                 </div>
             </div>
@@ -114,8 +109,13 @@
 
 </div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
+<script>
+    setTimeout(() => {
+        document.getElementById('btn1').disabled = false;
+    }, 30000);
+</script>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/4.0.0/shuffle.min.js"></script>

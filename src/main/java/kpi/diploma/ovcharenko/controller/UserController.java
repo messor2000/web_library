@@ -142,7 +142,7 @@ public class UserController {
         if (verificationToken == null) {
             final String message = messages.getMessage("auth.message.invalidToken", null, locale);
             model.addAttribute("message", message);
-            return "redirect:/badUser";
+            return "badUser";
         }
 
         final AppUser user = verificationToken.getUser();
@@ -150,7 +150,7 @@ public class UserController {
         if (user == null) {
             final String message = messages.getMessage("auth.message.invalidToken", null, locale);
             model.addAttribute("message", message);
-            return "redirect:/badUser";
+            return "badUser";
         }
 
         final Calendar cal = Calendar.getInstance();
@@ -158,7 +158,7 @@ public class UserController {
             model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
             model.addAttribute("expired", true);
             model.addAttribute("token", token);
-            return "redirect:/badUser";
+            return "badUser";
         }
 
         user.setEnabled(true);
@@ -189,6 +189,7 @@ public class UserController {
             model.addAttribute("message", e.getLocalizedMessage());
             return "redirect:/emailError";
         }
+
         return "infoAboutEmail";
     }
 
@@ -447,6 +448,12 @@ public class UserController {
     public String showAccountUpdatedPage() {
         return "accountUpdated";
     }
+
+    @GetMapping("/bad/user")
+    public String showBadUserPage() {
+        return "badUser";
+    }
+
 
     private Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);

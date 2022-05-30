@@ -87,7 +87,7 @@
                             <input type="text" th:name="token" hidden th:value="${token}" name="token"/>
                         </label>
                         <div class="col-sm-6 col-sm-offset-3">
-                            <button class="btn btn-danger button btn btn-primary" type="submit"
+                            <button disabled id="btn1" class="btn btn-danger button btn btn-primary" type="submit"
                                     th:text="#{message.resendToken}">Resend token
                             </button>
                         </div>
@@ -105,6 +105,12 @@
     </div>
 
 </div>
+
+<script>
+    setTimeout(() => {
+            document.getElementById('btn1').disabled = false;
+        }, 30000);
+</script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.0/foundation.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
