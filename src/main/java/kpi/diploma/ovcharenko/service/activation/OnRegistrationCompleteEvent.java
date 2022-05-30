@@ -13,7 +13,6 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private String appUrl;
     private Locale locale;
     private AppUser user;
-
     private String token;
 
     public OnRegistrationCompleteEvent(AppUser user, Locale locale, String appUrl, String token) {

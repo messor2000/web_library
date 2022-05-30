@@ -32,7 +32,6 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     private void confirmRegistration(OnRegistrationCompleteEvent event) {
         AppUser user = event.getUser();
-//        String token = UUID.randomUUID().toString();
         userService.createVerificationTokenForUser(user, event.getToken());
 
         final SimpleMailMessage email = constructEmailMessage(event, user, event.getToken());
