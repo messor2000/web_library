@@ -1,4 +1,4 @@
-package kpi.diploma.ovcharenko.service.updloader;
+package kpi.diploma.ovcharenko.service.excel.updloader;
 
 import kpi.diploma.ovcharenko.exception.StorageException;
 import kpi.diploma.ovcharenko.exception.StorageFileNotFoundException;
@@ -18,10 +18,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-/**
- * @author Aleksandr Ovcharenko
- */
 
 @Service
 public class ExcelStorageService implements StorageService {
@@ -43,7 +39,6 @@ public class ExcelStorageService implements StorageService {
                     Paths.get(Objects.requireNonNull(file.getOriginalFilename())))
                     .normalize().toAbsolutePath();
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-                // This is a security check
                 throw new StorageException("Cannot store file outside current directory.");
             }
             try (InputStream inputStream = file.getInputStream()) {

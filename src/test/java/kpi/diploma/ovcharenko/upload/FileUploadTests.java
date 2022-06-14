@@ -1,7 +1,7 @@
 package kpi.diploma.ovcharenko.upload;
 
 import kpi.diploma.ovcharenko.exception.StorageFileNotFoundException;
-import kpi.diploma.ovcharenko.service.updloader.StorageService;
+import kpi.diploma.ovcharenko.service.excel.updloader.StorageService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

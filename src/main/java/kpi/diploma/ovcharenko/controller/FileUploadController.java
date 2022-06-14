@@ -3,8 +3,8 @@ package kpi.diploma.ovcharenko.controller;
 import kpi.diploma.ovcharenko.entity.book.BookTag;
 import kpi.diploma.ovcharenko.exception.StorageFileNotFoundException;
 import kpi.diploma.ovcharenko.service.book.tags.BookTagService;
-import kpi.diploma.ovcharenko.service.data.ExcelDataService;
-import kpi.diploma.ovcharenko.service.updloader.StorageService;
+import kpi.diploma.ovcharenko.service.excel.reader.ExcelReaderService;
+import kpi.diploma.ovcharenko.service.excel.updloader.StorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -33,13 +33,13 @@ import java.util.stream.Collectors;
 public class FileUploadController {
 
     private final StorageService storageService;
-    private final ExcelDataService excelDataService;
+    private final ExcelReaderService excelReaderService;
     private final BookTagService bookTagService;
 
     @Autowired
-    public FileUploadController(StorageService storageService, ExcelDataService excelDataService, BookTagService bookTagService) {
+    public FileUploadController(StorageService storageService, ExcelReaderService excelReaderService, BookTagService bookTagService) {
         this.storageService = storageService;
-        this.excelDataService = excelDataService;
+        this.excelReaderService = excelReaderService;
         this.bookTagService = bookTagService;
     }
 
@@ -52,8 +52,6 @@ public class FileUploadController {
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
                         "serveFile", path.getFileName().toString()).build().toUri().toString())
                 .collect(Collectors.toList()));
-
-
 
         return "uploadPage";
     }
@@ -68,13 +66,18 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("pageNum") String pageNum,
-                                   @RequestParam("category") String category, @RequestParam("section") String section,
-                                   @RequestParam("tag") String tag, RedirectAttributes redirectAttributes) {
+                                   @RequestParam(value = "category", required = false) String category,
+                                   @RequestParam(value = "section", required = false) String section,
+                                   @RequestParam(value = "tag", required = false) String tag, RedirectAttributes redirectAttributes) {
         storageService.store(file);
 
-        Set<BookTag> bookTags = tagSetOfTagsFromString(tag);
+        Set<BookTag> bookTags = new HashSet<>();
 
-        excelDataService.getExcelDataAsList(file, Integer.parseInt(pageNum), category, section, bookTags);
+        if (tag != null) {
+            bookTags = tagSetOfTagsFromString(tag);
+        }
+
+        excelReaderService.getExcelDataAsList(file, Integer.parseInt(pageNum), category, section, bookTags);
 
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");

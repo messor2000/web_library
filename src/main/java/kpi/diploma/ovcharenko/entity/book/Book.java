@@ -65,6 +65,7 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<BookCard> bookCards = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,

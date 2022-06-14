@@ -1,4 +1,4 @@
-package kpi.diploma.ovcharenko.service.updloader;
+package kpi.diploma.ovcharenko.service.excel.updloader;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

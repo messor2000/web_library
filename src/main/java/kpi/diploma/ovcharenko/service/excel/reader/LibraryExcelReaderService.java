@@ -1,4 +1,4 @@
-package kpi.diploma.ovcharenko.service.data;
+package kpi.diploma.ovcharenko.service.excel.reader;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
@@ -29,12 +29,12 @@ import java.util.Set;
 
 @Slf4j
 @Service
-public class LibraryExcelDataService implements ExcelDataService {
+public class LibraryExcelReaderService implements ExcelReaderService {
 
     private final BookRepository bookRepository;
 
     @Autowired
-    public LibraryExcelDataService(BookRepository bookRepository) {
+    public LibraryExcelReaderService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
@@ -65,11 +65,12 @@ public class LibraryExcelDataService implements ExcelDataService {
 
                 book.setAuthor(getCellValue(row, 1));
                 book.setBookName(getCellValue(row, 2));
-                book.setYear(convertStringToInt(getCellValue(row, 3)));
+                book.setYear(Integer.parseInt(getCellValue(row, 3)));
 
                 BookCategory bookCategory = new BookCategory();
                 bookCategory.setCategory(category);
                 book.addCategory(bookCategory);
+
                 book.setAmount(1);
                 book.setSection(section);
 
@@ -80,6 +81,7 @@ public class LibraryExcelDataService implements ExcelDataService {
 
                 BookStatus bookStatus = new BookStatus(Status.FREE);
                 book.addStatus(bookStatus);
+
                 books.add(book);
             }
         }
@@ -87,15 +89,6 @@ public class LibraryExcelDataService implements ExcelDataService {
         books = removeDuplicates(books);
 
         bookRepository.saveAll(books);
-    }
-
-    private int convertStringToInt(String str) {
-        int result = 0;
-        if (str == null || str.isEmpty() || str.trim().isEmpty()) {
-            return result;
-        }
-        result = Integer.parseInt(str);
-        return result;
     }
 
     private String getCellValue(Row row, int cellNo) {
