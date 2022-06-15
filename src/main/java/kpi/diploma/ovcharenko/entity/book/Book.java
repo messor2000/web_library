@@ -1,6 +1,5 @@
 package kpi.diploma.ovcharenko.entity.book;
 
-import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

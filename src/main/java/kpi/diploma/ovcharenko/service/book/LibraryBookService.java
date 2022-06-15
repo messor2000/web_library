@@ -3,8 +3,7 @@ package kpi.diploma.ovcharenko.service.book;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.BookTag;
-import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
-import kpi.diploma.ovcharenko.entity.book.status.Status;
+import kpi.diploma.ovcharenko.entity.book.BookStatus;
 import kpi.diploma.ovcharenko.exception.BookDoesntPresentException;
 import kpi.diploma.ovcharenko.repo.BookCategoryRepository;
 import kpi.diploma.ovcharenko.repo.BookRepository;
@@ -77,7 +76,7 @@ public class LibraryBookService implements BookService {
         if (book.getAmount() > bookStatuses.size()) {
             int difference = book.getAmount() - bookStatuses.size();
             for (int i = 0; i < difference; i++) {
-                BookStatus status = new BookStatus(Status.FREE);
+                BookStatus status = new BookStatus("FREE");
                 book.addStatus(status);
             }
         }
@@ -86,7 +85,7 @@ public class LibraryBookService implements BookService {
             int difference = bookStatuses.size() - book.getAmount();
             for (int i = 0; i < difference; i++) {
                 BookStatus status = bookStatuses.get(i);
-                if (status.getStatus().equals(Status.FREE)) {
+                if (status.getStatus().equals("FREE")) {
                     bookStatusService.deleteBookStatus(status);
                 } else {
                     throw new RuntimeException("All books is used, can't delete");
@@ -126,7 +125,7 @@ public class LibraryBookService implements BookService {
         }
 
         for (int i = 0; i < book.getAmount(); i++) {
-            BookStatus status = new BookStatus(Status.FREE);
+            BookStatus status = new BookStatus("FREE");
             book.addStatus(status);
         }
 
@@ -195,9 +194,7 @@ public class LibraryBookService implements BookService {
             return bookRepository.findByYearContaining(Integer.parseInt(search), pageable);
         }
 
-//        Page<Book> books = bookRepository.findByBookCardsContaining(search, pageable);
-
-        return bookRepository.findByBookNameOrAuthorOrYear(search, pageable);
+        return bookRepository.findByBookNameOrAuthor(search, pageable);
     }
 
     @Override

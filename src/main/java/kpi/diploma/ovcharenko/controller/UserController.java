@@ -2,7 +2,6 @@ package kpi.diploma.ovcharenko.controller;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
-import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.entity.user.VerificationToken;
@@ -48,7 +47,6 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-
     private final BookService bookService;
     private final BookCardService bookCardService;
     private final SecurityService securityService;
@@ -80,11 +78,6 @@ public class UserController {
         model.addAttribute("userForm", new AppUser());
 
         return "registration";
-    }
-
-    @ModelAttribute("user")
-    public UserModel userRegistrationDto() {
-        return new UserModel();
     }
 
     @PostMapping("/registration")
@@ -161,7 +154,7 @@ public class UserController {
             return "badUser";
         }
 
-        user.setEnabled(true);
+//        user.setEnabled(true);
         userService.saveRegisteredUser(user);
 
         return "accountActivated";
@@ -358,7 +351,7 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @GetMapping("/admin/showBookingCards/shouldApprove")
     public String showAllBookingCardsThatShouldBeApproved(Model model) {
-        List<BookCard> bookCards = bookCardService.findAllBookCardsWithStatus(CardStatus.WAIT_FOR_APPROVE);
+        List<BookCard> bookCards = bookCardService.findAllBookCardsWithStatus("WAIT_FOR_APPROVE");
 
         model.addAttribute("bookCards", bookCards);
 
@@ -368,7 +361,7 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @GetMapping("/admin/showBookingCards/shouldPutBack")
     public String showAllBookingCardsThatShouldBeBackedToTheLibrary(Model model) {
-        List<BookCard> bookCards = bookCardService.findAllBookCardsWithStatus(CardStatus.APPROVED);
+        List<BookCard> bookCards = bookCardService.findAllBookCardsWithStatus("APPROVED");
 
         model.addAttribute("bookCards", bookCards);
 
@@ -454,6 +447,10 @@ public class UserController {
         return "badUser";
     }
 
+    @ModelAttribute("user")
+    public UserModel userRegistrationDto() {
+        return new UserModel();
+    }
 
     private Optional<String> getPreviousPageByRequest(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);

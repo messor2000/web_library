@@ -1,6 +1,6 @@
 package kpi.diploma.ovcharenko.service.book.status;
 
-import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
+import kpi.diploma.ovcharenko.entity.book.BookStatus;
 
 import java.util.List;
 

@@ -130,7 +130,7 @@
                                                 <td th:text="${bookCard.cardStatus}">body</td>
                                                 <td>
                                                     <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                                                        <div th:if="${bookCard.cardStatus.equals(bookCard.cardStatus.WAIT_FOR_APPROVE)}">
+                                                        <div th:if="${bookCard.cardStatus.equals('WAIT_FOR_APPROVE')}">
                                                             <form th:action="@{/admin/approve/book/{bookId}/user/{userId}(bookId=${bookCard.book.id}, userId=${bookCard.user.id})}"
                                                                   method="post">
                                                                 <button class="btn btn-danger button btn btn-primary"
@@ -139,7 +139,7 @@
                                                                 </button>
                                                             </form>
                                                         </div>
-                                                        <div th:if="${bookCard.cardStatus.equals(bookCard.cardStatus.APPROVED)}">
+                                                        <div th:if="${bookCard.cardStatus.equals('APPROVED')}">
                                                             <form th:action="@{/admin/putBackIntoTheLibrary/{bookId}/user/{userId}(bookId=${bookCard.book.id}, userId=${bookCard.user.id})}"
                                                                   method="post">
                                                                 <button class="btn btn-danger button btn btn-primary"

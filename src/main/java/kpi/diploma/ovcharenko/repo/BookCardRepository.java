@@ -1,7 +1,6 @@
 package kpi.diploma.ovcharenko.repo;
 
 import kpi.diploma.ovcharenko.entity.card.BookCard;
-import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -15,7 +14,7 @@ public interface BookCardRepository extends CrudRepository<BookCard, Long> {
 
     List<BookCard> findAllByUserId(Long userId);
 
-    List<BookCard> findAllByCardStatus(CardStatus status);
+    List<BookCard> findAllByCardStatus(String status);
 
     BookCard findBookCardById(Long bookCardId);
 

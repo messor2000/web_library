@@ -1,6 +1,6 @@
 package kpi.diploma.ovcharenko.repo;
 
-import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
+import kpi.diploma.ovcharenko.entity.book.BookStatus;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

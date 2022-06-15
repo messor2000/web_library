@@ -39,10 +39,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "booking_card")
-@TypeDef(
-        name = "pgsql_enum",
-        typeClass = PostgreSQLEnumType.class
-)
+//@TypeDef(
+//        name = "pgsql_enum",
+//        typeClass = PostgreSQLEnumType.class
+//)
 public class BookCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,9 +59,9 @@ public class BookCard {
     private Book book;
 
     @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    @Type(type = "pgsql_enum")
-    private CardStatus cardStatus;
+//    @Enumerated(EnumType.STRING)
+//    @Type(type = "pgsql_enum")
+    private String cardStatus;
 
     @CreationTimestamp
     @Column(name = "create_time")

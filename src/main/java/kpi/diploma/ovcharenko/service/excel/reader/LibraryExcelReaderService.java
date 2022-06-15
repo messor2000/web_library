@@ -3,8 +3,7 @@ package kpi.diploma.ovcharenko.service.excel.reader;
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookCategory;
 import kpi.diploma.ovcharenko.entity.book.BookTag;
-import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
-import kpi.diploma.ovcharenko.entity.book.status.Status;
+import kpi.diploma.ovcharenko.entity.book.BookStatus;
 import kpi.diploma.ovcharenko.repo.BookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -79,7 +78,7 @@ public class LibraryExcelReaderService implements ExcelReaderService {
                     book.getTags().add(tag);
                 }
 
-                BookStatus bookStatus = new BookStatus(Status.FREE);
+                BookStatus bookStatus = new BookStatus("FREE");
                 book.addStatus(bookStatus);
 
                 books.add(book);
@@ -117,7 +116,7 @@ public class LibraryExcelReaderService implements ExcelReaderService {
             if (!filteredBooks.add(book)) {
                 Book updatedBook = filteredBooks.stream().filter(data -> Objects.equals(data, book)).findFirst().get();
                 updatedBook.setAmount(updatedBook.getAmount() + 1);
-                BookStatus bookStatus = new BookStatus(Status.FREE);
+                BookStatus bookStatus = new BookStatus("FREE");
                 updatedBook.addStatus(bookStatus);
             }
         }

@@ -1,4 +1,4 @@
-package kpi.diploma.ovcharenko.entity.book.status;
+package kpi.diploma.ovcharenko.entity.book;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.util.PostgreSQLEnumType;
@@ -23,7 +23,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -33,10 +32,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "book_status")
-@TypeDef(
-        name = "pgsql_enum",
-        typeClass = PostgreSQLEnumType.class
-)
+//@TypeDef(
+//        name = "pgsql_enum",
+//        typeClass = PostgreSQLEnumType.class
+//)
 public class BookStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,11 +47,11 @@ public class BookStatus {
     private Book book;
 
     @Column(name = "book_status")
-    @Enumerated(EnumType.STRING)
-    @Type(type = "pgsql_enum")
-    private Status status;
+//    @Enumerated(EnumType.STRING)
+//    @Type(type = "pgsql_enum")
+    private String status;
 
-    public BookStatus(Status status) {
+    public BookStatus(String status) {
         this.status = status;
     }
 }

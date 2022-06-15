@@ -2,6 +2,8 @@ package kpi.diploma.ovcharenko.repo;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.service.book.BookService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -21,85 +28,84 @@ class BookRepositoryTests {
     @Autowired
     private BookService bookService;
 
-    @Test
-    @DisplayName("Test save list of books")
-    void saveListOfBooksTest() {
-        Page<Book> books = bookRepository.findAll(PageRequest.of(1, 20));
+    Book book1 = new Book("test1", 9999, "testAuthor1", 1, "test1");
+    Book book2 = new Book("test2", 1000, "testAuthor2", 1, "test2");
 
-        assertEquals(20, books.stream().count());
+    @BeforeEach
+    public void initEach() {
+        List<Book> bookList = new ArrayList<>();
+
+        bookList.add(book1);
+        bookList.add(book2);
+
+        bookRepository.saveAll(bookList);
+    }
+
+    @AfterEach
+    public void deleteEach() {
+        bookRepository.delete(book1);
+        bookRepository.delete(book2);
     }
 
     @Test
-    @DisplayName("Test find book with category")
+    @DisplayName("should return list of books")
+    void returnListOfBooks() {
+        Page<Book> books = bookRepository.findAll(PageRequest.of(0, 20));
+
+        assertEquals(2, books.stream().count());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("should return only book with selected category")
     void findBookCategoryContainsTest() {
         String category = "forTestCategory";
+
         Book book = new Book().toBuilder()
                 .bookName("forTest")
                 .amount(1)
                 .build();
 
-//        bookService.addNewBook(book, category);
+        bookService.addNewBook(book, category, "not used");
 
-        Page<Book> books = bookRepository.findByCategoryContains(category ,PageRequest.of(0, 20));
-
-        bookService.deleteBookById(book.getId());
+        Page<Book> books = bookRepository.findByCategoryContains(category, PageRequest.of(0, 20));
 
         assertEquals(1, books.get().count());
     }
 
     @Test
-    @DisplayName("Test find book by name")
+    @DisplayName("should return the book which contains name")
     void findBookByNameTest() {
-        String name = "forTest";
-        Book book = new Book().toBuilder()
-                .bookName(name)
-                .amount(1)
-                .build();
-
-//        bookService.addNewBook(book, "forTestCategory");
-
-        Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(name ,PageRequest.of(0, 20));
-
-        bookService.deleteBookById(book.getId());
+        Page<Book> foundBook = bookRepository.findByBookNameOrAuthor(book1.getBookName(), PageRequest.of(0, 20));
 
         assertEquals(1, foundBook.get().count());
     }
 
     @Test
-    @DisplayName("Test find book by author")
+    @DisplayName("should return the book which contains author")
     void findBookByAuthorTest() {
-        String author = "forTest";
-        Book book = new Book().toBuilder()
-                .bookName("forTest")
-                .author(author)
-                .amount(1)
-                .build();
-
-//        bookService.addNewBook(book, "forTestCategory");
-
-        Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(author ,PageRequest.of(0, 20));
-
-        bookService.deleteBookById(book.getId());
+        Page<Book> foundBook = bookRepository.findByBookNameOrAuthor(book1.getAuthor(), PageRequest.of(0, 20));
 
         assertEquals(1, foundBook.get().count());
     }
 
     @Test
-    @DisplayName("Test find book by book year")
+    @DisplayName("should return the book which contains year")
     void findBookByYearTest() {
-        int year = 10000;
-        Book book = new Book().toBuilder()
-                .bookName("forTest")
-                .amount(1)
-                .year(year)
-                .build();
-
-//        bookService.addNewBook(book, "forTestCategory");
-
-        Page<Book> foundBook = bookRepository.findByBookNameOrAuthorOrYear(String.valueOf(year),PageRequest.of(0, 20));
-
-        bookService.deleteBookById(book.getId());
+        Page<Book> foundBook = bookRepository.findByYearContaining(book1.getYear(), PageRequest.of(0, 20));
 
         assertEquals(1, foundBook.get().count());
+    }
+
+    @Test
+    @DisplayName("should successfully delete book by id")
+    void deleteBookByIdTest() {
+        Page<Book> foundBook = bookRepository.findByBookNameOrAuthor(book1.getBookName(), PageRequest.of(0, 20));
+
+        Book book = foundBook.get().findFirst().get();
+
+        bookRepository.deleteBookById(book.getId());
+
+        assertEquals(Optional.empty(), bookRepository.findById(book.getId()));
     }
 }

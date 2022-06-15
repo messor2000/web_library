@@ -1,12 +1,10 @@
 package kpi.diploma.ovcharenko.service.book.cards;
 
 import kpi.diploma.ovcharenko.entity.card.BookCard;
-import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.repo.BookCardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,7 +31,7 @@ public class LibraryBookCardService implements BookCardService {
     }
 
     @Override
-    public List<BookCard> findAllBookCardsWithStatus(CardStatus status) {
+    public List<BookCard> findAllBookCardsWithStatus(String status) {
         return bookCardRepository.findAllByCardStatus(status);
     }
 

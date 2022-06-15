@@ -88,7 +88,7 @@ public class FileUploadController {
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
-    public ResponseEntity<StorageFileNotFoundException> handleStorageFileNotFound(StorageFileNotFoundException e) {
+    public ResponseEntity<StorageFileNotFoundException> handleStorageFileNotFound() {
         return ResponseEntity.notFound().build();
     }
 

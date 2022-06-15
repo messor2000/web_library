@@ -1,10 +1,12 @@
 package kpi.diploma.ovcharenko.service;
 
+import kpi.diploma.ovcharenko.config.PasswordEncoder;
 import kpi.diploma.ovcharenko.entity.book.Book;
-import kpi.diploma.ovcharenko.entity.book.BookCategory;
+import kpi.diploma.ovcharenko.entity.book.BookStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
 import kpi.diploma.ovcharenko.service.book.BookService;
+import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
 import kpi.diploma.ovcharenko.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -14,12 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -31,127 +31,146 @@ class AppUserServiceTests {
     @Autowired
     private BookService bookService;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BookCardService bookCardService;
 
-    UserModel userModel;
-    private final String email = "forTest@gmail.com";
-    private Book book;
+    UserModel user = new UserModel().toBuilder()
+            .firstName("test1")
+            .lastName("test1")
+            .email("test1@gmail.com")
+            .password(PasswordEncoder.passwordEncoder().encode("password"))
+            .build();
+
+    Book book = new Book("test1", 9999, "testAuthor1", 1, "test1");
 
     @BeforeEach
-    void initTestUserAndTestBook() {
-        userModel = new UserModel().toBuilder()
-                .firstName("forTest")
-                .lastName("forTest")
-                .email(email)
-                .password("forTest")
-                .build();
-
-        userService.save(userModel);
-
-        book = new Book().toBuilder()
-                .bookName("forTest")
-                .amount(1)
-                .build();
-        BookCategory bookCategory = new BookCategory("forTest");
-
-//        bookService.addNewBook(book, bookCategory.getCategory());
+    public void initEach() {
+        userService.save(user);
+        bookService.addNewBook(book, "not used", "not used");
     }
 
     @AfterEach
-    void deleteTestUserAndTestBook() {
-        AppUser user = userService.findByEmail(email);
-        userService.deleteUser(user.getId());
+    public void deleteEach() {
+        userService.deleteUser(userService.findByEmail(user.getEmail()).getId());
         bookService.deleteBookById(book.getId());
     }
 
     @Test
-    @DisplayName("Test find user by email")
-    void saveAndRetrieveNewUserByEmail() {
-        AppUser foundUser = userService.findByEmail(email);
+    @DisplayName("should return correct user by user email")
+    void findUserByEmailTest() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
 
-        assertEquals(foundUser.getEmail(), email);
+        assertEquals(foundUser.getEmail(), user.getEmail());
+        assertEquals(foundUser.getFirstName(), user.getFirstName());
     }
 
     @Test
-    @DisplayName("Test change old user password to the new one")
-    void changeOldPasswordTest() {
-        AppUser foundUser = userService.findByEmail(email);
+    @DisplayName("should return correct user by user id")
+    void findUserByIdTest() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+        AppUser foundUserById = userService.findById(foundUser.getId());
 
-        String newUserPassword = "newpassword";
-        userService.changeUserPassword(foundUser, newUserPassword);
-        AppUser userAfterChangePassword  = userService.findByEmail(email);
-
-        assertTrue(passwordEncoder.matches(newUserPassword, userAfterChangePassword.getPassword()));
+        assertEquals(foundUserById, foundUser);
     }
 
     @Test
-    @DisplayName("Test check that user enter valid old password")
-    void checkValidUserOldPassword() {
-        AppUser foundUser = userService.findByEmail(email);
-
-        assertTrue(userService.checkIfValidOldPassword(foundUser, "forTest"));
-    }
-
-    @Test
-    @DisplayName("Test show all users")
-    void showAllUsersTest() {
-        UserModel userModel = new UserModel().toBuilder()
-                .firstName("forTest")
-                .lastName("forTest")
-                .email("forTest2@gmail.com")
-                .password("forTest")
+    @DisplayName("should successfully save new user")
+    void saveNewUserTest() {
+        UserModel userForSave = new UserModel().toBuilder()
+                .firstName("test1")
+                .lastName("test1")
+                .email("test2@gmail.com")
+                .password(PasswordEncoder.passwordEncoder().encode("password"))
                 .build();
 
-        List<AppUser> appUserList = userService.showAllUsers();
-        userService.save(userModel);
-        List<AppUser> appUserListAfterSavingNewOne = userService.showAllUsers();
+        List<AppUser> appUsersBeforeSaving = userService.showAllUsers();
 
-        AppUser user = userService.findByEmail(email);
-        userService.deleteUser(user.getId());
+        userService.save(userForSave);
 
-        assertEquals(appUserList.size() + 1, appUserListAfterSavingNewOne.size());
+        List<AppUser> appUsersAfterSaving = userService.showAllUsers();
+
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+        AppUser foundUserForThisTest = userService.findByEmail(userForSave.getEmail());
+
+        userService.deleteUser(foundUserForThisTest.getId());
+
+        assertNotSame(foundUser, foundUserForThisTest);
+        assertNotSame(appUsersBeforeSaving, appUsersAfterSaving);
     }
-
-//    @Test
-//    @DisplayName("Test take book by user")
-//    void testTakeBook() {
-//        AppUser foundUser = userService.findByEmail(email);
-//
-//        userService.bookedBook(book.getId(), foundUser.getEmail());
-//
-//        Book foundedBook = bookService.findBookById(book.getId());
-//
-//        userService.returnBook(book.getId(), foundUser.getEmail());
-//
-//        assertEquals(0, foundedBook.getAmount());
-//    }
-//
-//    @Test
-//    @DisplayName("Test return book that user took")
-//    void testReturnBook() {
-//        AppUser foundUser = userService.findByEmail(email);
-//
-//        userService.bookedBook(book.getId(), foundUser.getEmail());
-//
-//        userService.returnBook(book.getId(), foundUser.getEmail());
-//
-//        Book foundedBook = bookService.findBookById(book.getId());
-//
-//        assertEquals(1, foundedBook.getAmount());
-//    }
 
     @Test
-    @DisplayName("Test create password reset token for user and retrieve him by it")
-    void createPasswordResetTokenAndRetrieveUserByItTest() {
-        AppUser foundUser = userService.findByEmail(email);
-        String token = "testToken";
+    @DisplayName("should successfully save new user when admin saves him")
+    void saveNewUserByAdminTest() {
+        UserModel userForSave = new UserModel().toBuilder()
+                .firstName("test1")
+                .lastName("test1")
+                .email("test2@gmail.com")
+                .password(PasswordEncoder.passwordEncoder().encode("password"))
+                .build();
 
-        userService.createPasswordResetTokenForUser(foundUser, token);
+        List<AppUser> appUsersBeforeSaving = userService.showAllUsers();
 
-        AppUser foundedUserByToken = userService.getUserByPasswordResetToken(token).get();
+        userService.createNewUserByAdmin(userForSave);
 
-        assertEquals(foundUser, foundedUserByToken);
+        List<AppUser> appUsersAfterSaving = userService.showAllUsers();
+
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+        AppUser foundUserForThisTest = userService.findByEmail(userForSave.getEmail());
+
+        userService.deleteUser(foundUserForThisTest.getId());
+
+        assertNotSame(foundUser, foundUserForThisTest);
+        assertNotSame(appUsersBeforeSaving, appUsersAfterSaving);
     }
+
+    @Test
+    @DisplayName("user must become available after save him like registered user")
+    void saveRegisteredUserTest() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+
+        userService.saveRegisteredUser(foundUser);
+
+        AppUser foundUserAfterUpdating = userService.findByEmail(user.getEmail());
+
+        assertTrue(foundUserAfterUpdating.isEnabled());
+    }
+
+    @Test
+    @DisplayName("should successfully delete user by user id")
+    void deleteUserTest() {
+        UserModel userForDelete = new UserModel().toBuilder()
+                .firstName("test1")
+                .lastName("test1")
+                .email("test2@gmail.com")
+                .password(PasswordEncoder.passwordEncoder().encode("password"))
+                .build();
+
+        userService.save(userForDelete);
+
+        AppUser foundUser = userService.findByEmail(userForDelete.getEmail());
+        userService.deleteUser(foundUser.getId());
+
+        assertNull(userService.findByEmail(userForDelete.getEmail()));
+    }
+
+    @Test
+    @DisplayName("when user book a book, should change status in book to 'booked'")
+    void bookABookByUserTest() {
+        userService.bookedBook(book.getId(), user.getEmail());
+
+        Book bookAfterBooking = bookService.findBookById(book.getId());
+
+        assertTrue(bookAfterBooking.getStatuses().contains(new BookStatus(Status.BOOKED)));
+    }
+
+//    @Test
+//    @DisplayName("when admin approve a book, should change status in book to 'taken'")
+//    void approveBookByAdminTest() {
+//        userService.approveBookForUser(book.getId(), user.getEmail());
+//
+//        Book bookAfterBooking = bookService.findBookById(book.getId());
+//
+//        assertTrue(bookAfterBooking.getStatuses().contains(new BookStatus(Status.BOOKED)));
+//    }
 }
 
 

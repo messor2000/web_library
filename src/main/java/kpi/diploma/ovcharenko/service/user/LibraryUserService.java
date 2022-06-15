@@ -2,10 +2,8 @@ package kpi.diploma.ovcharenko.service.user;
 
 import kpi.diploma.ovcharenko.config.PasswordEncoder;
 import kpi.diploma.ovcharenko.entity.book.Book;
-import kpi.diploma.ovcharenko.entity.book.status.BookStatus;
-import kpi.diploma.ovcharenko.entity.book.status.Status;
+import kpi.diploma.ovcharenko.entity.book.BookStatus;
 import kpi.diploma.ovcharenko.entity.card.BookCard;
-import kpi.diploma.ovcharenko.entity.card.CardStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.PasswordResetToken;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
@@ -94,6 +92,7 @@ public class LibraryUserService implements UserService {
 
     @Override
     public void saveRegisteredUser(AppUser user) {
+        user.setEnabled(true);
         userRepository.save(user);
     }
 
@@ -220,15 +219,15 @@ public class LibraryUserService implements UserService {
 
         BookCard bookCard = new BookCard();
         bookCard.setBook(book);
-        bookCard.setCardStatus(CardStatus.WAIT_FOR_APPROVE);
+        bookCard.setCardStatus("WAIT_FOR_APPROVE");
 
         user.addBookCard(bookCard);
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(id);
 
         for (BookStatus bookStatus : bookStatuses) {
-            if (bookStatus.getStatus().equals(Status.FREE)) {
-                bookStatus.setStatus(Status.BOOKED);
+            if (bookStatus.getStatus().equals("FREE")) {
+                bookStatus.setStatus("BOOKED");
                 break;
             }
         }
@@ -246,12 +245,12 @@ public class LibraryUserService implements UserService {
         Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
                 new BookDoesntPresentException("Book with this id doesnt exist"));
 
-        bookCard.setCardStatus(CardStatus.APPROVED);
+        bookCard.setCardStatus("APPROVED");
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
         for (BookStatus bookStatus : bookStatuses) {
-            if (bookStatus.getStatus().equals(Status.BOOKED)) {
-                bookStatus.setStatus(Status.TAKEN);
+            if (bookStatus.getStatus().equals("BOOKED")) {
+                bookStatus.setStatus("TAKEN");
                 break;
             }
         }
@@ -267,14 +266,14 @@ public class LibraryUserService implements UserService {
         Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
                 new BookDoesntPresentException("Book with this id doesnt exist"));
 
-        bookCard.setCardStatus(CardStatus.REJECT);
+        bookCard.setCardStatus("REJECT");
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
 
 
         for (BookStatus bookStatus : bookStatuses) {
-            if (bookStatus.getStatus().equals(Status.BOOKED)) {
-                bookStatus.setStatus(Status.FREE);
+            if (bookStatus.getStatus().equals("BOOKED")) {
+                bookStatus.setStatus("FREE");
                 break;
             }
         }
@@ -293,12 +292,12 @@ public class LibraryUserService implements UserService {
         Book book = bookRepository.findById(bookCard.getBook().getId()).orElseThrow(() ->
                 new BookDoesntPresentException("Book with this id doesnt exist"));
 
-        bookCard.setCardStatus(CardStatus.BOOK_RETURNED);
+        bookCard.setCardStatus("BOOK_RETURNED");
 
         List<BookStatus> bookStatuses = bookStatusRepository.findAllByBookId(book.getId());
         for (BookStatus bookStatus : bookStatuses) {
-            if (bookStatus.getStatus().equals(Status.TAKEN)) {
-                bookStatus.setStatus(Status.FREE);
+            if (bookStatus.getStatus().equals("TAKEN")) {
+                bookStatus.setStatus("FREE");
                 break;
             }
         }
