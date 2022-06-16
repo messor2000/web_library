@@ -14,13 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -29,8 +28,6 @@ public class BookCardRepositoryTests {
     private BookCardRepository bookCardRepository;
     @Autowired
     private BookService bookService;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private UserService userService;
 
@@ -54,12 +51,7 @@ public class BookCardRepositoryTests {
     public void deleteEach() {
         bookService.deleteBookById(book.getId());
         userService.deleteUser(userService.findByEmail(user.getEmail()).getId());
-
-//        userRepository.delete(user);
-//        bookRepository.delete(book2);
     }
-
-
 
     @Test
     @DisplayName("should return list of book cards")
@@ -69,4 +61,79 @@ public class BookCardRepositoryTests {
         assertEquals(1, bookCards.size());
     }
 
+    @Test
+    @DisplayName("should return list of book cards by user id")
+    void returnListOfBooksByUserId() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+        List<BookCard> bookCards = bookCardRepository.findAllByUserId(foundUser.getId());
+
+        assertEquals(1, bookCards.size());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("should return list of book cards which card status booked")
+    void returnListOfBooksByStatusBooked() {
+        List<BookCard> bookCards = bookCardRepository.findAllByCardStatus("BOOKED");
+
+        assertEquals(bookCards.get(0).getCardStatus(), "BOOKED");
+    }
+
+    @Test
+    @DisplayName("should return list of book cards which card status approved")
+    void returnListOfBooksByStatusApproved() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+        List<BookCard> bookCards = bookCardRepository.findAllByUserId(foundUser.getId());
+        userService.approveBookForUser(bookCards.get(0).getId());
+
+        List<BookCard> bookCardsAfterApproving = bookCardRepository.findAllByCardStatus("APPROVED");
+
+        assertEquals(bookCardsAfterApproving.get(0).getCardStatus(), "APPROVED");
+    }
+
+    @Test
+    @DisplayName("should correctly return book card by card id")
+    void returnBookCardByCardId() {
+        List<BookCard> bookCards = bookCardRepository.findAll();
+
+        BookCard bookCard = bookCardRepository.findBookCardById(bookCards.get(0).getId());
+
+        assertEquals(bookCards.get(0), bookCard);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("should correctly delete book card by card id")
+    void deleteBookCardByCardId() {
+        List<BookCard> bookCards = bookCardRepository.findAll();
+        BookCard bookCard = bookCardRepository.findBookCardById(bookCards.get(0).getId());
+
+        bookCardRepository.deleteBookCardByCardId(bookCard.getId());
+
+        assertNull(bookCardRepository.findBookCardById(bookCards.get(0).getId()));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("should correctly delete book card by user id")
+    void deleteBookCardByUserId() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+        List<BookCard> bookCards = bookCardRepository.findAllByUserId(foundUser.getId());
+
+        bookCardRepository.deleteBookCardByCardId(foundUser.getId());
+
+        assertNull(bookCardRepository.findBookCardById(bookCards.get(0).getId()));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("should correctly delete book card by book id")
+    void deleteBookCardByBookId() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+        List<BookCard> bookCards = bookCardRepository.findAllByUserId(foundUser.getId());
+
+        bookCardRepository.deleteBookCardByCardId(book.getId());
+
+        assertNull(bookCardRepository.findBookCardById(bookCards.get(0).getId()));
+    }
 }

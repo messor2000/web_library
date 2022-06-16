@@ -5,6 +5,7 @@ import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.book.BookStatus;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
 import kpi.diploma.ovcharenko.entity.user.UserModel;
+import kpi.diploma.ovcharenko.entity.user.VerificationToken;
 import kpi.diploma.ovcharenko.service.book.BookService;
 import kpi.diploma.ovcharenko.service.book.cards.BookCardService;
 import kpi.diploma.ovcharenko.service.user.UserService;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +34,8 @@ class AppUserServiceTests {
     private BookService bookService;
     @Autowired
     private BookCardService bookCardService;
+
+    private final String token = UUID.randomUUID().toString();
 
     UserModel user = new UserModel().toBuilder()
             .firstName("test1")
@@ -152,16 +156,16 @@ class AppUserServiceTests {
         assertNull(userService.findByEmail(userForDelete.getEmail()));
     }
 
-    @Test
-    @DisplayName("when user book a book, should change status in book to 'booked'")
-    void bookABookByUserTest() {
-        userService.bookedBook(book.getId(), user.getEmail());
-
-        Book bookAfterBooking = bookService.findBookById(book.getId());
-
-        assertTrue(bookAfterBooking.getStatuses().contains(new BookStatus(Status.BOOKED)));
-    }
-
+//    @Test
+//    @DisplayName("when user book a book, should change status in book to 'booked'")
+//    void bookABookByUserTest() {
+//        userService.bookedBook(book.getId(), user.getEmail());
+//
+//        Book bookAfterBooking = bookService.findBookById(book.getId());
+//
+//        assertEquals("BOOKED", bookAfterBooking.getStatuses().stream().findFirst());
+//    }
+//
 //    @Test
 //    @DisplayName("when admin approve a book, should change status in book to 'taken'")
 //    void approveBookByAdminTest() {
@@ -171,6 +175,46 @@ class AppUserServiceTests {
 //
 //        assertTrue(bookAfterBooking.getStatuses().contains(new BookStatus(Status.BOOKED)));
 //    }
+
+    @Test
+    @DisplayName("should successfully create verification token for user and got this user by created token")
+    void createVerificationTokenForUser() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+
+        userService.createVerificationTokenForUser(foundUser, token);
+
+        AppUser userByVerificationToken = userService.getUserByVerificationToken(token);
+
+        assertEquals(userByVerificationToken, foundUser);
+    }
+
+    @Test
+    @DisplayName("should successfully recreate verification token for user and got this user by created token")
+    void createNewVerificationTokenForUser() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+
+        userService.createVerificationTokenForUser(foundUser, token);
+
+        AppUser userByVerificationToken = userService.getUserByVerificationToken(token);
+
+        VerificationToken verificationToken = userService.generateNewVerificationToken(token);
+
+        AppUser userByUpdatedVerificationToken = userService.getUserByVerificationToken(verificationToken.getToken());
+
+        assertEquals(userByUpdatedVerificationToken, userByVerificationToken);
+    }
+
+    @Test
+    @DisplayName("should successfully return the same verification token by token")
+    void returnVerificationTokenByToken() {
+        AppUser foundUser = userService.findByEmail(user.getEmail());
+
+        userService.createVerificationTokenForUser(foundUser, token);
+
+        VerificationToken verificationToken = userService.getVerificationToken(token);
+
+        assertEquals(verificationToken.getToken(), token);
+    }
 }
 
 

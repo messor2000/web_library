@@ -38,19 +38,6 @@ public class BookCategoryTests {
         bookService.deleteBookById(book.getId());
     }
 
-//    @BeforeEach
-//    @Transactional
-//    public void initEach() {
-//        book.setCategories(Collections.singleton(new BookCategory(category)));
-//        bookRepository.save(book);
-//    }
-//
-//    @AfterEach
-//    public void deleteEach() {
-//        bookService.deleteCategory(book.getId(), category);
-//        bookRepository.delete(book);
-//    }
-
     @Test
     @DisplayName("should return book category by book and category name")
     void returnBookCategoryByBookAndCategory() {

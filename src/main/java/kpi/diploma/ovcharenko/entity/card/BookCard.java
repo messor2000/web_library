@@ -2,7 +2,6 @@ package kpi.diploma.ovcharenko.entity.card;
 
 import kpi.diploma.ovcharenko.entity.book.Book;
 import kpi.diploma.ovcharenko.entity.user.AppUser;
-import kpi.diploma.ovcharenko.util.PostgreSQLEnumType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,12 +11,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.*;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +24,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -39,10 +33,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "booking_card")
-//@TypeDef(
-//        name = "pgsql_enum",
-//        typeClass = PostgreSQLEnumType.class
-//)
 public class BookCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,8 +49,6 @@ public class BookCard {
     private Book book;
 
     @Column(name = "status")
-//    @Enumerated(EnumType.STRING)
-//    @Type(type = "pgsql_enum")
     private String cardStatus;
 
     @CreationTimestamp
