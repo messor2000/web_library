@@ -32,7 +32,7 @@ public interface BookService {
 
     Set<String> findBookCategories(Book book);
 
-    void deleteCategory(Long id, String category);
+    void deleteCategory(Long bookId, String category);
 
     Page<Book> findByKeyWord(String search, Pageable pageable);
 
