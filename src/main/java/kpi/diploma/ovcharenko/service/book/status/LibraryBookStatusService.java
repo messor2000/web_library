@@ -21,11 +21,6 @@ public class LibraryBookStatusService implements BookStatusService {
     }
 
     @Override
-    public void deleteBookStatusesByBookId(Long bookId) {
-        bookStatusRepository.deleteBookStatusesByBookId(bookId);
-    }
-
-    @Override
     public void deleteBookStatus(BookStatus bookStatus) {
         bookStatusRepository.delete(bookStatus);
     }

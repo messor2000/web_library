@@ -8,7 +8,5 @@ public interface BookStatusService {
 
     List<BookStatus> findBookStatusesByBookId(Long bookId);
 
-    void deleteBookStatusesByBookId(Long bookId);
-
     void deleteBookStatus(BookStatus bookStatus);
 }
