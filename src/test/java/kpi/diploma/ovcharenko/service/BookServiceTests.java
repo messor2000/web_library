@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class BookServiceTests {
@@ -41,7 +42,7 @@ class BookServiceTests {
 
     private final String category = "forTest";
 
-    Book book = new Book("test1", 9999, "testAuthor1", 1, "test1");
+    final Book book = new Book("test1", 9999, "testAuthor1", 1, "test1");
 
     @BeforeEach
     public void initEach() {

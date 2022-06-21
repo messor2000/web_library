@@ -56,18 +56,6 @@ public class AmazonLibraryClient implements AmazonClient {
     }
 
     @Override
-    public void uploadPhotoImage(MultipartFile multipartFile, String email) {
-        try {
-            File file = convertMultiPartToFile(multipartFile);
-            String fileName = "user/" + email;
-            uploadFileTos3bucket(fileName, file);
-            file.delete();
-        } catch (Exception e) {
-            log.error(e);
-        }
-    }
-
-    @Override
     public void changeFile(MultipartFile multipartFile, Long bookId) {
         try {
             String fileName = "book/" + bookId.toString();
